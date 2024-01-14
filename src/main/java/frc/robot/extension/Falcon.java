@@ -5,6 +5,8 @@
 package frc.robot.extension;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -199,32 +201,31 @@ public class Falcon {
      * 
      * @return Configured TalonFX motor
      */
-    /* public static TalonFX configMotionMagic(TalonFX motorObject, double kP, double kI, double kD, double kF,
+    public static TalonFX configMotionMagic(TalonFX motorObject, double kP, double kI, double kD, double kF,
             double CruiseVelocity, double Acceleration) {
 
-        // Auxilary motor
-        motorObject.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0,
-                kTimeout);
-        motorObject.configNeutralDeadband(0.001, kTimeout);
-        motorObject.configOpenloopRamp(0);
+        motorObject.getConfigurator().apply(new MotorOutputConfigs().withDutyCycleNeutralDeadband(0.001));
+        motorObject.getConfigurator().apply(new OpenLoopRampsConfigs().withVoltageOpenLoopRampPeriod(0));
 
         // Set Motion Magic gains in slot0 - see documentation
-        motorObject.selectProfileSlot(0, 0);
-        motorObject.config_kF(0, kF, kTimeout);
-        motorObject.config_kP(0, kP, kTimeout);
-        motorObject.config_kI(0, kI, kTimeout);
-        motorObject.config_kD(0, kD, kTimeout);
+       Slot0Configs slot0Configs = new Slot0Configs();
+        slot0Configs.kV = kF;
+        slot0Configs.kP = kP;
+        slot0Configs.kI = kI;
+        slot0Configs.kD = kD;
+
+        motorObject.getConfigurator().apply(slot0Configs, kTimeout);
 
         // Set acceleration and vcruise velocity - see documentation
-        motorObject.configMotionCruiseVelocity(CruiseVelocity, kTimeout);
-        motorObject.configMotionAcceleration(Acceleration, kTimeout);
+        MotionMagicConfigs mmCfg = new MotionMagicConfigs()
+        .withMotionMagicAcceleration(Acceleration)
+        .withMotionMagicCruiseVelocity(CruiseVelocity);
+
+        motorObject.getConfigurator().apply(mmCfg);
 
         // Zero the sensor once on robot boot up
-        motorObject.setSelectedSensorPosition(0, 0, kTimeout);
-
-        // integral Zone
-        motorObject.config_IntegralZone(0, 200);
+        motorObject.setPosition(0);
 
         return motorObject;
-    } */
+    }
 }
