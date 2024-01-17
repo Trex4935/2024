@@ -30,15 +30,26 @@ public class Scoring extends SubsystemBase {
   public void scoringMovement(){
     shootingmotor1.set(0.5);
     shootingmotor2.set(0.5);
+  }
+//makes magazine motor spin
+   public void magazineMotorMovement(){
     magazinemotor.set(0.5);
   }
 //stops motors
-  public void stopScoringMotor(){
+  public void stopShootingMotor1(){
     shootingmotor1.stopMotor();
+  }
+    public void stopShootingMotor2(){
     shootingmotor2.stopMotor();
+  }
+    public void stopMagazineMotor(){
     magazinemotor.stopMotor();
   }
-
+  public void stopAllMotors(){
+   stopShootingMotor1();
+   stopShootingMotor2();
+   stopMagazineMotor();
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
