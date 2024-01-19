@@ -4,11 +4,30 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import frc.robot.extension.SparkMax;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  public Intake() {}
+
+  //Declaring NEO
+  CANSparkMax intakemotor;
+
+  public Intake() {
+  //Creates motor class
+    intakemotor = SparkMax.createDefaultCANSparkMax(0);
+  }
+//Makes motor spin
+  public void intakeMovement(){
+    intakemotor.set(0.5);
+  }
+//Stops motor
+  public void stopIntakeMotor(){
+    intakemotor.stopMotor();
+  }
 
   @Override
   public void periodic() {
