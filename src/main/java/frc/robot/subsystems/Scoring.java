@@ -28,8 +28,8 @@ public class Scoring extends SubsystemBase {
 }
 //makes motors spin YIPPIE
   public void scoringMovement(){
-    shootingmotor1.set(-0.8);
-    shootingmotor2.set(0.8);
+    shootingmotor1.set(-0.9);
+    shootingmotor2.set(0.9);
   }
 //makes magazine motor spin
    public void magazineMotorMovement(){
@@ -39,10 +39,10 @@ public class Scoring extends SubsystemBase {
   public void stopShootingMotor1(){
     shootingmotor1.stopMotor();
   }
-    public void stopShootingMotor2(){
+  public void stopShootingMotor2(){
     shootingmotor2.stopMotor();
   }
-    public void stopMagazineMotor(){
+  public void stopMagazineMotor(){
     magazinemotor.stopMotor();
   }
   public void stopAllMotors(){
