@@ -11,6 +11,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -35,6 +36,7 @@ public class RobotContainer {
   private final Telemetry logger = new Telemetry(MaxSpeed);
   private final Scoring scoring = new Scoring();
   private final Intake intake = new Intake();
+  private Vision _Vision = new Vision();
 
   private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -61,6 +63,12 @@ public class RobotContainer {
 
   public RobotContainer() {
     configureBindings();
+    //SmartDashboard.putData(_Vision.x);
+    //SmartDashboard.putData(_Vision.y);
+    //SmartDashboard.putData(_Vision.area);
+    SmartDashboard.putNumber("tx", _Vision.x);
+    SmartDashboard.putNumber("ty", _Vision.y);
+    SmartDashboard.putNumber("ta", _Vision.area);
   }
 
   public Command getAutonomousCommand() {

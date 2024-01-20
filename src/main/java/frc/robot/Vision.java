@@ -5,6 +5,12 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Vision {
+
+
+ public Vision (){
+
+  
+
      NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
                         NetworkTableEntry tx = table.getEntry("tx");
                         NetworkTableEntry ty = table.getEntry("ty");
@@ -15,8 +21,8 @@ public class Vision {
                         double y = ty.getDouble(0.0);
                         double area = ta.getDouble(0.0);
 
-                        //post to smart dashboard periodically
-                        SmartDashboard.putNumber("LimelightX", x);
-                        SmartDashboard.putNumber("LimelightY", y);
-                        SmartDashboard.putNumber("LimelightArea", area);
+ }
+public double x;
+public double y;
+public double area;
 }
