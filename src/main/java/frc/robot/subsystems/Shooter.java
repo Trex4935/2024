@@ -10,15 +10,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.extension.SparkMax;
 
-public class Scoring extends SubsystemBase {
+public class Shooter extends SubsystemBase {
 
   //Declaring Motors
   CANSparkMax shootingmotor1;
   CANSparkMax shootingmotor2;
   CANSparkMax magazinemotor;
 
-  /** Creates a new Scoring. */
-  public Scoring() {
+  /** Creates a new Shooter. */
+  public Shooter() {
 
     //Creating Motor Objects
     shootingmotor1 = SparkMax.createDefaultCANSparkMax(1);
@@ -27,7 +27,7 @@ public class Scoring extends SubsystemBase {
   
 }
 //makes motors spin YIPPIE
-  public void scoringMovement(){
+  public void shooterMovement(){
     shootingmotor1.set(-0.8);
     shootingmotor2.set(0.8);
   }
