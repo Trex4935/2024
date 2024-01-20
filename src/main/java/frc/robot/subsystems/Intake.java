@@ -22,7 +22,7 @@ public class Intake extends SubsystemBase {
   }
 //Makes motor spin
   public void intakeMovement(){
-    intakemotor.set(0.5);
+    intakemotor.set(0.9);
   }
 //Stops motor
   public void stopIntakeMotor(){
