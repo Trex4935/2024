@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,6 +17,7 @@ public class Scoring extends SubsystemBase {
   CANSparkMax shootingmotor1;
   CANSparkMax shootingmotor2;
   CANSparkMax magazinemotor;
+  CANSparkMax pivotMotor;
 
   /** Creates a new Scoring. */
   public Scoring() {
@@ -24,6 +26,7 @@ public class Scoring extends SubsystemBase {
     shootingmotor1 = SparkMax.createDefaultCANSparkMax(1);
     shootingmotor2 = SparkMax.createDefaultCANSparkMax(2);
     magazinemotor = SparkMax.createDefaultCANSparkMax(3);
+    pivotMotor = SparkMax.createDefaultCANSparkMax(6);
   
 }
 //makes motors spin YIPPIE
@@ -35,6 +38,11 @@ public class Scoring extends SubsystemBase {
    public void magazineMotorMovement(){
     magazinemotor.set(0.5);
   }
+//makes pivot motor move
+  public void pivotMotor(){
+    pivotMotor.set(0);
+    pivotMotor.getPIDController().setReference(180, CANSparkBase.ControlType.kPosition);
+  }
 //stops motors
   public void stopShootingMotor1(){
     shootingmotor1.stopMotor();
@@ -45,10 +53,14 @@ public class Scoring extends SubsystemBase {
   public void stopMagazineMotor(){
     magazinemotor.stopMotor();
   }
+  public void stopPivotMotor(){
+    pivotMotor.stopMotor();
+  }
   public void stopAllMotors(){
    stopShootingMotor1();
    stopShootingMotor2();
    stopMagazineMotor();
+   stopPivotMotor();
   }
   @Override
   public void periodic() {
