@@ -105,25 +105,27 @@ public class Shooter extends SubsystemBase {
   switch (shooterLevel)
   {
     // Angled towards the Human Player for loading 
-    case LOAD:{
+    case LOAD:
       System.out.println("Load");
-    }
-    case FEED:{
+      break;
+    case FEED:
       System.out.println("Feed");
-    }
+      break;
     // Lays shooter flat, deafult position. 
-    case DEFAULT:{
+    case DEFAULT:
       System.out.println("Deafult");
-    }
+      break;
     // Angles shooter upwards
-    case AMP:{
+    case AMP:
       System.out.println("Amp");
-    }
+      break;
     // Less steeper then Amp but more steeper then deafult, used for shooting
-    case SPEAKER:{
+    case SPEAKER:
       System.out.println("Speaker");
-    }
+      break;
 
+    default:
+    System.out.println("Deafult");
   }
   }
 }
