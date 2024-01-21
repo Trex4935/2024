@@ -32,7 +32,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class RobotContainer {
-  private final Shooter m_Shooter = new Shooter();
+  private final Shooter shooter = new Shooter();
   private double MaxSpeed = 6; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
@@ -65,13 +65,13 @@ private Command runAuto = drivetrain.getAutoPath("curve auto- test");
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
     joystick.b().whileTrue(drivetrain
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
-    // joystick.x().whileTrue(Commands.runEnd(() -> shooter.shooterMovement(), () -> shooter.stopAllMotors(), shooter));
-    // joystick.y().whileTrue(Commands.runEnd(() -> intake.intakeMovement(), () -> intake.stopIntakeMotor(), intake));
+    joystick.x().whileTrue(Commands.runEnd(() -> shooter.shooterMovement(), () -> shooter.stopAllMotors(), shooter));
+    joystick.y().whileTrue(Commands.runEnd(() -> intake.intakeMovement(), () -> intake.stopIntakeMotor(), intake));
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    joystick.rightBumper().onTrue(m_Shooter.stateSwitcher(ShooterLevel.LOAD));
-    joystick.povUp().onTrue(m_Shooter.stateSwitcher(ShooterLevel.AMP));
+    joystick.rightBumper().onTrue(shooter.stateSwitcher(ShooterLevel.LOAD));
+    joystick.povUp().onTrue(shooter.stateSwitcher(ShooterLevel.AMP));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -87,7 +87,7 @@ private Command runAuto = drivetrain.getAutoPath("curve auto- test");
     SmartDashboard.putNumber("tx", _Vision.x);
     SmartDashboard.putNumber("ty", _Vision.y);
     SmartDashboard.putNumber("ta", _Vision.area);
-    SmartDashboard.putString("angle", m_Shooter.returnShooterLevel());
+    SmartDashboard.putString("angle", shooter.returnShooterLevel());
   }
 
   public Command getAutonomousCommand() {
