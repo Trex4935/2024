@@ -18,10 +18,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.extension.ShooterLevel;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 
 public class RobotContainer {
   private final Shooter shooter = new Shooter();
+  private final Intake intake = new Intake();
+  private final Pivot pivot = new Pivot();
+  private Vision _Vision = new Vision();
   private double MaxSpeed = 6; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
@@ -40,8 +44,6 @@ public class RobotContainer {
 private Command runAuto = drivetrain.getAutoPath("curve auto- test");
   
   private final Telemetry logger = new Telemetry(MaxSpeed);
-  private final Intake intake = new Intake();
-  private Vision _Vision = new Vision();
 
   private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically

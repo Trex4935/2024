@@ -19,7 +19,7 @@ public class Shooter extends SubsystemBase {
   CANSparkMax shootingmotor1;
   CANSparkMax shootingmotor2;
   CANSparkMax magazinemotor;
-  CANSparkMax pivotMotor;
+ 
  
   // Makes a new state for the shooter
   public static ShooterLevel shooterLevel;
@@ -32,7 +32,7 @@ public class Shooter extends SubsystemBase {
     shootingmotor1 = SparkMax.createDefaultCANSparkMax(16);
     shootingmotor2 = SparkMax.createDefaultCANSparkMax(26);
     magazinemotor = SparkMax.createDefaultCANSparkMax(36);
-    pivotMotor = SparkMax.createDefaultCANSparkMax(17);
+
    
 
    shooterLevel = ShooterLevel.DEFAULT;
@@ -46,11 +46,7 @@ public class Shooter extends SubsystemBase {
    public void magazineMotorMovement(){
     magazinemotor.set(0.5);
   }
-//makes pivot motor move
-  public void pivotMotor(){
-    pivotMotor.set(0);
-    pivotMotor.getPIDController().setReference(180, CANSparkBase.ControlType.kPosition);
-  }
+
 //stops motors
   public void stopShootingMotor1(){
     shootingmotor1.stopMotor();
@@ -61,14 +57,11 @@ public class Shooter extends SubsystemBase {
   public void stopMagazineMotor(){
     magazinemotor.stopMotor();
   }
-  public void stopPivotMotor(){
-    pivotMotor.stopMotor();
-  }
+ 
   public void stopAllMotors(){
    stopShootingMotor1();
    stopShootingMotor2();
    stopMagazineMotor();
-   stopPivotMotor();
   }
   
   // changes the state of the shooter
