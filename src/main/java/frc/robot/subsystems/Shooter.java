@@ -99,4 +99,31 @@ public class Shooter extends SubsystemBase {
       () -> changeShooterLevel(desiredLevel)
     );
   } 
+
+  // Shooter state machine that switches between different angles
+  public void shooterStateMachine() {
+  switch (shooterLevel)
+  {
+    // Angled towards the Human Player for loading 
+    case LOAD:{
+      System.out.println("Load");
+    }
+    case FEED:{
+      System.out.println("Feed");
+    }
+    // Lays shooter flat, deafult position. 
+    case DEFAULT:{
+      System.out.println("Deafult");
+    }
+    // Angles shooter upwards
+    case AMP:{
+      System.out.println("Amp");
+    }
+    // Less steeper then Amp but more steeper then deafult, used for shooting
+    case SPEAKER:{
+      System.out.println("Speaker");
+    }
+
+  }
+  }
 }
