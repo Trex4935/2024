@@ -61,8 +61,8 @@ private Command runAuto = drivetrain.getAutoPath("curve auto- test");
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    joystick.rightBumper().onTrue(shooter.stateSwitcher(ShooterLevel.LOAD));
-    joystick.povUp().onTrue(shooter.stateSwitcher(ShooterLevel.AMP));
+    joystick.rightBumper().onTrue(pivot.stateSwitcher(ShooterLevel.LOAD));
+    joystick.povUp().onTrue(pivot.stateSwitcher(ShooterLevel.AMP));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -78,7 +78,7 @@ private Command runAuto = drivetrain.getAutoPath("curve auto- test");
     SmartDashboard.putNumber("tx", _Vision.x);
     SmartDashboard.putNumber("ty", _Vision.y);
     SmartDashboard.putNumber("ta", _Vision.area);
-    SmartDashboard.putString("angle", shooter.returnShooterLevel());
+    SmartDashboard.putString("angle", pivot.returnShooterLevel());
   }
 
   public Command getAutonomousCommand() {
