@@ -22,7 +22,6 @@ public class Shooter extends SubsystemBase {
  
  
   // Makes a new state for the shooter
-  public static ShooterLevel shooterLevel;
 
 
   /** Creates a new Shooter. */
@@ -35,7 +34,6 @@ public class Shooter extends SubsystemBase {
 
    
 
-   shooterLevel = ShooterLevel.DEFAULT;
 }
  //makes motors spin YIPPIE
   public void shooterMovement(){
@@ -63,22 +61,6 @@ public class Shooter extends SubsystemBase {
    stopShootingMotor2();
    stopMagazineMotor();
   }
-  
-  // changes the state of the shooter
-  public void changeShooterLevel(ShooterLevel desiredLevel){
-    shooterLevel = desiredLevel;
-    System.out.println(shooterLevel);
-  }
-
-  // returns the current state of the shooter
-  public String returnShooterLevel(){
-    System.out.println(shooterLevel.toString());
-    return shooterLevel.toString();
-  }
-
-  public void netTbls(SendableBuilder builder) {
-    builder.addStringProperty("Angle", this::returnShooterLevel, null);
-  }
 
   @Override
   public void periodic() {
@@ -86,39 +68,5 @@ public class Shooter extends SubsystemBase {
     
   }
 
-  // takes in a state and makes it the current one
-  public Command stateSwitcher(ShooterLevel desiredLevel){
-    return runOnce(
-      () -> changeShooterLevel(desiredLevel)
-    );
-  } 
-
-  // Shooter state machine that switches between different angles
-  public void shooterStateMachine() {
-  switch (shooterLevel)
-  {
-    // Angled towards the Human Player for loading 
-    case LOAD:
-      System.out.println("Load");
-      break;
-    case FEED:
-      System.out.println("Feed");
-      break;
-    // Lays shooter flat, deafult position. 
-    case DEFAULT:
-      System.out.println("Deafult");
-      break;
-    // Angles shooter upwards
-    case AMP:
-      System.out.println("Amp");
-      break;
-    // Less steeper then Amp but more steeper then deafult, used for shooting
-    case SPEAKER:
-      System.out.println("Speaker");
-      break;
-
-    default:
-    System.out.println("Deafult");
-  }
-  }
+  
 }
