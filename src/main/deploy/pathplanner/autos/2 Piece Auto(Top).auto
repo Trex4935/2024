@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.6093327560320605,
-      "y": 2.5708828641856574
+      "x": 1.0,
+      "y": 7.0
     },
     "rotation": 0
   },
@@ -14,12 +14,18 @@
         {
           "type": "path",
           "data": {
-            "pathName": "curve path- test"
+            "pathName": "2 Piece Auto(Top-1)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 Piece Auto(Top-2)"
           }
         }
       ]
     }
   },
-  "folder": "Test Autos",
+  "folder": "2 Piece Autos",
   "choreoAuto": false
 }
