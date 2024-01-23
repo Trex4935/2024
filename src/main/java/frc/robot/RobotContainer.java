@@ -27,7 +27,6 @@ import frc.robot.subsystems.Shooter;
 public class RobotContainer {
 
   private final Shooter shooter = new Shooter();
-  private final Intake intake = new Intake();
   private final Vision vision = new Vision();
   private final Pivot pivot = new Pivot();
   public static NoteState noteState = NoteState.OPEN;
@@ -89,7 +88,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("tx", _Vision.x);
     SmartDashboard.putNumber("ty", _Vision.y);
     SmartDashboard.putNumber("ta", _Vision.area);
-    SmartDashboard.putString("angle", shooter.returnShooterLevel());
+    SmartDashboard.putString("angle", pivot.returnShooterLevel());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
 
