@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase {
   //Creates motor class
     intakemotor = SparkMax.createDefaultCANSparkMax(0);
   }
-//Makes motor spin
+/** Makes motor spin */
   public void intakeMovement(){
     intakemotor.set(0.9);
   }
