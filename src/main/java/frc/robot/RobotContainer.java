@@ -7,10 +7,12 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -25,7 +27,6 @@ import frc.robot.subsystems.Shooter;
 public class RobotContainer {
 
   private final Shooter shooter = new Shooter();
-  private final Intake intake = new Intake();
   private final Vision vision = new Vision();
   private final Pivot pivot = new Pivot();
   public static NoteState noteState = NoteState.OPEN;
@@ -43,13 +44,16 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   
-//path follower
-private Command runAuto = drivetrain.getAutoPath("curve auto- test");
-  
+
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
+  private final Intake intake = new Intake();
+  private Vision _Vision = new Vision();
+  private final SendableChooser<Command> autoChooser;
+
   private void configureBindings() {
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+ 
+   drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> drive.withVelocityX(joystick.getLeftY() * MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
             .withVelocityY(joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
@@ -75,16 +79,22 @@ private Command runAuto = drivetrain.getAutoPath("curve auto- test");
 
   public RobotContainer() {
     configureBindings();
+
+  
     //SmartDashboard.putData(_Vision.x);
     //SmartDashboard.putData(_Vision.y);
     //SmartDashboard.putData(_Vision.area);
-    SmartDashboard.putNumber("tx", vision.x);
-    SmartDashboard.putNumber("ty", vision.y);
-    SmartDashboard.putNumber("ta", vision.area);
+
+    SmartDashboard.putNumber("tx", _Vision.x);
+    SmartDashboard.putNumber("ty", _Vision.y);
+    SmartDashboard.putNumber("ta", _Vision.area);
     SmartDashboard.putString("angle", pivot.returnShooterLevel());
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Mode", autoChooser);
+
   }
 
   public Command getAutonomousCommand() {
-    return runAuto;
+    return autoChooser.getSelected();
   }
 }
