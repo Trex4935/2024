@@ -4,24 +4,47 @@
 
 package frc.robot.subsystems;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.ShooterLevel;
 import frc.robot.extension.SparkMax;
-import frc.robot.extension.ShooterLevel;
  
 public class Pivot extends SubsystemBase {
 
   /** Creates a new Pivot. */
    CANSparkMax pivotMotor;
+   PIDController pid;
+
+   // Initializes a duty cycle encoder
+   DutyCycleEncoder encoder;
+   
+   private HashMap<String, Double> stateAngle;
+   
+   
     public static ShooterLevel shooterLevel;
   public Pivot() {
     pivotMotor = SparkMax.createDefaultCANSparkMax(17);
-     shooterLevel = ShooterLevel.DEFAULT;
+    shooterLevel = ShooterLevel.DEFAULT;
+    encoder = new DutyCycleEncoder(0);
+    pid = new PIDController(0, 0 ,0);
+
+    stateAngle = new HashMap<String,Double>();
+    stateAngle.put("Default", 30.0);
+    stateAngle.put("Amp", 60.0);
+    stateAngle.put("Speaker", 90.0);
+    stateAngle.put("Feed", 120.0);
+    stateAngle.put("Load", 150.0);
+
+
   }
 
 /** makes pivot motor move */
@@ -49,6 +72,7 @@ public class Pivot extends SubsystemBase {
   public void netTbls(SendableBuilder builder) {
     builder.addStringProperty("Angle", this::returnShooterLevel, null);
   }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -63,30 +87,7 @@ public class Pivot extends SubsystemBase {
 
   // Shooter state machine that switches between different angles
   public void shooterStateMachine() {
-    switch (shooterLevel)
-    {
-      // Angled towards the Human Player for loading 
-      case LOAD:
-        System.out.println("Load");
-        break;
-      case FEED:
-        System.out.println("Feed");
-        break;
-      // Lays shooter flat, deafult position. 
-      case DEFAULT:
-        System.out.println("Deafult");
-        break;
-      // Angles shooter upwards
-      case AMP:
-        System.out.println("Amp");
-        break;
-      // Less steeper then Amp but more steeper then deafult, used for shooting
-      case SPEAKER:
-        System.out.println("Speaker");
-        break;
-  
-      default:
-      System.out.println("Deafult");
-    }
+    pivotMotor.set(pid.calculate(encoder.getDistance(), (stateAngle.get(returnShooterLevel()))));
+    
     }
 }
