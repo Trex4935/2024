@@ -28,7 +28,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   private final Vision vision = new Vision();
   private final Pivot pivot = new Pivot();
-  public static NoteState noteState = NoteState.OPEN;
+  public static NoteState noteState = NoteState.FIELD;
   private double MaxSpeed = 1; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
@@ -64,8 +64,8 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    joystick.rightBumper().onTrue(pivot.stateSwitcher(ShooterLevel.LOAD));
-    joystick.povUp().onTrue(pivot.stateSwitcher(ShooterLevel.AMP));
+    joystick.rightBumper().onTrue(pivot.stateSwitcher(ShooterLevel.Load));
+    joystick.povUp().onTrue(pivot.stateSwitcher(ShooterLevel.Amp));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));

@@ -6,9 +6,9 @@ package frc.robot.extension;
 
 /** Add your docs here. */
 public enum ShooterLevel {
-    DEFAULT,
-    SPEAKER,
-    AMP,
-    FEED,
-    LOAD
+    Default,
+    Speaker,
+    Amp,
+    Feed,
+    Load
 }
