@@ -68,8 +68,8 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    joystick.rightBumper().onTrue(pivot.stateSwitcher(ShooterLevel.LOAD));
-    joystick.povUp().onTrue(pivot.stateSwitcher(ShooterLevel.AMP));
+    joystick.rightBumper().onTrue(pivot.stateSwitcher(ShooterLevel.Load));
+    joystick.povUp().onTrue(pivot.stateSwitcher(ShooterLevel.Amp));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
