@@ -4,31 +4,34 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.extension.SparkMax;
-
 public class Intake extends SubsystemBase {
-  /** Creates a new Intake. */
-
-  //Declaring NEO
-  CANSparkMax intakemotor;
-
+  // DoubleSolenoid doublesolenoid;
+  Solenoid solenoid;
+  /** Creates a new IntakeLift. */
   public Intake() {
-  //Creates motor class
-    intakemotor = SparkMax.createDefaultCANSparkMax(0);
+    // doublesolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,33, 44);
+    solenoid = new Solenoid(PneumaticsModuleType.REVPH, 22);
+
   }
-/** Makes motor spin */
-  public void intakeMovement(){
-    intakemotor.set(0.9);
-  }
-//Stops motor
-  public void stopIntakeMotor(){
-    intakemotor.stopMotor();
+  public void switchIntake() {
+    solenoid.toggle();
   }
 
+
+  public boolean getIntakeState() {
+    return solenoid.get();
+  }
+
+
+
+  public void initSendable(SendableBuilder builder){
+    builder.addBooleanProperty("Intake Dropped", this::getIntakeState, null);
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

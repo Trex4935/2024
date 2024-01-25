@@ -4,14 +4,10 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.SparkMax;
-import frc.robot.extension.ShooterLevel;
 
 public class Shooter extends SubsystemBase {
 
