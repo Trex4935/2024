@@ -29,7 +29,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   private final Vision vision = new Vision();
   private final Pivot pivot = new Pivot();
-  public static NoteState noteState = NoteState.OPEN;
+  public static NoteState noteState = NoteState.FIELD;
   private double MaxSpeed = 1; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
