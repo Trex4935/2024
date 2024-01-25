@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.ShooterLevel;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 
@@ -47,8 +46,6 @@ public class RobotContainer {
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
-  private final Intake intake = new Intake();
-  private Vision _Vision = new Vision();
   private final SendableChooser<Command> autoChooser;
 
   private void configureBindings() {
@@ -64,7 +61,6 @@ public class RobotContainer {
     joystick.b().whileTrue(drivetrain
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
     joystick.x().whileTrue(Commands.runEnd(() -> shooter.shooterMovement(), () -> shooter.stopAllMotors(), shooter));
-    joystick.y().whileTrue(Commands.runEnd(() -> intake.intakeMovement(), () -> intake.stopIntakeMotor(), intake));
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -85,9 +81,9 @@ public class RobotContainer {
     //SmartDashboard.putData(_Vision.y);
     //SmartDashboard.putData(_Vision.area);
 
-    SmartDashboard.putNumber("tx", _Vision.x);
-    SmartDashboard.putNumber("ty", _Vision.y);
-    SmartDashboard.putNumber("ta", _Vision.area);
+    SmartDashboard.putNumber("tx", vision.x);
+    SmartDashboard.putNumber("ty", vision.y);
+    SmartDashboard.putNumber("ta", vision.area);
     SmartDashboard.putString("angle", pivot.returnShooterLevel());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);

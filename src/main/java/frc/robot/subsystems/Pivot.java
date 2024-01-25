@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import java.util.HashMap;
-
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
