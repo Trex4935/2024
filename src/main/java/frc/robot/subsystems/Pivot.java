@@ -11,7 +11,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
-import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.ShooterLevel;
@@ -32,7 +31,7 @@ public class Pivot extends SubsystemBase {
   public Pivot() {
     pivotMotor = SparkMax.createDefaultCANSparkMax(17);
     pivotMotor = SparkMax.configPIDwithSmartMotion(pivotMotor, 0, 0, 0, 0, 0, 1, 1, 0);
-    shooterLevel = ShooterLevel.DEFAULT;
+    shooterLevel = ShooterLevel.Default;
     absEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
     pivotMotor.getPIDController().setFeedbackDevice(absEncoder);
 
@@ -48,8 +47,11 @@ public class Pivot extends SubsystemBase {
 
 /** makes pivot motor move */
   public void runPivotMotor(){
-    pivotMotor.set(0);
-    pivotMotor.getPIDController().setReference(180, CANSparkBase.ControlType.kPosition);
+    pivotMotor.set(0.1);
+  }
+
+  public void reversePivotMotor(){
+    pivotMotor.set(-0.1);
   }
 
   public void stopPivotMotor(){
@@ -66,10 +68,6 @@ public class Pivot extends SubsystemBase {
   public String returnShooterLevel(){
     System.out.println(shooterLevel.toString());
     return shooterLevel.toString();
-  }
-
-  public void netTbls(SendableBuilder builder) {
-    builder.addStringProperty("Angle", this::returnShooterLevel, null);
   }
 
   @Override
