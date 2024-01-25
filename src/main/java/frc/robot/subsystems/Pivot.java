@@ -5,14 +5,12 @@
 package frc.robot.subsystems;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.ShooterLevel;
@@ -22,10 +20,9 @@ public class Pivot extends SubsystemBase {
 
   /** Creates a new Pivot. */
    CANSparkMax pivotMotor;
-   PIDController pid;
 
    // Initializes a duty cycle encoder
-   DutyCycleEncoder encoder;
+   SparkAbsoluteEncoder absEncoder;
    
    private HashMap<String, Double> stateAngle;
    
@@ -33,9 +30,10 @@ public class Pivot extends SubsystemBase {
     public static ShooterLevel shooterLevel;
   public Pivot() {
     pivotMotor = SparkMax.createDefaultCANSparkMax(17);
-    shooterLevel = ShooterLevel.DEFAULT;
-    encoder = new DutyCycleEncoder(0);
-    pid = new PIDController(0, 0 ,0);
+    pivotMotor = SparkMax.configPIDwithSmartMotion(pivotMotor, 0, 0, 0, 0, 0, 1, 1, 0);
+    shooterLevel = ShooterLevel.Default;
+    absEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    pivotMotor.getPIDController().setFeedbackDevice(absEncoder);
 
     stateAngle = new HashMap<String,Double>();
     stateAngle.put("Default", 30.0);
@@ -49,8 +47,11 @@ public class Pivot extends SubsystemBase {
 
 /** makes pivot motor move */
   public void runPivotMotor(){
-    pivotMotor.set(0);
-    pivotMotor.getPIDController().setReference(180, CANSparkBase.ControlType.kPosition);
+    pivotMotor.set(0.1);
+  }
+
+  public void reversePivotMotor(){
+    pivotMotor.set(-0.1);
   }
 
   public void stopPivotMotor(){
@@ -69,10 +70,6 @@ public class Pivot extends SubsystemBase {
     return shooterLevel.toString();
   }
 
-  public void netTbls(SendableBuilder builder) {
-    builder.addStringProperty("Angle", this::returnShooterLevel, null);
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -87,7 +84,6 @@ public class Pivot extends SubsystemBase {
 
   // Shooter state machine that switches between different angles
   public void shooterStateMachine() {
-    pivotMotor.set(pid.calculate(encoder.getDistance(), (stateAngle.get(returnShooterLevel()))));
-    
-    }
+    pivotMotor.getPIDController().setReference(stateAngle.get(returnShooterLevel()), CANSparkBase.ControlType.kSmartMotion);
+  }
 }
