@@ -6,7 +6,12 @@ package frc.robot.extension;
 
 /** Add your docs here. */
 public enum NoteState {
-    SHOOTER,
+    FIELD,
     INTAKE,
-    OPEN
+    GRABBED,
+    CONTROL,
+    STORAGE,
+    LOADING,
+    SPEAKER,
+    AMP
 }
