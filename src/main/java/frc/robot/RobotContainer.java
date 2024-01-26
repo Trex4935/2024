@@ -23,11 +23,12 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
 
   private final Shooter shooter = new Shooter();
-  private final Vision vision = new Vision();
+  private final Vision vision = new Vision("LL1");
   private final Pivot pivot = new Pivot();
   public static NoteState noteState = NoteState.OPEN;
   private double MaxSpeed = 1; // 6 meters per second desired top speed
@@ -48,7 +49,6 @@ public class RobotContainer {
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
   private final Intake intake = new Intake();
-  private Vision _Vision = new Vision();
   private final SendableChooser<Command> autoChooser;
 
   private void configureBindings() {
@@ -85,9 +85,9 @@ public class RobotContainer {
     //SmartDashboard.putData(_Vision.y);
     //SmartDashboard.putData(_Vision.area);
 
-    SmartDashboard.putNumber("tx", _Vision.x);
-    SmartDashboard.putNumber("ty", _Vision.y);
-    SmartDashboard.putNumber("ta", _Vision.area);
+    // SmartDashboard.putNumber("tx", _Vision.x);
+    // SmartDashboard.putNumber("ty", _Vision.y);
+    // SmartDashboard.putNumber("ta", _Vision.area);
     SmartDashboard.putString("angle", pivot.returnShooterLevel());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
