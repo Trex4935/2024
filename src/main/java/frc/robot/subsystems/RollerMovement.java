@@ -9,8 +9,8 @@ public class RollerMovement extends SubsystemBase {
     CANSparkMax rollermotor1;
     CANSparkMax lowmagazine;
     CANSparkMax highmagazine;
-
-
+double x;
+double y;
 
 
 public RollerMovement(){
@@ -21,14 +21,15 @@ highmagazine = SparkMax.createDefaultCANSparkMax(10);
 }
 
 // Roller movement speed
-public void onRollerMotor(){
-    rollermotor1.set(0.1);
+public void onRollerMotor(double speed){
+    rollermotor1.set(speed);
+    
 }
-public void onLowMagazine(){
-    lowmagazine.set(0.1);
+public void onLowMagazine(double speed){
+    lowmagazine.set(speed);
 }
-public void onHighMagazine(){
-   highmagazine.set(0.1); 
+public void onHighMagazine(double speed){
+   highmagazine.set(speed); 
 }
 
 
