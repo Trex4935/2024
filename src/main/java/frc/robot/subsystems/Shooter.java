@@ -6,15 +6,20 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.SparkMax;
 
 public class Shooter extends SubsystemBase {
 
-   //Declaring Motors
+  //Declaring Motors
   CANSparkMax shootingmotor1;
   CANSparkMax shootingmotor2;
   CANSparkMax magazinemotor;
+
+  //Declaring Inputs
+  FlippedDIO flippedDio;
  
  
   // Makes a new state for the shooter
@@ -27,7 +32,9 @@ public class Shooter extends SubsystemBase {
     shootingmotor1 = SparkMax.createDefaultCANSparkMax(16);
     shootingmotor2 = SparkMax.createDefaultCANSparkMax(26);
     magazinemotor = SparkMax.createDefaultCANSparkMax(36);
-
+    
+    //Creating Inputs
+    flippedDio = new FlippedDIO(0);
    
 
 }
