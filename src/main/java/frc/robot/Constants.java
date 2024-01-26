@@ -16,4 +16,24 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class VisionConstants {
+    public static final double LIMELIGHT_HEIGHT = 11.9; //placeholder
+    public static final double LIMELIGHT_X_TRANSLATION = 4.75; //placeholder
+    public static final double LIMELIGHT_Y_TRANSLATION = 0.0; //placeholder
+    public static final double LIMELIGHT_MOUNTING_ANGLE = 15.0; //placeholder
+
+
+    public static final double CENTER_LIMIT = 0.3;
+
+    public enum Pipeline {
+        DEFAULT(0),
+        CHUTE(1);
+
+        public final int value;
+        Pipeline(int value) {
+            this.value = value;
+        }
+    }
+  }
 }
