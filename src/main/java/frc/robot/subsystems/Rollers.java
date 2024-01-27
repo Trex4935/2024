@@ -22,8 +22,9 @@ public FlippedDIO intakeSmacna;
 public FlippedDIO magazineSmacna;
 public FlippedDIO magneticFlap;  
 
+boolean previousValue;
+boolean currentValue;
 
-private boolean previousValue;
 
 public Rollers(){
     // random id's and creating motor objects
@@ -35,6 +36,7 @@ rollerState = NoteState.FIELD;
 intakeSmacna = new FlippedDIO(0);
 magazineSmacna = new FlippedDIO(1);
 magneticFlap = new FlippedDIO(2);
+
 }
 
 public void onLowMagazine(double speed){
@@ -107,13 +109,19 @@ public void intakeSwitch(){
       case AMP:
         onLowMagazine(-0.1);
         onHighMagazine(-0.1);
-      if (previousValue != magneticFlap.get()) {
+        //set currentValue to current magnetic flap value
+      currentValue = magneticFlap.get();       
+      //check if previous magnetic value does not equal current value 
+      if (previousValue != currentValue) {
+        //if the previous value is true set note state to field
         if (previousValue){
           RobotContainer.noteLifecycle = NoteState.FIELD;
         }
         else{};
-      }
+      }      
       else{};
+      // set previousvalue to the current one
+      previousValue = currentValue;
       default:
       // Turns magazines Off
         stopHighMagazine();
