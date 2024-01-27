@@ -17,10 +17,13 @@ public class Rollers extends SubsystemBase {
     CANSparkMax lowMagazine;
     CANSparkMax highMagazine;
     NoteState rollerState;
-
+    
 public FlippedDIO intakeSmacna;
 public FlippedDIO magazineSmacna;
 public FlippedDIO magneticFlap;  
+
+
+private boolean previousValue;
 
 public Rollers(){
     // random id's and creating motor objects
@@ -33,7 +36,6 @@ intakeSmacna = new FlippedDIO(0);
 magazineSmacna = new FlippedDIO(1);
 magneticFlap = new FlippedDIO(2);
 }
-
 
 public void onLowMagazine(double speed){
     lowMagazine.set(speed);
@@ -51,6 +53,7 @@ public void stopHighMagazine(){
 @Override
   public void periodic() {
     //
+
 }
 
 public void intakeSwitch(){
@@ -104,7 +107,13 @@ public void intakeSwitch(){
       case AMP:
         onLowMagazine(-0.1);
         onHighMagazine(-0.1);
-        break;
+      if (previousValue != magneticFlap.get()) {
+        if (previousValue){
+          RobotContainer.noteLifecycle = NoteState.FIELD;
+        }
+        else{};
+      }
+      else{};
       default:
       // Turns magazines Off
         stopHighMagazine();
