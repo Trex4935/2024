@@ -11,21 +11,34 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.extension.NoteState;
+
+import frc.robot.extension.SparkMax;
 
 public class Intake extends SubsystemBase {
   // DoubleSolenoid doublesolenoid;
   Solenoid solenoid;
+
   PowerDistribution PDH;
 
   private final Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+  NoteState intakeState;
+ 
   /** Creates a new IntakeLift. */
   public Intake() {
     // doublesolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,33, 44);
     solenoid = new Solenoid(PneumaticsModuleType.REVPH, 22);
+
     PDH = new PowerDistribution(1, ModuleType.kRev);
+
+    intakeState = NoteState.FIELD;
   }
-  public void switchIntake() {
-    solenoid.toggle();
+  public void switchIntakeOn() {
+    solenoid.set(true);
+
+  }
+  public void switchIntakeOff() {
+    solenoid.set(false);
   }
   public void PDH_on(){
     PDH.setSwitchableChannel(true);
@@ -60,5 +73,20 @@ public void PDH_Toggle(){
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  public void intakeSwitch(){
+    switch (intakeState) {
+      case INTAKE:
+      // Turns Solenoid On
+        switchIntakeOn();
+        break;
+      case GRABBED:
+        switchIntakeOn();
+        break;
+      default:
+      // Turns Solenoid Off
+        switchIntakeOff();
+    }
   }
 }

@@ -20,14 +20,17 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.ShooterLevel;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
 
-  private final Shooter shooter = new Shooter();
-  private final Vision vision = new Vision();
+  private final Intake intake = new Intake();
   private final Pivot pivot = new Pivot();
+  private final Shooter shooter = new Shooter();
+  private final Vision vision = new Vision("LL1");
   public static NoteState noteState = NoteState.FIELD;
   private double MaxSpeed = 1; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
@@ -81,9 +84,9 @@ public class RobotContainer {
     //SmartDashboard.putData(_Vision.y);
     //SmartDashboard.putData(_Vision.area);
 
-    SmartDashboard.putNumber("tx", vision.x);
-    SmartDashboard.putNumber("ty", vision.y);
-    SmartDashboard.putNumber("ta", vision.area);
+    // SmartDashboard.putNumber("tx", _Vision.x);
+    // SmartDashboard.putNumber("ty", _Vision.y);
+    // SmartDashboard.putNumber("ta", _Vision.area);
     SmartDashboard.putString("angle", pivot.returnShooterLevel());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
