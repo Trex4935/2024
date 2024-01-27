@@ -1,10 +1,14 @@
 package frc.robot.subsystems;
 
+import java.util.EnumSet;
+
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.SparkMax;
+import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.NoteState;
 
@@ -53,15 +57,33 @@ public void intakeSwitch(){
     switch (rollerState) {
 
       case INTAKE:
-        onLowMagazine(0.1);
+        onLowMagazine(0.1); 
+      //intake sensor detects leading edge of note -> Grabbed state
+        if (intakeSmacna.get()){
+          RobotContainer.noteLifecycle = NoteState.GRABBED;
+        }
+        
         break;
+    
       case GRABBED:
       // Turns the low roller on
         onLowMagazine(0.1);
+      //intake sensor detects back edge of the note -> Control state
+        if (!intakeSmacna.get()){
+          RobotContainer.noteLifecycle = NoteState.CONTROL;
+        }
+      
         break;
+      
       case CONTROL:
         onLowMagazine(0.1);
+      //magazine sensor detects leading edge of note -> Storage state
+         if (magazineSmacna.get()){
+          RobotContainer.noteLifecycle = NoteState.STORAGE;
+        }
+      
         break;
+  
       case STORAGE:
         // Turns low roller off
         stopLowMagazine();
@@ -70,12 +92,19 @@ public void intakeSwitch(){
         // Turns low roller on
         onHighMagazine(0.1);
         onLowMagazine(0.1);
+        //If the magnetic flap moes away from magnet -> Speaker state
+        if (magneticFlap.get()){
+          RobotContainer.noteLifecycle = NoteState.AMP;
+        }
         break;
       case SPEAKER:
         onLowMagazine(0.1);
         onHighMagazine(0.1);
         break;
-
+      case AMP:
+        onLowMagazine(-0.1);
+        onHighMagazine(-0.1);
+        break;
       default:
       // Turns magazines Off
         stopHighMagazine();
