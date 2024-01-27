@@ -2,25 +2,32 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.SparkMax;
+import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.NoteState;
 
 
 public class Rollers extends SubsystemBase {
     CANSparkMax lowMagazine;
     CANSparkMax highMagazine;
-
     NoteState rollerState;
 
-  
-
+public FlippedDIO intakeSmacna;
+public FlippedDIO magazineSmacna;
+public FlippedDIO magneticFlap;  
 
 public Rollers(){
     // random id's and creating motor objects
 lowMagazine = SparkMax.createDefaultCANSparkMax(9);
 highMagazine = SparkMax.createDefaultCANSparkMax(10);
 rollerState = NoteState.FIELD;
+
+  //Sensor Objects
+intakeSmacna = new FlippedDIO(0);
+magazineSmacna = new FlippedDIO(1);
+magneticFlap = new FlippedDIO(2);
 }
 
 
