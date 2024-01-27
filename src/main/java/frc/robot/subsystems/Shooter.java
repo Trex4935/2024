@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.SparkMax;
+import frc.robot.extension.NoteState;
 
 public class Shooter extends SubsystemBase {
 
@@ -17,9 +18,12 @@ public class Shooter extends SubsystemBase {
   CANSparkMax shootingmotor1;
   CANSparkMax shootingmotor2;
   CANSparkMax magazinemotor;
+  NoteState shooterStateMachine;
+
 
   //Declaring Inputs
-  FlippedDIO flippedDio;
+  public FlippedDIO shooterSmacna;
+  
  
  
   // Makes a new state for the shooter
@@ -34,7 +38,8 @@ public class Shooter extends SubsystemBase {
     magazinemotor = SparkMax.createDefaultCANSparkMax(36);
     
     //Creating Inputs
-    flippedDio = new FlippedDIO(0);
+    shooterSmacna = new FlippedDIO(0);
+    shooterStateMachine = NoteState.FIELD;
    
 
 }
@@ -65,6 +70,51 @@ public class Shooter extends SubsystemBase {
    stopMagazineMotor();
   }
 
+  public void shooterSwitch (){
+    switch (shooterStateMachine){
+
+      case AMPLOADING:
+
+
+
+      break;
+
+      case AMP:
+      shootingmotor1(0.9);
+      shootingmotor2(0.9);
+
+
+      break;
+
+      case SPEAKER:
+
+
+
+      break;
+
+      
+      default:
+      stopAllMotors();
+
+
+
+
+
+
+    }
+
+
+
+  }
+
+  private void shootingmotor2(double d) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'shootingmotor2'");
+  }
+  private void shootingmotor1(double d) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'shootingmotor1'");
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

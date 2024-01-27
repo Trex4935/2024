@@ -12,6 +12,7 @@ public class Rollers extends SubsystemBase {
     CANSparkMax highMagazine;
 
     NoteState rollerState;
+    
 
   
 
