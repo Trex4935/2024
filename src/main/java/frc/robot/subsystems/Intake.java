@@ -58,13 +58,6 @@ public boolean OnOff_Compressor (){
 
 return m_compressor.isEnabled();
 }
-public void PDH_Toggle(){
-  if (OnOff_Compressor()){
-    PDH_on();}
-  else{
-    PDH_off();
-  }
-}
   
 
   public void initSendable(SendableBuilder builder){
@@ -72,6 +65,7 @@ public void PDH_Toggle(){
   }
   @Override
   public void periodic() {
+    m_compressor.isEnabled();
     // This method will be called once per scheduler run
   }
 
