@@ -13,7 +13,7 @@ public class Rollers extends SubsystemBase {
 
     NoteState rollerState;
 
-
+  
 
 
 public Rollers(){
@@ -24,11 +24,11 @@ rollerState = NoteState.FIELD;
 }
 
 
-public void onLowMagazine(){
-    lowMagazine.set(0.1);
+public void onLowMagazine(double speed){
+    lowMagazine.set(speed);
 }
-public void onHighMagazine(){
-   highMagazine.set(0.1); 
+public void onHighMagazine(double speed){
+   highMagazine.set(speed); 
 }
 
 public void stopLowMagazine(){
@@ -46,14 +46,14 @@ public void intakeSwitch(){
     switch (rollerState) {
 
       case INTAKE:
-        onLowMagazine();
+        onLowMagazine(0.1);
         break;
       case GRABBED:
       // Turns the low roller on
-        onLowMagazine();
+        onLowMagazine(0.1);
         break;
       case CONTROL:
-        onLowMagazine();
+        onLowMagazine(0.1);
         break;
       case STORAGE:
         // Turns low roller off
@@ -61,12 +61,12 @@ public void intakeSwitch(){
         break;
       case AMPLOADING:
         // Turns low roller on
-        onHighMagazine();
-        onLowMagazine();
+        onHighMagazine(0.1);
+        onLowMagazine(0.1);
         break;
       case SPEAKER:
-        onLowMagazine();
-        onHighMagazine();
+        onLowMagazine(0.1);
+        onHighMagazine(0.1);
         break;
 
       default:
