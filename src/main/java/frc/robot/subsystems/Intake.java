@@ -7,8 +7,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.NoteState;
@@ -19,7 +17,6 @@ public class Intake extends SubsystemBase {
   // DoubleSolenoid doublesolenoid;
   Solenoid solenoid;
 
-  PowerDistribution PDH;
 
   private final Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
   NoteState intakeState;
@@ -28,8 +25,6 @@ public class Intake extends SubsystemBase {
   public Intake() {
     // doublesolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,33, 44);
     solenoid = new Solenoid(PneumaticsModuleType.REVPH, 22);
-
-    PDH = new PowerDistribution(1, ModuleType.kRev);
 
     intakeState = NoteState.FIELD;
   }
@@ -40,31 +35,10 @@ public class Intake extends SubsystemBase {
   public void switchIntakeOff() {
     solenoid.set(false);
   }
-  public void PDH_on(){
-    PDH.setSwitchableChannel(true);
-  }
-  public void PDH_off(){
-    PDH.setSwitchableChannel(false);
-  }
 
   public boolean getIntakeState() {
     return solenoid.get();
   }
-  
-  public double sensePSI (){
-    return m_compressor.getPressure();
-  }
-public boolean OnOff_Compressor (){
-
-return m_compressor.isEnabled();
-}
-public void PDH_Toggle(){
-  if (OnOff_Compressor()){
-    PDH_on();}
-  else{
-    PDH_off();
-  }
-}
   
 
   public void initSendable(SendableBuilder builder){
@@ -72,6 +46,7 @@ public void PDH_Toggle(){
   }
   @Override
   public void periodic() {
+    m_compressor.isEnabled();
     // This method will be called once per scheduler run
   }
 
