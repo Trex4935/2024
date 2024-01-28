@@ -55,7 +55,7 @@ public class Shooter extends SubsystemBase {
 
   // state machine for shooter motors
   public void shooterSwitch() {
-    switch (RobotContainer.noteState) {
+    switch (RobotContainer.noteLifecycle) {
 
       case AMPLOADING:
         shooterMovement(0);
