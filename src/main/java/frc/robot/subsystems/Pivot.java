@@ -14,15 +14,19 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.apriltag.jni.AprilTagJNI.Helper;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.ShooterLevel;
 import frc.robot.extension.SparkMax;
 
 
- 
-public class Pivot extends SubsystemBase {
 
+public class Pivot extends SubsystemBase {
+FlippedDIO limitSwitch;
+// limit switch ex value
+int x = 20;
   /** Creates a new Pivot. */
   CANSparkMax pivotMotor;
 
@@ -43,6 +47,7 @@ public class Pivot extends SubsystemBase {
     relativeEncoder = pivotMotor.getEncoder();
     pivotMotor.getPIDController().setFeedbackDevice(relativeEncoder);
 
+    limitSwitch = new FlippedDIO(1);
     stateAngle = new HashMap<String,Double>();
     stateAngle.put("Default", 30.0);
     stateAngle.put("Amp", 60.0);
@@ -52,6 +57,10 @@ public class Pivot extends SubsystemBase {
 
 
   }
+  
+  
+
+ 
 
 /** makes pivot motor move */
   public void runPivotMotor(){
@@ -96,5 +105,15 @@ public class Pivot extends SubsystemBase {
     pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kSmartMotion);
     // Checks to see if the pivot angle is close to the expected angle, can be used anywhere
     pivotAtAngle = MathUtil.isNear(targetAngle, pivotMotor.getEncoder().getPosition(), 50.0);
+  }
+
+  public void limitSwitchStop(){
+    if (limitSwitch.get()){
+
+    }
+    else if (limitSwitch.get()){
+
+    }
+    else {}
   }
 }
