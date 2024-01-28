@@ -4,7 +4,6 @@ import java.util.EnumSet;
 
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.SparkMax;
 import frc.robot.Constants;

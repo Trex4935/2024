@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.NoteState;
 
-import frc.robot.extension.SparkMax;
 
 public class Intake extends SubsystemBase {
   // DoubleSolenoid doublesolenoid;
