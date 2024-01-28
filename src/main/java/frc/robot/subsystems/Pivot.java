@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.util.HashMap;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
@@ -21,7 +22,7 @@ public class Pivot extends SubsystemBase {
    CANSparkMax pivotMotor;
 
    // Initializes a duty cycle encoder
-   SparkAbsoluteEncoder absEncoder;
+   RelativeEncoder relativeEncoder;
    
    private HashMap<String, Double> stateAngle;
    
@@ -31,8 +32,8 @@ public class Pivot extends SubsystemBase {
     pivotMotor = SparkMax.createDefaultCANSparkMax(17);
     pivotMotor = SparkMax.configPIDwithSmartMotion(pivotMotor, 0, 0, 0, 0, 0, 1, 1, 0);
     shooterLevel = ShooterLevel.Default;
-    absEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
-    pivotMotor.getPIDController().setFeedbackDevice(absEncoder);
+    relativeEncoder = pivotMotor.getEncoder();
+    pivotMotor.getPIDController().setFeedbackDevice(relativeEncoder);
 
     stateAngle = new HashMap<String,Double>();
     stateAngle.put("Default", 30.0);
