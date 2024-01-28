@@ -11,24 +11,32 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.apriltag.jni.AprilTagJNI.Helper;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.ShooterLevel;
 import frc.robot.extension.SparkMax;
+
+
  
 public class Pivot extends SubsystemBase {
 
   /** Creates a new Pivot. */
-   CANSparkMax pivotMotor;
+  CANSparkMax pivotMotor;
 
    // Initializes a duty cycle encoder
-   RelativeEncoder relativeEncoder;
-   
-   private HashMap<String, Double> stateAngle;
-   
-   
-    public static ShooterLevel shooterLevel;
+  RelativeEncoder relativeEncoder;
+   // Makes a Hash Map for the Pivot State Machine
+  private HashMap<String, Double> stateAngle;
+
+  public static ShooterLevel shooterLevel;
+
+  public static boolean pivotAtAngle;
+
   public Pivot() {
+
     pivotMotor = SparkMax.createDefaultCANSparkMax(17);
     pivotMotor = SparkMax.configPIDwithSmartMotion(pivotMotor, 0, 0, 0, 0, 0, 1, 1, 0);
     shooterLevel = ShooterLevel.Default;
@@ -84,6 +92,9 @@ public class Pivot extends SubsystemBase {
 
   // Shooter state machine that switches between different angles
   public void shooterStateMachine() {
-    pivotMotor.getPIDController().setReference(stateAngle.get(returnShooterLevel()), CANSparkBase.ControlType.kSmartMotion);
+    double targetAngle = stateAngle.get(returnShooterLevel());
+    pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kSmartMotion);
+    // Checks to see if the pivot angle is close to the expected angle, can be used anywhere
+    pivotAtAngle = MathUtil.isNear(targetAngle, pivotMotor.getEncoder().getPosition(), 50.0);
   }
 }
