@@ -6,120 +6,84 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.SparkMax;
-import frc.robot.extension.NoteState;
 
 public class Shooter extends SubsystemBase {
 
-  //Declaring Motors
+  // Declaring Motors
   CANSparkMax shootingmotor1;
   CANSparkMax shootingmotor2;
-  CANSparkMax magazinemotor;
-  NoteState shooterStateMachine;
 
-
-  //Declaring Inputs
+  // Declaring Inputs
   public FlippedDIO shooterSmacna;
-  
- 
- 
-  // Makes a new state for the shooter
 
+  // Makes a new state for the shooter
 
   /** Creates a new Shooter. */
   public Shooter() {
 
-    //Creating Motor Objects
+    // Creating Motor Objects
     shootingmotor1 = SparkMax.createDefaultCANSparkMax(16);
     shootingmotor2 = SparkMax.createDefaultCANSparkMax(26);
-    magazinemotor = SparkMax.createDefaultCANSparkMax(36);
-    
-    //Creating Inputs
+
+    // Creating Inputs
     shooterSmacna = new FlippedDIO(0);
-    shooterStateMachine = NoteState.FIELD;
-   
 
-}
- //makes motors spin YIPPIE
-  public void shooterMovement(){
-    shootingmotor1.set(-0.8);
-    shootingmotor2.set(0.8);
-  }
-//makes magazine motor spin
-   public void magazineMotorMovement(){
-    magazinemotor.set(0.5);
   }
 
-//stops motors
-  public void stopShootingMotor1(){
+  // makes motors spin YIPPIE
+  public void shooterMovement(double speed) {
+    shootingmotor1.set(speed);
+    shootingmotor2.set(-speed);
+  }
+
+  // stops motors
+  public void stopShootingMotor1() {
     shootingmotor1.stopMotor();
   }
-  public void stopShootingMotor2(){
+
+  public void stopShootingMotor2() {
     shootingmotor2.stopMotor();
   }
-  public void stopMagazineMotor(){
-    magazinemotor.stopMotor();
-  }
- 
-  public void stopAllMotors(){
-   stopShootingMotor1();
-   stopShootingMotor2();
-   stopMagazineMotor();
+
+  public void stopAllMotors() {
+    stopShootingMotor1();
+    stopShootingMotor2();
   }
 
-  public void shooterSwitch (){
-    switch (shooterStateMachine){
+  // state machine for shooter motors
+  public void shooterSwitch() {
+    switch (RobotContainer.noteState) {
 
       case AMPLOADING:
-
-
-
-      break;
+        shooterMovement(0);
+        break;
 
       case AMP:
-      shootingmotor1(0.9);
-      shootingmotor2(0.9);
+        shooterMovement(0);
 
-
-      break;
+        break;
 
       case SPEAKER:
+        shooterMovement(0);
 
+        break;
 
-
-      break;
-
-      
       default:
-      stopAllMotors();
-
-
-
-
-
+        // turns all the motors off
+        stopAllMotors();
 
     }
 
-
-
   }
 
-  private void shootingmotor2(double d) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'shootingmotor2'");
-  }
-  private void shootingmotor1(double d) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'shootingmotor1'");
-  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    
+
   }
 
-  
 }
