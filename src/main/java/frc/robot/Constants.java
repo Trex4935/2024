@@ -31,9 +31,9 @@ public final class Constants {
   }
 
   public static final double fieldLength = Units.inchesToMeters(651.25);
-    public static final double fieldWidth = Units.inchesToMeters(315.5);
+    public static final double fieldWidth = Units.inchesToMeters(323.25);
     public static final double tapeWidth = Units.inchesToMeters(2.0);
-    public static final double aprilTagWidth = Units.inchesToMeters(6.0);
+    public static final double aprilTagWidth = Units.inchesToMeters(6.5);
 
   public static final double FRAME_PERIMETER = 29;
   public static final double CENTER_OFFSET = Units.inchesToMeters(FRAME_PERIMETER / 2.0 + 15.0);
