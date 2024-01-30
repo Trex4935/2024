@@ -61,7 +61,7 @@ public class Rollers extends SubsystemBase {
   public void intakeSwitch() {
     switch (rollerState) {
 
-      case INTAKE:
+      case GROUNDINTAKE:
         onLowMagazine(0.1);
         // intake sensor detects leading edge of note -> Grabbed state
         if (intakeSmacna.get()) {

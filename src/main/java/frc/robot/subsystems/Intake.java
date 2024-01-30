@@ -11,15 +11,13 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.NoteState;
 
-
 public class Intake extends SubsystemBase {
   // DoubleSolenoid doublesolenoid;
   Solenoid solenoid;
 
-
   private final Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
   NoteState intakeState;
- 
+
   /** Creates a new IntakeLift. */
   public Intake() {
     // doublesolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,33, 44);
@@ -27,10 +25,12 @@ public class Intake extends SubsystemBase {
 
     intakeState = NoteState.FIELD;
   }
+
   public void switchIntakeOn() {
     solenoid.set(true);
 
   }
+
   public void switchIntakeOff() {
     solenoid.set(false);
   }
@@ -38,28 +38,28 @@ public class Intake extends SubsystemBase {
   public boolean getIntakeState() {
     return solenoid.get();
   }
-  
 
-  public void initSendable(SendableBuilder builder){
+  public void initSendable(SendableBuilder builder) {
     builder.addBooleanProperty("Intake Dropped", this::getIntakeState, null);
   }
+
   @Override
   public void periodic() {
     m_compressor.isEnabled();
     // This method will be called once per scheduler run
   }
 
-  public void intakeSwitch(){
+  public void intakeSwitch() {
     switch (intakeState) {
-      case INTAKE:
-      // Turns Solenoid On
+      case GROUNDINTAKE:
+        // Turns Solenoid On
         switchIntakeOn();
         break;
       case GRABBED:
         switchIntakeOn();
         break;
       default:
-      // Turns Solenoid Off
+        // Turns Solenoid Off
         switchIntakeOff();
     }
   }
