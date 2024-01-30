@@ -39,15 +39,17 @@ public class Shooter extends SubsystemBase {
     shootingmotor2.set(-speed);
   }
 
-  // stops motors
+  // stops motor 1
   public void stopShootingMotor1() {
     shootingmotor1.stopMotor();
   }
 
+  // stops motor 2
   public void stopShootingMotor2() {
     shootingmotor2.stopMotor();
   }
 
+  // stop all motors
   public void stopAllMotors() {
     stopShootingMotor1();
     stopShootingMotor2();
@@ -57,20 +59,19 @@ public class Shooter extends SubsystemBase {
   public void shooterSwitch() {
     switch (RobotContainer.noteLifecycle) {
 
+      // Note is moving to the amp drop position
       case AMPLOADING:
         shooterMovement(0);
         break;
-
+      // Note is dropped into the amp
       case AMP:
         shooterMovement(0);
-
         break;
-
+      // Note is shot out towards speaker
       case SPEAKER:
         shooterMovement(0);
-
         break;
-
+      // Deafult Position of the Shooter angled at 180 degrees approximately
       default:
         // turns all the motors off
         stopAllMotors();
