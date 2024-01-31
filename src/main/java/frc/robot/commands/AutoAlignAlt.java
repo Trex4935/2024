@@ -19,14 +19,14 @@ import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.Constants;
 import frc.robot.Constants.ALIGNMENT_POSITION;
 
-public class AutoAlign extends Command {
+public class AutoAlignAlt extends Command {
 	/** Creates a new align. */
 	private final CommandSwerveDrivetrain drivetrain;
 	private final Timer timer;
 	private final ALIGNMENT_POSITION position;
 	private PathPlannerPath path;
 
-	public AutoAlign(CommandSwerveDrivetrain drivetrain, ALIGNMENT_POSITION position) {
+	public AutoAlignAlt(CommandSwerveDrivetrain drivetrain, ALIGNMENT_POSITION position) {
 		// Use addRequirements() here to declare subsystem dependencies.
 
 		this.drivetrain = drivetrain;
@@ -44,20 +44,9 @@ public class AutoAlign extends Command {
 		double targetX = tagLocation.getX() + position.offset.getX();
 		double targetY = tagLocation.getY() + position.offset.getY();
 		Rotation2d targetTheta = position.offset.getRotation();
-
-		Pose2d midPoint = new Pose2d(targetX + 0.2, targetY, targetTheta);
 		Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
 
-		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-				new Pose2d(robotPose.getTranslation(), position.heading),
-				new Pose2d(midPoint.getTranslation(), position.heading),
-				new Pose2d(targetPose.getTranslation(), position.heading));
-
-		path = new PathPlannerPath(bezierPoints,
-				new PathConstraints(3, 3, 3, 3),
-				new GoalEndState(0, new Rotation2d()));
-
-		Command autoCommand = AutoBuilder.followPath(path);
+		Command autoCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(3, 3, 3, 3), 0);
 		autoCommand.schedule();
 		timer.reset();
 	}

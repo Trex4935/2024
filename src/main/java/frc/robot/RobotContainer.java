@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -27,73 +29,71 @@ import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
 
-  private final Intake intake = new Intake();
-  private final Pivot pivot = new Pivot();
-  private final Shooter shooter = new Shooter();
-  private final Vision vision = new Vision("LL1");
-  public static NoteState noteState = NoteState.FIELD;
-  private double MaxSpeed = 1; // 6 meters per second desired top speed
-  private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+	private final Intake intake = new Intake();
+	private final Pivot pivot = new Pivot();
+	private final Shooter shooter = new Shooter();
+	private final Vision vision = new Vision("LL1");
+	public static NoteState noteState = NoteState.FIELD;
+	private double MaxSpeed = 1; // 6 meters per second desired top speed
+	private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
-  /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
-  public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+	/* Setting up bindings for necessary control of the swerve drive platform */
+	private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
+	public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-                                                               // driving in open loop
-  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  
+	private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+			.withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+			.withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+																																// driving in open loop
+	private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+	private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-  private final Telemetry logger = new Telemetry(MaxSpeed);
+	private final Telemetry logger = new Telemetry(MaxSpeed);
 
-  private final SendableChooser<Command> autoChooser;
+	private final SendableChooser<Command> autoChooser;
 
-  private void configureBindings() {
- 
-   drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(joystick.getLeftY() * MaxSpeed) // Drive forward with
-                                                                                           // negative Y (forward)
-            .withVelocityY(joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));
+	private void configureBindings() {
 
-    joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    joystick.b().whileTrue(drivetrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
-    joystick.x().whileTrue(Commands.runEnd(() -> shooter.shooterMovement(), () -> shooter.stopAllMotors(), shooter));
+		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+				drivetrain.applyRequest(() -> drive.withVelocityX(joystick.getLeftY() * MaxSpeed) // Drive forward with
+																																													// negative Y (forward)
+						.withVelocityY(joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+						.withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+				));
 
-    // reset the field-centric heading on left bumper press
-    joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    joystick.rightBumper().onTrue(pivot.stateSwitcher(ShooterLevel.Load));
-    joystick.povUp().onTrue(pivot.stateSwitcher(ShooterLevel.Amp));
+		joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+		joystick.b().whileTrue(drivetrain
+				.applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+		joystick.x().whileTrue(Commands.runEnd(() -> shooter.shooterMovement(), () -> shooter.stopAllMotors(), shooter));
 
-    if (Utils.isSimulation()) {
-      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-    }
-    drivetrain.registerTelemetry(logger::telemeterize);
-  }
+		// reset the field-centric heading on left bumper press
+		joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+		joystick.rightBumper().onTrue(pivot.stateSwitcher(ShooterLevel.Load));
+		joystick.povUp().onTrue(pivot.stateSwitcher(ShooterLevel.Amp));
 
-  public RobotContainer() {
-    configureBindings();
+		if (Utils.isSimulation()) {
+			drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+		}
+		drivetrain.registerTelemetry(logger::telemeterize);
+	}
 
-  
-    //SmartDashboard.putData(_Vision.x);
-    //SmartDashboard.putData(_Vision.y);
-    //SmartDashboard.putData(_Vision.area);
+	public RobotContainer() {
+		configureBindings();
 
-    // SmartDashboard.putNumber("tx", _Vision.x);
-    // SmartDashboard.putNumber("ty", _Vision.y);
-    // SmartDashboard.putNumber("ta", _Vision.area);
-    SmartDashboard.putString("angle", pivot.returnShooterLevel());
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Mode", autoChooser);
+		// SmartDashboard.putData(_Vision.x);
+		// SmartDashboard.putData(_Vision.y);
+		// SmartDashboard.putData(_Vision.area);
 
-  }
+		// SmartDashboard.putNumber("tx", _Vision.x);
+		// SmartDashboard.putNumber("ty", _Vision.y);
+		// SmartDashboard.putNumber("ta", _Vision.area);
+		SmartDashboard.putString("angle", pivot.returnShooterLevel());
+		autoChooser = AutoBuilder.buildAutoChooser();
+		SmartDashboard.putData("Auto Mode", autoChooser);
 
-  public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
-  }
+	}
+
+	public Command getAutonomousCommand() {
+		return autoChooser.getSelected();
+	}
 }
