@@ -13,81 +13,84 @@ import frc.robot.extension.NoteState;
 
 
 public class Rollers extends SubsystemBase {
-    CANSparkMax lowMagazine;
-    CANSparkMax highMagazine;
-    NoteState rollerState;
-    
-public FlippedDIO intakeSmacna;
-public FlippedDIO magazineSmacna;
-public FlippedDIO magneticFlap;  
+  CANSparkMax lowMagazine;
+  CANSparkMax highMagazine;
+  NoteState rollerState;
+  CANSparkMax lowmagazine;
+  CANSparkMax highmagazine;
 
-boolean previousValue;
-boolean currentValue;
+  CANSparkMax magazinemotor;
+  public FlippedDIO intakeSmacna;
+  public FlippedDIO magazineSmacna;
+  public FlippedDIO magneticFlap;
 
-
-public Rollers(){
+  boolean previousValue;
+  boolean currentValue;
+  public Rollers() {
     // random id's and creating motor objects
-lowMagazine = SparkMax.createDefaultCANSparkMax(9);
-highMagazine = SparkMax.createDefaultCANSparkMax(10);
-rollerState = NoteState.FIELD;
+    lowMagazine = SparkMax.createDefaultCANSparkMax(9);
+    highMagazine = SparkMax.createDefaultCANSparkMax(10);
+    // Sensor Objects
+    intakeSmacna = new FlippedDIO(0);
+    magazineSmacna = new FlippedDIO(1);
+    magneticFlap = new FlippedDIO(2);
 
-  //Sensor Objects
-intakeSmacna = new FlippedDIO(0);
-magazineSmacna = new FlippedDIO(1);
-magneticFlap = new FlippedDIO(2);
+  }
+  
 
-}
-
-public void onLowMagazine(double speed){
+  public void onLowMagazine(double speed) {
     lowMagazine.set(speed);
-}
-public void onHighMagazine(double speed){
-   highMagazine.set(speed); 
-}
+  }
 
-public void stopLowMagazine(){
+  public void onHighMagazine(double speed) {
+    highMagazine.set(speed);
+  }
+
+  public void stopLowMagazine() {
     lowMagazine.stopMotor();
-}
-public void stopHighMagazine(){
-  highMagazine.stopMotor();
-}
-@Override
+  }
+
+  public void stopHighMagazine() {
+    highMagazine.stopMotor();
+  }
+
+  @Override
   public void periodic() {
     //
 
-}
+  }
 
-public void intakeSwitch(){
-    switch (rollerState) {
+  public void intakeSwitch() {
+    switch (RobotContainer.noteLifecycle) {
 
-      case INTAKE:
-        onLowMagazine(0.1); 
-      //intake sensor detects leading edge of note -> Grabbed state
-        if (intakeSmacna.get()){
+      case GROUNDINTAKE:
+        onLowMagazine(0.1);
+        // intake sensor detects leading edge of note -> Grabbed state
+        if (intakeSmacna.get()) {
           RobotContainer.noteLifecycle = NoteState.GRABBED;
         }
-        
+
         break;
-    
+
       case GRABBED:
-      // Turns the low roller on
+        // Turns the low roller on
         onLowMagazine(0.1);
-      //intake sensor detects back edge of the note -> Control state
-        if (!intakeSmacna.get()){
+        // intake sensor detects back edge of the note -> Control state
+        if (!intakeSmacna.get()) {
           RobotContainer.noteLifecycle = NoteState.CONTROL;
         }
-      
+
         break;
-      
+
       case CONTROL:
         onLowMagazine(0.1);
-      //magazine sensor detects leading edge of note -> Storage state
-         if (magazineSmacna.get()){
+        // magazine sensor detects leading edge of note -> Storage state
+        if (magazineSmacna.get()) {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
-      
+
         break;
-  
+
       case STORAGE:
         // Turns low roller off
         stopLowMagazine();
@@ -96,8 +99,8 @@ public void intakeSwitch(){
         // Turns low roller on
         onHighMagazine(0.1);
         onLowMagazine(0.1);
-        //If the magnetic flap moes away from magnet -> Speaker state
-        if (magneticFlap.get()){
+        // If the magnetic flap moes away from magnet -> Speaker state
+        if (magneticFlap.get()) {
           RobotContainer.noteLifecycle = NoteState.AMP;
         }
         break;
@@ -108,26 +111,29 @@ public void intakeSwitch(){
       case AMP:
         onLowMagazine(-0.1);
         onHighMagazine(-0.1);
-        //set currentValue to current magnetic flap value
-      currentValue = magneticFlap.get();       
-      //check if previous magnetic value does not equal current value 
-      if (previousValue != currentValue) {
-        //if the previous value is true set note state to field
-        if (previousValue){
-          RobotContainer.noteLifecycle = NoteState.FIELD;
+        // set currentValue to current magnetic flap value
+        currentValue = magneticFlap.get();
+        // check if previous magnetic value does not equal current value
+        if (previousValue != currentValue) {
+          // if the previous value is true set note state to field
+          if (previousValue) {
+            RobotContainer.noteLifecycle = NoteState.FIELD;
+          }
         }
-        else{};
-      }      
-      else{};
-      // set previousvalue to the current one
-      previousValue = currentValue;
+        // set previousvalue to the current one
+        previousValue = currentValue;
+        break;
+      case EJECT:
+
+        highmagazine.set(0.1);
+        lowmagazine.set(0.1);
+
       default:
-      // Turns magazines Off
+        // Turns magazines Off
         stopHighMagazine();
         stopLowMagazine();
-      
-        
-    }
-  }
 
+    }
+   
+  }
 }
