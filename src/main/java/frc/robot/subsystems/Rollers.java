@@ -59,10 +59,10 @@ public class Rollers extends SubsystemBase {
     //
 
   }
-
+  // state machine for rollers
   public void intakeSwitch() {
     switch (RobotContainer.noteLifecycle) {
-
+      // ground intake state, turns low roller on
       case GROUNDINTAKE:
         onLowMagazine(0.1);
         // intake sensor detects leading edge of note -> Grabbed state
@@ -71,9 +71,9 @@ public class Rollers extends SubsystemBase {
         }
 
         break;
-
+        
+      // Grabbed state, turns the low roller on
       case GRABBED:
-        // Turns the low roller on
         onLowMagazine(0.1);
         // intake sensor detects back edge of the note -> Control state
         if (!intakeSmacna.get()) {
@@ -81,7 +81,7 @@ public class Rollers extends SubsystemBase {
         }
 
         break;
-
+      // control state, turns low roller on
       case CONTROL:
         onLowMagazine(0.1);
         // magazine sensor detects leading edge of note -> Storage state
@@ -92,22 +92,24 @@ public class Rollers extends SubsystemBase {
         break;
 
       case STORAGE:
-        // Turns low roller off
+        // Turns low roller off; storage state
         stopLowMagazine();
         break;
       case AMPLOADING:
-        // Turns low roller on
+        // Turns low and high rollers on; amploading state
         onHighMagazine(0.1);
         onLowMagazine(0.1);
-        // If the magnetic flap moes away from magnet -> Speaker state
+        // If the magnetic flap moves away from magnet -> AMP state
         if (magneticFlap.get()) {
           RobotContainer.noteLifecycle = NoteState.AMP;
         }
         break;
       case SPEAKER:
+      // speaker state, turns both high and low rollers on
         onLowMagazine(0.1);
         onHighMagazine(0.1);
         break;
+        // amp state; turns both high and low rollers on
       case AMP:
         onLowMagazine(-0.1);
         onHighMagazine(-0.1);
@@ -123,13 +125,15 @@ public class Rollers extends SubsystemBase {
         // set previousvalue to the current one
         previousValue = currentValue;
         break;
+      // eject state, turns high and low rollers on
       case EJECT:
 
         highmagazine.set(0.1);
         lowmagazine.set(0.1);
+        break;
 
       default:
-        // Turns magazines Off
+        // Turns magazines Off (default state of the rollers)
         stopHighMagazine();
         stopLowMagazine();
 
