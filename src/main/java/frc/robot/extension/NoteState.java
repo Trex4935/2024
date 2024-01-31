@@ -14,5 +14,6 @@ public enum NoteState {
     STORAGE, // Note is stationary inside robot, magazine sensor sees note
     SPEAKER, // Note is shot out towards speaker
     AMPLOADING, // Note is moving to the amp drop position
-    AMP // Note is dropped into the amp
+    AMP, // Note is dropped into the amp
+    EJECT
 }
