@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.extension.NoteState;
 
 public class Intake extends SubsystemBase {
@@ -16,14 +17,11 @@ public class Intake extends SubsystemBase {
   Solenoid solenoid;
 
   private final Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-  NoteState intakeState;
-
+ 
   /** Creates a new IntakeLift. */
   public Intake() {
     // doublesolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,33, 44);
     solenoid = new Solenoid(PneumaticsModuleType.REVPH, 22);
-
-    intakeState = NoteState.FIELD;
   }
 
   public void switchIntakeOn() {
@@ -50,7 +48,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void intakeSwitch() {
-    switch (intakeState) {
+    switch (RobotContainer.noteLifecycle) {
       case GROUNDINTAKE:
         // Turns Solenoid On
         switchIntakeOn();

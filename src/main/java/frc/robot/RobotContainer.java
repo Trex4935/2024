@@ -24,6 +24,8 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
+import frc.robot.extension.NoteState;
+import frc.robot.subsystems.Rollers;
 
 public class RobotContainer {
 
@@ -31,9 +33,11 @@ public class RobotContainer {
   private final Pivot pivot = new Pivot();
   private final Shooter shooter = new Shooter();
   private final Vision vision = new Vision("LL1");
+  private final Rollers rollers = new Rollers();
   public static NoteState noteLifecycle = NoteState.FIELD;
   private double MaxSpeed = 1; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
@@ -46,6 +50,11 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   
+
+// note cycle return
+  public static NoteState getCycle(){
+    return noteLifecycle;
+  }
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 

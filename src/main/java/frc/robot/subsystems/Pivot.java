@@ -42,7 +42,6 @@ public class Pivot extends SubsystemBase {
     shooterLevel = ShooterLevel.Default;
     relativeEncoder = pivotMotor.getEncoder();
     pivotMotor.getPIDController().setFeedbackDevice(relativeEncoder);
-
     stateAngle = new HashMap<String,Double>();
     stateAngle.put("Default", 30.0);
     stateAngle.put("Amp", 60.0);
