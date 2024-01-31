@@ -11,6 +11,7 @@ import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.NoteState;
 
+
 public class Rollers extends SubsystemBase {
   CANSparkMax lowMagazine;
   CANSparkMax highMagazine;
@@ -25,18 +26,17 @@ public class Rollers extends SubsystemBase {
 
   boolean previousValue;
   boolean currentValue;
-
   public Rollers() {
     // random id's and creating motor objects
     lowMagazine = SparkMax.createDefaultCANSparkMax(9);
     highMagazine = SparkMax.createDefaultCANSparkMax(10);
-    rollerState = NoteState.FIELD;
     // Sensor Objects
     intakeSmacna = new FlippedDIO(0);
     magazineSmacna = new FlippedDIO(1);
     magneticFlap = new FlippedDIO(2);
 
   }
+  
 
   public void onLowMagazine(double speed) {
     lowMagazine.set(speed);
@@ -61,7 +61,7 @@ public class Rollers extends SubsystemBase {
   }
 
   public void intakeSwitch() {
-    switch (rollerState) {
+    switch (RobotContainer.noteLifecycle) {
 
       case GROUNDINTAKE:
         onLowMagazine(0.1);
@@ -134,5 +134,6 @@ public class Rollers extends SubsystemBase {
         stopLowMagazine();
 
     }
+   
   }
 }
