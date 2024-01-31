@@ -84,7 +84,7 @@ public class RobotContainer {
     // SmartDashboard.putNumber("tx", _Vision.x);
     // SmartDashboard.putNumber("ty", _Vision.y);
     // SmartDashboard.putNumber("ta", _Vision.area);
-    SmartDashboard.putString("angle", pivot.returnShooterLevel());
+    SmartDashboard.putString("angle", pivot.returnPivotAngle());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
 
