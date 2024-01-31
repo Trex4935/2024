@@ -16,7 +16,10 @@ public class Rollers extends SubsystemBase {
   CANSparkMax lowMagazine;
   CANSparkMax highMagazine;
   NoteState rollerState;
+  CANSparkMax lowmagazine;
+  CANSparkMax highmagazine;
 
+  CANSparkMax magazinemotor;
   public FlippedDIO intakeSmacna;
   public FlippedDIO magazineSmacna;
   public FlippedDIO magneticFlap;
@@ -120,6 +123,11 @@ public class Rollers extends SubsystemBase {
         // set previousvalue to the current one
         previousValue = currentValue;
         break;
+      case EJECT:
+
+        highmagazine.set(0.1);
+        lowmagazine.set(0.1);
+
       default:
         // Turns magazines Off
         stopHighMagazine();
@@ -128,5 +136,4 @@ public class Rollers extends SubsystemBase {
     }
    
   }
-
 }

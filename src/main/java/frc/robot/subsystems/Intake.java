@@ -14,29 +14,46 @@ import frc.robot.extension.NoteState;
 
 public class Intake extends SubsystemBase {
   // DoubleSolenoid doublesolenoid;
+
+  // Makes a New Solenoid
   Solenoid solenoid;
 
-  private final Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
- 
+
+  // Makes a new compressor 
+  private final Compressor m_compressor;
+  NoteState intakeState;
+
+
   /** Creates a new IntakeLift. */
   public Intake() {
     // doublesolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,33, 44);
+
+    // news up the solenoid and compressor
     solenoid = new Solenoid(PneumaticsModuleType.REVPH, 22);
+
+    m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+
+    intakeState = NoteState.FIELD;
+
   }
 
+  // Turns on the solenoid
   public void switchIntakeOn() {
     solenoid.set(true);
 
   }
 
+  // Turns off the solenoid
   public void switchIntakeOff() {
     solenoid.set(false);
   }
 
+  // Returns the current state of the solenoid
   public boolean getIntakeState() {
     return solenoid.get();
   }
 
+  // puts the current state of the intake on the network table
   public void initSendable(SendableBuilder builder) {
     builder.addBooleanProperty("Intake Dropped", this::getIntakeState, null);
   }
@@ -47,6 +64,7 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  // State machine to switch the state of the note
   public void intakeSwitch() {
     switch (RobotContainer.noteLifecycle) {
       case GROUNDINTAKE:

@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.extension.NoteState;
-import frc.robot.extension.ShooterLevel;
+import frc.robot.extension.PivotAngle;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
@@ -49,7 +49,6 @@ public class RobotContainer {
                                                                // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  
 
 // note cycle return
   public static NoteState getCycle(){
@@ -61,10 +60,10 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   private void configureBindings() {
- 
-   drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+
+    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> drive.withVelocityX(joystick.getLeftY() * MaxSpeed) // Drive forward
-                                                                                           // negative Y (forward)
+                                                                                          // negative Y (forward)
             .withVelocityY(joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
@@ -72,11 +71,11 @@ public class RobotContainer {
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
     joystick.b().whileTrue(drivetrain
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
-    
+
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    joystick.rightBumper().onTrue(pivot.stateSwitcher(ShooterLevel.Load));
-    joystick.povUp().onTrue(pivot.stateSwitcher(ShooterLevel.Amp));
+    joystick.rightBumper().onTrue(pivot.stateSwitcher(PivotAngle.Load));
+    joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -87,15 +86,14 @@ public class RobotContainer {
   public RobotContainer() {
     configureBindings();
 
-  
-    //SmartDashboard.putData(_Vision.x);
-    //SmartDashboard.putData(_Vision.y);
-    //SmartDashboard.putData(_Vision.area);
+    // SmartDashboard.putData(_Vision.x);
+    // SmartDashboard.putData(_Vision.y);
+    // SmartDashboard.putData(_Vision.area);
 
     // SmartDashboard.putNumber("tx", _Vision.x);
     // SmartDashboard.putNumber("ty", _Vision.y);
     // SmartDashboard.putNumber("ta", _Vision.area);
-    SmartDashboard.putString("angle", pivot.returnShooterLevel());
+    SmartDashboard.putString("angle", pivot.returnPivotAngle());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
 
