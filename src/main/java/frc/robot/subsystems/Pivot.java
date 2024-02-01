@@ -8,12 +8,8 @@ import java.util.HashMap;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkAbsoluteEncoder;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.apriltag.jni.AprilTagJNI.Helper;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.PivotAngle;
@@ -29,7 +25,7 @@ public class Pivot extends SubsystemBase {
   // Makes a Hash Map for the Pivot State Machine
   private HashMap<String, Double> stateAngle;
 
-  public static PivotAngle shooterLevel;
+  public static PivotAngle pivotAngle;
 
   public static boolean pivotAtAngle;
 
@@ -37,11 +33,11 @@ public class Pivot extends SubsystemBase {
 
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
     pivotMotor = SparkMax.configPIDwithSmartMotion(pivotMotor, 0, 0, 0, 0, 0, 1, 1, 0);
-    shooterLevel = PivotAngle.Default;
+    pivotAngle = PivotAngle.Default;
     relativeEncoder = pivotMotor.getEncoder();
     pivotMotor.getPIDController().setFeedbackDevice(relativeEncoder);
 
-    stateAngle = new HashMap<String, Double>();
+    stateAngle = new HashMap<String,Double>();
     stateAngle.put("Default", 30.0);
     stateAngle.put("Amp", 60.0);
     stateAngle.put("Speaker", 90.0);
@@ -64,15 +60,15 @@ public class Pivot extends SubsystemBase {
   }
 
   // changes the state of the shooter
-  public void changeShooterLevel(PivotAngle desiredLevel) {
-    shooterLevel = desiredLevel;
-    System.out.println(shooterLevel);
+  public void changePivotAngle(PivotAngle desiredLevel) {
+    pivotAngle = desiredLevel;
+    System.out.println(pivotAngle);
   }
 
   // returns the current state of the shooter
-  public String returnShooterLevel() {
-    System.out.println(shooterLevel.toString());
-    return shooterLevel.toString();
+  public String returnPivotAngle() {
+    System.out.println(pivotAngle.toString());
+    return pivotAngle.toString();
   }
 
   @Override
@@ -83,12 +79,12 @@ public class Pivot extends SubsystemBase {
   // takes in a state and makes it the current one
   public Command stateSwitcher(PivotAngle desiredLevel) {
     return runOnce(
-        () -> changeShooterLevel(desiredLevel));
+        () -> changePivotAngle(desiredLevel));
   }
 
   // Shooter state machine that switches between different angles
   public void shooterStateMachine() {
-    double targetAngle = stateAngle.get(returnShooterLevel());
+    double targetAngle = stateAngle.get(returnPivotAngle());
     pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kSmartMotion);
     // Checks to see if the pivot angle is close to the expected angle, can be used
     // anywhere

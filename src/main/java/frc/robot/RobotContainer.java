@@ -23,6 +23,8 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
+import frc.robot.extension.NoteState;
+import frc.robot.subsystems.Rollers;
 
 public class RobotContainer {
   // News up our subsystems that we use throughout RobotContainer
@@ -32,12 +34,14 @@ public class RobotContainer {
   private final Vision vision = new Vision("LL1");
 
   // Sets the default state in the Note Life Cycle
+  private final Rollers rollers = new Rollers();
   public static NoteState noteLifecycle = NoteState.FIELD;
 
   private double MaxSpeed = 1; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   // Setting up bindings for necessary control of the swerve drive platform
+
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
@@ -49,6 +53,11 @@ public class RobotContainer {
   // Setting up the brake and pointing function
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
+// note cycle return
+  public static NoteState getCycle(){
+    return noteLifecycle;
+  }
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -86,7 +95,9 @@ public class RobotContainer {
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
     configureBindings();
+
     SmartDashboard.putString("angle", pivot.returnShooterLevel());
+
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
   }
