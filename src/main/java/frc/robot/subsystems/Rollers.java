@@ -25,8 +25,8 @@ public class Rollers extends SubsystemBase {
 
   public Rollers() {
     // random id's and creating motor objects
-    lowMagazine = SparkMax.createDefaultCANSparkMax(9);
-    highMagazine = SparkMax.createDefaultCANSparkMax(10);
+    lowMagazine = SparkMax.createDefaultCANSparkMax(4);
+    highMagazine = SparkMax.createDefaultCANSparkMax(5);
     rollerState = NoteState.FIELD;
 
     // Sensor Objects

@@ -25,11 +25,11 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
 
     // Creating Motor Objects
-    shootingmotor1 = SparkMax.createDefaultCANSparkMax(16);
-    shootingmotor2 = SparkMax.createDefaultCANSparkMax(26);
+    shootingmotor1 = SparkMax.createDefaultCANSparkMax(6);
+    shootingmotor2 = SparkMax.createDefaultCANSparkMax(8);
 
     // Creating Inputs
-    shooterSmacna = new FlippedDIO(0);
+    shooterSmacna = new FlippedDIO(3);
 
   }
 
