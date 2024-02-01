@@ -16,8 +16,6 @@ public class Shooter extends SubsystemBase {
   CANSparkMax shootingmotor1;
   CANSparkMax shootingmotor2;
 
-  // Declaring Inputs
-  public FlippedDIO shooterSmacna;
 
   // Makes a new state for the shooter
 
@@ -28,8 +26,6 @@ public class Shooter extends SubsystemBase {
     shootingmotor1 = SparkMax.createDefaultCANSparkMax(16);
     shootingmotor2 = SparkMax.createDefaultCANSparkMax(26);
 
-    // Creating Inputs
-    shooterSmacna = new FlippedDIO(0);
 
   }
 
@@ -70,6 +66,7 @@ public class Shooter extends SubsystemBase {
       // Note is shot out towards speaker
       case SPEAKER:
         shooterMovement(0);
+
         break;
       // Deafult Position of the Shooter angled at 180 degrees approximately
       default:
