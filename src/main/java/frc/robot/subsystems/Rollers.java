@@ -18,11 +18,13 @@ public class Rollers extends SubsystemBase {
   NoteState rollerState;
   CANSparkMax lowmagazine;
   CANSparkMax highmagazine;
-
   CANSparkMax magazinemotor;
+
   public FlippedDIO intakeSmacna;
   public FlippedDIO magazineSmacna;
   public FlippedDIO magneticFlap;
+  public FlippedDIO shooterSmacna;
+
 
   boolean previousValue;
   boolean currentValue;
@@ -34,6 +36,7 @@ public class Rollers extends SubsystemBase {
     intakeSmacna = new FlippedDIO(0);
     magazineSmacna = new FlippedDIO(1);
     magneticFlap = new FlippedDIO(2);
+    shooterSmacna = new FlippedDIO(3);
 
   }
   
@@ -108,6 +111,15 @@ public class Rollers extends SubsystemBase {
       // speaker state, turns both high and low rollers on
         onLowMagazine(0.1);
         onHighMagazine(0.1);
+        currentValue = shooterSmacna.get();
+        if (previousValue != currentValue) {
+          // if the previous value is true set note state to field
+          if (previousValue) {
+            RobotContainer.noteLifecycle = NoteState.FIELD;
+          }
+        }
+        // set previousvalue to the current one
+        previousValue = currentValue;
         break;
         // amp state; turns both high and low rollers on
       case AMP:
