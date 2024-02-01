@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.FlippedDIO;
-import frc.robot.extension.ShooterLevel;
+import frc.robot.extension.PivotAngle;
 import frc.robot.extension.SparkMax;
 
 
