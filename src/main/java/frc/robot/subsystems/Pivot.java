@@ -31,7 +31,7 @@ public class Pivot extends SubsystemBase {
 
   public Pivot() {
 
-    pivotMotor = SparkMax.createDefaultCANSparkMax(17);
+    pivotMotor = SparkMax.createDefaultCANSparkMax(7);
     pivotMotor = SparkMax.configPIDwithSmartMotion(pivotMotor, 0, 0, 0, 0, 0, 1, 1, 0);
     pivotAngle = PivotAngle.Default;
     relativeEncoder = pivotMotor.getEncoder();
