@@ -16,7 +16,6 @@ public class Shooter extends SubsystemBase {
   CANSparkMax shootingmotor1;
   CANSparkMax shootingmotor2;
 
-
   // Makes a new state for the shooter
 
   /** Creates a new Shooter. */
@@ -27,7 +26,6 @@ public class Shooter extends SubsystemBase {
     shootingmotor2 = SparkMax.createDefaultCANSparkMax(8);
 
     // Creating Inputs
-    shooterSmacna = new FlippedDIO(3);
 
   }
 
