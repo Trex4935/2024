@@ -16,16 +16,16 @@ public class Shooter extends SubsystemBase {
   CANSparkMax shootingmotor1;
   CANSparkMax shootingmotor2;
 
-
   // Makes a new state for the shooter
 
   /** Creates a new Shooter. */
   public Shooter() {
 
     // Creating Motor Objects
-    shootingmotor1 = SparkMax.createDefaultCANSparkMax(16);
-    shootingmotor2 = SparkMax.createDefaultCANSparkMax(26);
+    shootingmotor1 = SparkMax.createDefaultCANSparkMax(6);
+    shootingmotor2 = SparkMax.createDefaultCANSparkMax(8);
 
+    // Creating Inputs
 
   }
 
