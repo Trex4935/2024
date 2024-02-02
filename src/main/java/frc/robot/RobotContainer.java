@@ -54,8 +54,8 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-// note cycle return
-  public static NoteState getCycle(){
+  // note cycle return
+  public static NoteState getCycle() {
     return noteLifecycle;
   }
 
@@ -96,7 +96,7 @@ public class RobotContainer {
   public RobotContainer() {
     configureBindings();
 
-    SmartDashboard.putString("angle", pivot.returnShooterLevel());
+    SmartDashboard.putString("angle", pivot.returnPivotAngle());
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
