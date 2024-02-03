@@ -23,6 +23,7 @@ public class Rollers extends SubsystemBase {
   public FlippedDIO intakeSmacna;
   public FlippedDIO magazineSmacna;
   public FlippedDIO magneticFlap;
+  public FlippedDIO shooterSmacna;
 
   boolean previousValue;
   boolean currentValue;
@@ -36,7 +37,7 @@ public class Rollers extends SubsystemBase {
     intakeSmacna = new FlippedDIO(0);
     magazineSmacna = new FlippedDIO(1);
     magneticFlap = new FlippedDIO(2);
-
+    shooterSmacna = new FlippedDIO(3);
   }
 
   public void onLowMagazine(double speed) {
