@@ -25,8 +25,6 @@ public class Shooter extends SubsystemBase {
     shootingmotor1 = SparkMax.createDefaultCANSparkMax(6);
     shootingmotor2 = SparkMax.createDefaultCANSparkMax(8);
 
-    // Creating Inputs
-
   }
 
   // makes motors spin YIPPIE
@@ -56,7 +54,7 @@ public class Shooter extends SubsystemBase {
   }
 
   // stop all motors
-  public void stopAllMotors() {
+  public void stopShooterMotors() {
     stopShootingMotor1();
     stopShootingMotor2();
   }
@@ -81,7 +79,7 @@ public class Shooter extends SubsystemBase {
       // Deafult Position of the Shooter angled at 180 degrees approximately
       default:
         // turns all the motors off
-        stopAllMotors();
+        stopShooterMotors();
 
     }
 
