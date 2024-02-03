@@ -20,12 +20,9 @@ import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.PivotAngle;
 import frc.robot.extension.SparkMax;
 
-
-
 public class Pivot extends SubsystemBase {
-FlippedDIO limitSwitch;
-// limit switch ex value
-int x = 20;
+  FlippedDIO limitSwitch;
+
   /** Creates a new Pivot. */
   CANSparkMax pivotMotor;
 
@@ -33,7 +30,7 @@ int x = 20;
   RelativeEncoder relativeEncoder;
   // Makes a Hash Map for the Pivot State Machine
   private HashMap<String, Double> stateAngle;
-
+  // Creates Pivot Angle and Pivot at Angle Objects
   public static PivotAngle pivotAngle;
 
   public static boolean pivotAtAngle;
@@ -47,7 +44,7 @@ int x = 20;
     pivotMotor.getPIDController().setFeedbackDevice(relativeEncoder);
 
     limitSwitch = new FlippedDIO(1);
-    stateAngle = new HashMap<String,Double>();
+    stateAngle = new HashMap<String, Double>();
     stateAngle.put("Default", 30.0);
     stateAngle.put("Amp", 60.0);
     stateAngle.put("Speaker", 90.0);
@@ -55,10 +52,6 @@ int x = 20;
     stateAngle.put("Load", 150.0);
 
   }
-  
-  
-
- 
 
   /** makes pivot motor move */
   public void runPivotMotor() {
@@ -76,12 +69,12 @@ int x = 20;
   // changes the state of the shooter
   public void changePivotAngle(PivotAngle desiredLevel) {
     pivotAngle = desiredLevel;
-    System.out.println(pivotAngle);
+    // System.out.println(pivotAngle);
   }
 
   // returns the current state of the shooter
   public String returnPivotAngle() {
-    System.out.println(pivotAngle.toString());
+    // System.out.println(pivotAngle.toString());
     return pivotAngle.toString();
   }
 
@@ -97,7 +90,7 @@ int x = 20;
   }
 
   // Shooter state machine that switches between different angles
-  public void shooterStateMachine() {
+  public void pivotStateMachine() {
     double targetAngle = stateAngle.get(returnPivotAngle());
     pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kSmartMotion);
     // Checks to see if the pivot angle is close to the expected angle, can be used
@@ -105,13 +98,12 @@ int x = 20;
     pivotAtAngle = MathUtil.isNear(targetAngle, pivotMotor.getEncoder().getPosition(), 50.0);
   }
 
-  public void limitSwitchStop(){
-    if (limitSwitch.get()){
+  public void limitSwitchStop() {
+    if (limitSwitch.get()) {
 
-    }
-    else if (limitSwitch.get()){
+    } else if (limitSwitch.get()) {
 
+    } else {
     }
-    else {}
   }
 }
