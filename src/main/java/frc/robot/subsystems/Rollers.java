@@ -115,6 +115,7 @@ public class Rollers extends SubsystemBase {
         onHighMagazine(0.1);
                 currentValue = intakeSmacna.get();
         if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)){
+          RobotContainer.noteLifecycle = NoteState.FIELD;
         }
         previousValue = currentValue;
         break;
@@ -123,7 +124,7 @@ public class Rollers extends SubsystemBase {
         onHighMagazine(-0.1);
         currentValue = intakeSmacna.get();
         if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)){
-          RobotContainer.noteLifecycle = NoteState.GRABBED;
+          RobotContainer.noteLifecycle = NoteState.FIELD;
         }
         previousValue = currentValue;
         break;
