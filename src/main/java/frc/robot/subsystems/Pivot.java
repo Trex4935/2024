@@ -62,7 +62,12 @@ public class Pivot extends SubsystemBase {
   public void reversePivotMotor() {
     pivotMotor.set(-0.1);
   }
-
+// Manual movement for the PID
+  public void setPID(String wantedPosition){
+    double targetAngle = stateAngle.get(wantedPosition);
+    pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kSmartMotion);
+  }
+  // Stop pivot motor
   public void stopPivotMotor() {
     pivotMotor.stopMotor();
   }

@@ -90,6 +90,9 @@ public class RobotContainer {
 
     joystick.rightTrigger().whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));
 
+    // Test button for the manual setting of the pivot PID
+    joystick.y().onTrue(pivot.runOnce(() -> pivot.setPID("Default")));
+
     // Helps run the simulation
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
