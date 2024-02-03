@@ -129,9 +129,11 @@ public class Rollers extends SubsystemBase {
         previousValue = currentValue;
         break;
       case EJECT:
-
         highmagazine.set(0.1);
         lowmagazine.set(0.1);
+        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)){
+          RobotContainer.noteLifecycle = NoteState.FIELD;
+        }
         
       default:
         // Turns magazines Off
