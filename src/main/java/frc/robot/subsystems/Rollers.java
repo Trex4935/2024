@@ -5,12 +5,15 @@ import java.util.EnumSet;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.extension.SparkMax;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.Helper;
+
+
 
 public class Rollers extends SubsystemBase {
   CANSparkMax lowMagazine;
@@ -28,6 +31,8 @@ public class Rollers extends SubsystemBase {
   boolean previousValue;
   boolean currentValue;
 
+  Timer timer;
+
   public Rollers() {
     // random id's and creating motor objects
     lowMagazine = SparkMax.createDefaultCANSparkMax(9);
@@ -38,6 +43,9 @@ public class Rollers extends SubsystemBase {
     magazineSmacna = new FlippedDIO(1);
     magneticFlap = new FlippedDIO(2);
     shooterSmacna = new FlippedDIO(3);
+
+    timer = new Timer();
+
   }
 
   public void onLowMagazine(double speed) {
@@ -106,17 +114,20 @@ public class Rollers extends SubsystemBase {
         onLowMagazine(0.1);
         // If the magnetic flap moes away from magnet -> Speaker state
         currentValue = magazineSmacna.get();
-        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)){
-          RobotContainer.noteLifecycle = NoteState.GRABBED;
-        }
         previousValue = currentValue;
         break;
       case SPEAKER:
         onLowMagazine(0.1);
         onHighMagazine(0.1);
                 currentValue = intakeSmacna.get();
-        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)){
-          RobotContainer.noteLifecycle = NoteState.FIELD;
+        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false))
+        {
+          timer.start();
+          if (timer.hasElapsed(5))
+          {
+            RobotContainer.noteLifecycle = NoteState.FIELD;
+            timer.reset();
+          }         
         }
         previousValue = currentValue;
         break;
@@ -124,16 +135,29 @@ public class Rollers extends SubsystemBase {
         onLowMagazine(-0.1);
         onHighMagazine(-0.1);
         currentValue = intakeSmacna.get();
-        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)){
-          RobotContainer.noteLifecycle = NoteState.FIELD;
+        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false))
+        {
+          timer.start();
+          if (timer.hasElapsed(5))
+          {
+            RobotContainer.noteLifecycle = NoteState.FIELD;
+            timer.reset();
+          }         
         }
         previousValue = currentValue;
         break;
+  
       case EJECT:
         highmagazine.set(0.1);
         lowmagazine.set(0.1);
-        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)){
-          RobotContainer.noteLifecycle = NoteState.FIELD;
+        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false))
+        {
+          timer.start();
+          if (timer.hasElapsed(5))
+          {
+            RobotContainer.noteLifecycle = NoteState.FIELD;
+            timer.reset();
+          }         
         }
         
       default:
