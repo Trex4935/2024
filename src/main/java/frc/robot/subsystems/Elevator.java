@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.SparkMax;
 
@@ -18,24 +19,29 @@ public class Elevator extends SubsystemBase {
   public Elevator() {
     elevatorMotorOne = SparkMax.createDefaultCANSparkMax(2);
     elevatorMotorTwo = SparkMax.createDefaultCANSparkMax(3);
-
   }
 
-  // makes elevator motors spin
+  // Human control of elevator motors
   public void elevatorMotorOneMovement() {
     elevatorMotorOne.set(0);
   }
 
   public void elevatorMotorTwoMovement() {
     elevatorMotorTwo.set(0);
+
+  }
+
+  public void elevatorMotorsMovements(){
+    elevatorMotorTwo.follow(elevatorMotorOne);
+    elevatorMotorOne.set(0);
   }
 
   // stops the elevator motors
-  public void stopelevatorMotorOne() {
+  public void stopElevatorMotorOne() {
     elevatorMotorOne.stopMotor();
   }
 
-  public void stopelevatorMotorTwo() {
+  public void stopElevatorMotorTwo() {
     elevatorMotorTwo.stopMotor();
   }
 
