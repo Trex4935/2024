@@ -22,6 +22,7 @@ import frc.robot.extension.SparkMax;
 
 public class Pivot extends SubsystemBase {
   FlippedDIO limitSwitch;
+  FlippedDIO limitSwitch2;
 
   /** Creates a new Pivot. */
   CANSparkMax pivotMotor;
@@ -101,9 +102,11 @@ public class Pivot extends SubsystemBase {
   public void limitSwitchStop() {
     if (limitSwitch.get()) {
 
-    } else if (limitSwitch.get()) {
+    } 
+    else if (limitSwitch2.get()) {
 
-    } else {
+    } 
+    else {
     }
   }
 }
