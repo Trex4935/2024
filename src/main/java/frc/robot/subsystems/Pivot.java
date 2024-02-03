@@ -107,11 +107,14 @@ public class Pivot extends SubsystemBase {
   public void limitSwitchStop() {
     if (limitSwitch.get()) {
 
-    } 
-    else if (limitSwitch2.get()) {
+    } else if (limitSwitch2.get()) {
 
-    } 
-    else {
+    } else {
     }
+  }
+
+  public Command applyRequest(Object object) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'applyRequest'");
   }
 }
