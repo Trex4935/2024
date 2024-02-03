@@ -18,11 +18,8 @@ public class Intake extends SubsystemBase {
   // Makes a New Solenoid
   Solenoid solenoid;
 
-
-  // Makes a new compressor 
+  // Makes a new compressor
   private final Compressor m_compressor;
-  NoteState intakeState;
-
 
   /** Creates a new IntakeLift. */
   public Intake() {
@@ -31,9 +28,8 @@ public class Intake extends SubsystemBase {
     // news up the solenoid and compressor
     solenoid = new Solenoid(PneumaticsModuleType.REVPH, 22);
 
+    // Creates Compressor Object
     m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-
-    intakeState = NoteState.FIELD;
 
   }
 
@@ -48,7 +44,7 @@ public class Intake extends SubsystemBase {
     solenoid.set(false);
   }
 
-  // Returns the current state of the solenoid
+  // Returns the current state of the solenoid-Used for Sendables
   public boolean getIntakeState() {
     return solenoid.get();
   }
@@ -60,7 +56,6 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_compressor.isEnabled();
     // This method will be called once per scheduler run
   }
 

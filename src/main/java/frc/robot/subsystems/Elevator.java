@@ -14,12 +14,14 @@ public class Elevator extends SubsystemBase {
   CANSparkMax elevatorMotorOne;
   CANSparkMax elevatorMotorTwo;
 
+  // Sets Elevator Motor Object ID's
   public Elevator() {
     elevatorMotorOne = SparkMax.createDefaultCANSparkMax(2);
     elevatorMotorTwo = SparkMax.createDefaultCANSparkMax(3);
-    // makes elevator motors spin
+
   }
 
+  // makes elevator motors spin
   public void elevatorMotorOneMovement() {
     elevatorMotorOne.set(0);
   }
@@ -34,6 +36,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public void stopelevatorMotorTwo() {
+    elevatorMotorTwo.stopMotor();
+  }
+
+  public void stopElevatorMotors() {
+    elevatorMotorOne.stopMotor();
     elevatorMotorTwo.stopMotor();
   }
 
