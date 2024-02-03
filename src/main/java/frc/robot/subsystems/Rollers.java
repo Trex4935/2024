@@ -23,6 +23,7 @@ public class Rollers extends SubsystemBase {
   public FlippedDIO intakeSmacna;
   public FlippedDIO magazineSmacna;
   public FlippedDIO magneticFlap;
+  public FlippedDIO shooterSmacna;
 
   boolean previousValue;
   boolean currentValue;
@@ -36,7 +37,7 @@ public class Rollers extends SubsystemBase {
     intakeSmacna = new FlippedDIO(0);
     magazineSmacna = new FlippedDIO(1);
     magneticFlap = new FlippedDIO(2);
-
+    shooterSmacna = new FlippedDIO(3);
   }
 
   public void onLowMagazine(double speed) {
@@ -115,6 +116,7 @@ public class Rollers extends SubsystemBase {
         onHighMagazine(0.1);
                 currentValue = intakeSmacna.get();
         if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)){
+          RobotContainer.noteLifecycle = NoteState.FIELD;
         }
         previousValue = currentValue;
         break;
@@ -123,14 +125,16 @@ public class Rollers extends SubsystemBase {
         onHighMagazine(-0.1);
         currentValue = intakeSmacna.get();
         if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)){
-          RobotContainer.noteLifecycle = NoteState.GRABBED;
+          RobotContainer.noteLifecycle = NoteState.FIELD;
         }
         previousValue = currentValue;
         break;
       case EJECT:
-
         highmagazine.set(0.1);
         lowmagazine.set(0.1);
+        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)){
+          RobotContainer.noteLifecycle = NoteState.FIELD;
+        }
         
       default:
         // Turns magazines Off

@@ -10,7 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.MathUtil;
-
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.apriltag.jni.AprilTagJNI.Helper;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -62,7 +62,12 @@ public class Pivot extends SubsystemBase {
   public void reversePivotMotor() {
     pivotMotor.set(-0.1);
   }
-
+// Manual movement for the PID
+  public void setPID(String wantedPosition){
+    double targetAngle = stateAngle.get(wantedPosition);
+    pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kSmartMotion);
+  }
+  // Stop pivot motor
   public void stopPivotMotor() {
     pivotMotor.stopMotor();
   }
@@ -102,11 +107,14 @@ public class Pivot extends SubsystemBase {
   public void limitSwitchStop() {
     if (limitSwitch.get()) {
 
-    } 
-    else if (limitSwitch2.get()) {
+    } else if (limitSwitch2.get()) {
 
-    } 
-    else {
+    } else {
     }
+  }
+
+  public Command applyRequest(Object object) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'applyRequest'");
   }
 }
