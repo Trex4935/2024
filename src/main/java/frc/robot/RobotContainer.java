@@ -46,6 +46,7 @@ public class RobotContainer {
   // Setting up bindings for necessary control of the swerve drive platform
 
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
+  private final CommandXboxController operatorButtonBindings = new CommandXboxController(1);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   // Make sure things are feild centric for swerve
@@ -88,13 +89,21 @@ public class RobotContainer {
     joystick.rightBumper().onTrue(pivot.stateSwitcher(PivotAngle.Load));
     joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
 
-    joystick.rightTrigger().whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));
+    joystick.rightTrigger()
+        .whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));
 
     // Helps run the simulation
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
+
+    // maps the button bindings for the operator
+    operatorButtonBindings.a().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
+    operatorButtonBindings.b().onTrue(pivot.stateSwitcher(PivotAngle.Speaker));
+    operatorButtonBindings.x().onTrue(pivot.stateSwitcher(PivotAngle.Feed));
+    operatorButtonBindings.y().onTrue(pivot.stateSwitcher(PivotAngle.Load));
+
   }
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
@@ -105,6 +114,8 @@ public class RobotContainer {
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
+
+    // sendable for
   }
 
   // Runs autoChooser :)
