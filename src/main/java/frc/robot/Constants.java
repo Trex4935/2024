@@ -118,6 +118,7 @@ public final class Constants {
 		public static final double singleSubstationHighZ = singleSubstationLowZ + singleSubstationHeight;
 	}
 
+	// TODO: Need to know values for limelight position
 	public enum ALIGNMENT_POSITION {
 		LEFT_DOUBLE_STATION(-CENTER_OFFSET, 1.1, 0.0, 0.0),
 		RIGHT_DOUBLE_STATION(-CENTER_OFFSET, -0.9, 0.0, 0.0),
@@ -135,49 +136,67 @@ public final class Constants {
 		}
 	}
 
-	// TODO: Change for Crescendo
+	// All AprilTag poses
 	public static List<Pose2d> aprilTagPoses = new ArrayList<Pose2d>(16);
+	// Poses used by your alliance
 	public static List<Pose2d> allianceAprilTags = new ArrayList<Pose2d>(8);
+	// Poses used by the opposing alliance
+	public static List<Pose2d> opposingAllianceAprilTags = new ArrayList<Pose2d>(8);
+	// Poses provided speaker
 	public static List<Pose2d> speakerAprilTags = new ArrayList<>(2);
+	// Poses provided by trap
 	public static List<Pose2d> trapAprilTags = new ArrayList<>(3);
+	// Poses provided by human player station (source)
 	public static List<Pose2d> sourceAprilTags = new ArrayList<>(2);
+	// Pose provided by amp
 	public static Pose2d ampAprilTag;
-	public static Pose2d humanStationAprilTag;
-	public static Pose2d chuteAprilTag = new Pose2d(LoadingZone.singleSubstationTranslation, Rotation2d.fromDegrees(0.0));
-	public static List<Pose2d> opposingAllianceAprilTags = new ArrayList<Pose2d>(4);
 
 	public static AprilTagFieldLayout aprilTagLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
 	public static void updateAprilTagTranslations() {
 
+		// Clear lists
 		aprilTagPoses.clear();
 		allianceAprilTags.clear();
 		speakerAprilTags.clear();
+		trapAprilTags.clear();
+		sourceAprilTags.clear();
 		opposingAllianceAprilTags.clear();
+
+		// Return a pose from each AprilTag
 		for (int i = 0; i < aprilTagLayout.getTags().size(); i++) {
 			aprilTagPoses.add(i, aprilTagLayout.getTagPose(i + 1).get().toPose2d());
 		}
 
 		if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
 
-			chuteAprilTag = new Pose2d(LoadingZone.singleSubstationTranslation,
-					Rotation2d.fromDegrees(0.0));
-			speakerAprilTags.addAll(aprilTagPoses.subList(5, 8));
+			sourceAprilTags.addAll(aprilTagPoses.subList(0, 2));
+			allianceAprilTags.addAll(sourceAprilTags);
+
+			ampAprilTag = aprilTagPoses.get(5);
+			allianceAprilTags.add(ampAprilTag);
+
+			speakerAprilTags.addAll(aprilTagPoses.subList(6, 8));
 			allianceAprilTags.addAll(speakerAprilTags);
-			humanStationAprilTag = aprilTagPoses.get(3);
-			ampAprilTag = aprilTagPoses.get(6);
-			allianceAprilTags.add(humanStationAprilTag);
+
+			trapAprilTags.addAll(aprilTagPoses.subList(13, 16));
+			allianceAprilTags.addAll(trapAprilTags);
 
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(2, 5));
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(8, 13));
 
 		} else {
-			chuteAprilTag = new Pose2d(new Translation2d(LoadingZone.singleSubstationCenterX, 0),
-					Rotation2d.fromDegrees(0.0));
-			speakerAprilTags.addAll(aprilTagPoses.subList(0, 3));
+			speakerAprilTags.addAll(aprilTagPoses.subList(2, 4));
 			allianceAprilTags.addAll(speakerAprilTags);
-			humanStationAprilTag = aprilTagPoses.get(4);
-			allianceAprilTags.add(humanStationAprilTag);
+
+			ampAprilTag = aprilTagPoses.get(4);
+			allianceAprilTags.add(ampAprilTag);
+
+			sourceAprilTags.addAll(aprilTagPoses.subList(8, 10));
+			allianceAprilTags.addAll(sourceAprilTags);
+
+			trapAprilTags.addAll(aprilTagPoses.subList(10, 13));
+			allianceAprilTags.addAll(trapAprilTags);
 
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(0, 2));
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(5, 8));

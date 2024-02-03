@@ -4,15 +4,10 @@
 
 package frc.robot.commands;
 
-import java.util.List;
-
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.CommandSwerveDrivetrain;
@@ -24,7 +19,6 @@ public class AutoAlignAlt extends Command {
 	private final CommandSwerveDrivetrain drivetrain;
 	private final Timer timer;
 	private final ALIGNMENT_POSITION position;
-	private PathPlannerPath path;
 
 	public AutoAlignAlt(CommandSwerveDrivetrain drivetrain, ALIGNMENT_POSITION position) {
 		// Use addRequirements() here to declare subsystem dependencies.

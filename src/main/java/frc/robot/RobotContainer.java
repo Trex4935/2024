@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.ALIGNMENT_POSITION;
+import frc.robot.commands.AutoAlignAlt;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.PivotAngle;
 import frc.robot.generated.TunerConstants;
@@ -36,6 +38,7 @@ public class RobotContainer {
 	private final Shooter shooter = new Shooter();
 	private final Vision vision = new Vision("LL1");
 	private final Rollers rollers = new Rollers();
+
 	public static NoteState noteLifecycle = NoteState.FIELD;
 	private double MaxSpeed = 1; // 6 meters per second desired top speed
 	private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
@@ -52,6 +55,8 @@ public class RobotContainer {
 	private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
 	private final Telemetry logger = new Telemetry(MaxSpeed);
+
+	private final AutoAlignAlt autoAlignAlt = new AutoAlignAlt(drivetrain, ALIGNMENT_POSITION.LEFT);
 
 	private final SendableChooser<Command> autoChooser;
 
@@ -72,6 +77,8 @@ public class RobotContainer {
 		joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 		joystick.rightBumper().onTrue(pivot.stateSwitcher(PivotAngle.Load));
 		joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
+
+		joystick.leftStick().onTrue(autoAlignAlt);
 
 		if (Utils.isSimulation()) {
 			drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
