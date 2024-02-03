@@ -19,15 +19,18 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.PivotAngle;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
 import frc.robot.extension.NoteState;
 import frc.robot.subsystems.Rollers;
+import frc.robot.subsystems.Elevator;;
 
 public class RobotContainer {
   // News up our subsystems that we use throughout RobotContainer
+  private final Elevator elevator = new Elevator();
   private final Intake intake = new Intake();
   private final Pivot pivot = new Pivot();
   private final Shooter shooter = new Shooter();
@@ -84,6 +87,8 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     joystick.rightBumper().onTrue(pivot.stateSwitcher(PivotAngle.Load));
     joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
+
+    joystick.rightTrigger().whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));
 
     // Helps run the simulation
     if (Utils.isSimulation()) {
