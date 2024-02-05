@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.ALIGNMENT_POSITION;
+import frc.robot.Constants.PoseOffset;
 import frc.robot.commands.AutoAlignAlt;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.PivotAngle;
@@ -56,7 +56,7 @@ public class RobotContainer {
 
 	private final Telemetry logger = new Telemetry(MaxSpeed);
 
-	private final AutoAlignAlt autoAlignAlt = new AutoAlignAlt(drivetrain, ALIGNMENT_POSITION.LEFT);
+	private final AutoAlignAlt autoAlignAlt = new AutoAlignAlt(drivetrain, PoseOffset.LEFT);
 
 	private final SendableChooser<Command> autoChooser;
 

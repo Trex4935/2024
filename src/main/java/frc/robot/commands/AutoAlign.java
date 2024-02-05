@@ -17,16 +17,16 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.Constants;
-import frc.robot.Constants.ALIGNMENT_POSITION;
+import frc.robot.Constants.PoseOffset;
 
 public class AutoAlign extends Command {
 	/** Creates a new align. */
 	private final CommandSwerveDrivetrain drivetrain;
 	private final Timer timer;
-	private final ALIGNMENT_POSITION position;
+	private final PoseOffset position;
 	private PathPlannerPath path;
 
-	public AutoAlign(CommandSwerveDrivetrain drivetrain, ALIGNMENT_POSITION position) {
+	public AutoAlign(CommandSwerveDrivetrain drivetrain, PoseOffset position) {
 		// Use addRequirements() here to declare subsystem dependencies.
 
 		this.drivetrain = drivetrain;
