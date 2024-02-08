@@ -37,12 +37,40 @@ public class Helper {
      * Converts an angle from a range of -180 to 180 into a range of 0 to 360
      *
      * @param angle
-     *                Angle to convert
-     *  
+     *              Angle to convert
+     * 
      * @return Double between 0 and 360
      */
     public static double ConvertTo360(double angle) {
         return (angle + 360) % 360;
+    }
+
+    //
+    /**
+     * 
+     * @param previousValue
+     *                      provide the previous value of the thing you want checked
+     * @param currentValue
+     *                      get the current value of what you want checked
+     * @param isRisingEdge
+     *                      set to if it is or is not sensing the rising edge
+     * @return
+     */
+
+    // boolean method determning if it is isRisingEdge or isFallingEdge
+    public static boolean detectFallingRisingEdge(boolean previousValue, boolean currentValue, boolean isRisingEdge) {
+        if (isRisingEdge) {
+            if (currentValue && !previousValue) {
+                // rising edge
+                return true;
+            }
+        } else {
+            if (!currentValue && previousValue) {
+                // fall edge
+                return true;
+            }
+        }
+        return false;
     }
 
 }
