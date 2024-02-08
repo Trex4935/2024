@@ -16,27 +16,31 @@ public class Shooter extends SubsystemBase {
   CANSparkMax shootingmotor1;
   CANSparkMax shootingmotor2;
 
-  // Declaring Inputs
-  public FlippedDIO shooterSmacna;
-
   // Makes a new state for the shooter
 
   /** Creates a new Shooter. */
   public Shooter() {
 
     // Creating Motor Objects
-    shootingmotor1 = SparkMax.createDefaultCANSparkMax(16);
-    shootingmotor2 = SparkMax.createDefaultCANSparkMax(26);
-
-    // Creating Inputs
-    shooterSmacna = new FlippedDIO(0);
+    shootingmotor1 = SparkMax.createDefaultCANSparkMax(6);
+    shootingmotor2 = SparkMax.createDefaultCANSparkMax(8);
 
   }
 
   // makes motors spin YIPPIE
   public void shooterMovement(double speed) {
+    shootingmotor1.set(0.8);
+    shootingmotor2.set(-0.8);
+  }
+
+  // sets motor 1's speed
+  public void setshootingmotor1(double speed) {
     shootingmotor1.set(speed);
-    shootingmotor2.set(-speed);
+  }
+
+  // sets motor 2's speed
+  public void setshootingmotor2(double speed) {
+    shootingmotor2.set(speed);
   }
 
   // stops motor 1
@@ -50,7 +54,7 @@ public class Shooter extends SubsystemBase {
   }
 
   // stop all motors
-  public void stopAllMotors() {
+  public void stopShooterMotors() {
     stopShootingMotor1();
     stopShootingMotor2();
   }
@@ -70,11 +74,12 @@ public class Shooter extends SubsystemBase {
       // Note is shot out towards speaker
       case SPEAKER:
         shooterMovement(0);
+
         break;
       // Deafult Position of the Shooter angled at 180 degrees approximately
       default:
         // turns all the motors off
-        stopAllMotors();
+        stopShooterMotors();
 
     }
 

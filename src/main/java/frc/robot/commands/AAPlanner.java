@@ -60,7 +60,7 @@ public class AAPlanner extends Command {
 	
 			// Reset controllers
 			Pose2d currentPose = drivetrain.getState().Pose;
-;
+			
 			Translation2d linearFieldVelocity = new Translation2d(
 				drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond,
 				drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond).
