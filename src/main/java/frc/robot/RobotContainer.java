@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.PoseOffset;
 import frc.robot.commands.AutoAlignAlt;
+import frc.robot.commands.align;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.PivotAngle;
 import frc.robot.generated.TunerConstants;
@@ -70,6 +71,7 @@ public class RobotContainer {
 	private final Telemetry logger = new Telemetry(MaxSpeed);
 
 	private final AutoAlignAlt autoAlignAlt = new AutoAlignAlt(drivetrain, PoseOffset.LEFT);
+	private final align align = new align(drivetrain, () -> drivetrain.getState().Pose.nearest(Constants.speakerAprilTags), false);
 
   private final SendableChooser<Command> autoChooser;
 
@@ -95,6 +97,8 @@ public class RobotContainer {
 		joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
 
 		joystick.leftStick().onTrue(autoAlignAlt);
+
+		joystick.leftTrigger().onTrue(align);
 
     joystick.rightTrigger()
         .whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));

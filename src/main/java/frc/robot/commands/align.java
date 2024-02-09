@@ -36,17 +36,15 @@ public class align extends Command {
 	private final ProfiledPIDController xController, yController, thetaController;
 
 	private final CommandSwerveDrivetrain drivetrain;
-	private final Supplier<Pose2d> poseProvider;
 	private final Supplier<Pose2d> goalPoseSupplier;
 	private final boolean useAllianceColor;
 	private SwerveRequest.ApplyChassisSpeeds initialDrive, driveToPoint, finalDrive;
 
-	public align(CommandSwerveDrivetrain drivetrain, Supplier<Pose2d> goalPoseSupplier, Supplier<Pose2d> poseProvider,
+	public align(CommandSwerveDrivetrain drivetrain, Supplier<Pose2d> goalPoseSupplier,
 			boolean useAllianceColor) {
 		// Use addRequirements() here to declare subsystem dependencies.
 		this.drivetrain = drivetrain;
 		this.goalPoseSupplier = goalPoseSupplier;
-		this.poseProvider = poseProvider;
 		this.useAllianceColor = useAllianceColor;
 
 		xController = new ProfiledPIDController(0, 0, 0, DEFAULT_XY_CONSTRAINTS);
@@ -94,7 +92,7 @@ public class align extends Command {
 	}
 
 	private void resetPIDControllers() {
-		Pose2d robotPose = poseProvider.get();
+		Pose2d robotPose = drivetrain.getState().Pose;
 		xController.reset(robotPose.getX());
 		yController.reset(robotPose.getY());
 		thetaController.reset(robotPose.getRotation().getRadians());
@@ -103,7 +101,7 @@ public class align extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		Pose2d robotPose = poseProvider.get();
+		Pose2d robotPose = drivetrain.getState().Pose;
 
 		double xSpeed = xController.calculate(robotPose.getX());
 		if (xController.atGoal()) {
