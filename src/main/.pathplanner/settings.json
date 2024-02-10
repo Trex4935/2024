@@ -4,11 +4,13 @@
   "holonomicMode": true,
   "pathFolders": [
     "2 Piece Paths",
-    "Test Path"
+    "Test Folder",
+    "3 Piece Paths"
   ],
   "autoFolders": [
-    "Test Autos",
-    "2 Piece Autos"
+    "2 Piece Autos",
+    "3 Piece Autos",
+    "Test Folder"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
