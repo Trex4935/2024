@@ -33,10 +33,10 @@ public class RobotContainer {
   // News up our subsystems that we use throughout RobotContainer
   private final Elevator elevator = new Elevator();
   private final Intake intake = new Intake();
+  private final LEDControl ledControl = new LEDControl();
   private final Pivot pivot = new Pivot();
   private final Shooter shooter = new Shooter();
   private final Vision vision = new Vision("LL1");
-  private final LEDControl ledControl = new LEDControl();
 
   // Sets the default state in the Note Life Cycle
   private final Rollers rollers = new Rollers();
