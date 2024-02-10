@@ -4,8 +4,10 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 
@@ -46,6 +48,27 @@ public class LEDControl extends SubsystemBase {
     ledStrip.setData(ledBuffer);
     ledStrip.start();
   }
+  public void sectionedLEDControl(){
+    for (var i = 0; i< ledBuffer.getLength(); i++) {
+      ledBuffer.setLED(i,Color.kBlue);
+      if(i < ledBuffer.getLength()-1){
+          System.out.println("+1: "+(i+1));
+          ledBuffer.setLED(i+1,Color.kBlack);
+      }
+      if(i >= 1){
+        System.out.println("-1: "+(i-1));
+        ledBuffer.setLED(i-1,Color.kBlack);
+      }
+      if(i==0){
+        ledBuffer.setLED(89,Color.kBlack);
+      }
+
+    Timer.delay(.05); 
+    ledStrip.setData(ledBuffer);
+    ledStrip.start();
+    }
+
+  }
   
 
   // state machine for shooter motors
@@ -58,7 +81,8 @@ public class LEDControl extends SubsystemBase {
 
   @Override
   public void periodic() {
-    LEDController();
+    // LEDController();
+    sectionedLEDControl();
     // This method will be called once per scheduler run
 
   }
