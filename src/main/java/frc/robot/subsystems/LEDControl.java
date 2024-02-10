@@ -17,6 +17,7 @@ public class LEDControl extends SubsystemBase {
   int m_rainbowFirstPixelHue;
   AddressableLED ledStrip;
   AddressableLEDBuffer ledBuffer;
+  boolean ledToggle;
   // Makes a new state for the shooter
 
   /** Creates a new Shooter. */
@@ -25,8 +26,10 @@ public class LEDControl extends SubsystemBase {
     // Creating addressable led Objects
     m_rainbowFirstPixelHue = 0;
     ledStrip = new AddressableLED(7);
-    ledBuffer = new AddressableLEDBuffer(90);
+    ledBuffer = new AddressableLEDBuffer(60);
     ledStrip.setLength(ledBuffer.getLength());
+    ledToggle = true;
+
     // Set the data
     
   }
@@ -69,22 +72,65 @@ public class LEDControl extends SubsystemBase {
     }
 
   }
-  
-
-  // state machine for shooter motors
-  public void shooterSwitch() {
-    switch (RobotContainer.noteLifecycle) {
-
+  public void solidLEDS(int hue, int saturation, int brightness){
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+      // Calculate the hue - hue is easier for rainbows because the color
+      // shape is a circle so only one value needs to precess
+      // Set the value
+      ledBuffer.setHSV(i, hue, saturation, brightness);
     }
-
+    // Increase by to make the rainbow "move"
+    // Check bounds
+    ledStrip.setData(ledBuffer);
+    ledStrip.start();
   }
+  
+  public void flashLEDS(int hue, int saturation, int brightness){
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+      // Calculate the hue - hue is easier for rainbows because the color
+      // shape is a circle so only one value needs to precess
+      // Set the value
+      if (i%2 == 0){
+        if (ledToggle)
+        {
+          ledBuffer.setHSV(i, hue, saturation, brightness);
+        }
+        else
+        {
+          ledBuffer.setHSV(i, 0, 0, 0);
+        }
+      }
+
+      else
+      {
+      if (ledToggle)
+      {
+      ledBuffer.setHSV(i, 0, 0, 0);
+      }
+      else
+      {
+        ledBuffer.setHSV(i, hue, saturation, brightness);
+      }
+      }
+    }
+    ledToggle = !ledToggle;
+    // Increase by to make the rainbow "move"
+    // Check bounds
+    Timer.delay(5);
+    ledStrip.setData(ledBuffer);
+    ledStrip.start();
+    
+  }
+
 
   @Override
   public void periodic() {
+  
     // LEDController();
-    sectionedLEDControl();
     // This method will be called once per scheduler run
-
+    // solidLEDS(15, 255, 32);
+    solidLEDS(15, 255, 32);
+    solidLEDS(0, 0, 0);
   }
 
 }
