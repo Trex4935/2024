@@ -98,7 +98,7 @@ public class RobotContainer {
 
 		joystick.leftStick().onTrue(autoAlignAlt);
 
-		joystick.leftTrigger().onTrue(align);
+		joystick.leftTrigger().whileTrue(align);
 
     joystick.rightTrigger()
         .whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));

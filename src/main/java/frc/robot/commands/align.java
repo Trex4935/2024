@@ -38,7 +38,7 @@ public class align extends Command {
 	private final CommandSwerveDrivetrain drivetrain;
 	private final Supplier<Pose2d> goalPoseSupplier;
 	private final boolean useAllianceColor;
-	private SwerveRequest.ApplyChassisSpeeds initialDrive, driveToPoint, finalDrive;
+	private SwerveRequest.ApplyChassisSpeeds driveToPoint, finalDrive;
 
 	public align(CommandSwerveDrivetrain drivetrain, Supplier<Pose2d> goalPoseSupplier,
 			boolean useAllianceColor) {
@@ -47,16 +47,15 @@ public class align extends Command {
 		this.goalPoseSupplier = goalPoseSupplier;
 		this.useAllianceColor = useAllianceColor;
 
-		xController = new ProfiledPIDController(0, 0, 0, DEFAULT_XY_CONSTRAINTS);
-		yController = new ProfiledPIDController(0, 0, 0, DEFAULT_XY_CONSTRAINTS);
-		thetaController = new ProfiledPIDController(0, 0, 0, DEFAULT_OMEGA_CONSTRAINTS);
+		xController = new ProfiledPIDController(0.2, 0, 0, DEFAULT_XY_CONSTRAINTS);
+		yController = new ProfiledPIDController(0.2, 0, 0, DEFAULT_XY_CONSTRAINTS);
+		thetaController = new ProfiledPIDController(0.2, 0, 0, DEFAULT_OMEGA_CONSTRAINTS);
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
 		xController.setTolerance(0.1);
 		yController.setTolerance(TRANSLATION_TOLERANCE);
 		thetaController.setTolerance(Units.degreesToRadians(2.0));
 
-		initialDrive = new SwerveRequest.ApplyChassisSpeeds();
 		driveToPoint = new SwerveRequest.ApplyChassisSpeeds();
 		finalDrive = new SwerveRequest.ApplyChassisSpeeds();
 
@@ -66,14 +65,6 @@ public class align extends Command {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		Translation2d emptyTranslation = new Translation2d();
-		initialDrive = initialDrive.withSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
-				emptyTranslation.getX(),
-				emptyTranslation.getY(),
-				0.0,
-				drivetrain.getRotation3d().toRotation2d()));
-
-		drivetrain.applyRequest(() -> initialDrive);
 
 		resetPIDControllers();
 		Pose2d pose = goalPoseSupplier.get();
@@ -120,8 +111,13 @@ public class align extends Command {
 
 		driveToPoint = driveToPoint.withSpeeds(
 				ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, thetaSpeed, robotPose.getRotation()));
+				System.out.println(xSpeed);
+				System.out.println(ySpeed);
+				System.out.println(thetaSpeed);
 
-		drivetrain.applyRequest(() -> driveToPoint);
+		drivetrain.setControl(driveToPoint);
+
+		System.out.println("Executing");
 	}
 
 	// Called once the command ends or is interrupted.
