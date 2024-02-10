@@ -35,13 +35,8 @@ public class poseWithVision extends Command {
             return;
         }
 
-        // If 50 ms have passed, add vision measurement to odometry
-        if (timer.hasElapsed(0.050)) {
-            double[] botpose = vision.botPose();
-            drivetrain.addVisionMeasurement(new Pose2d(botpose[0], botpose[1], Rotation2d.fromDegrees(botpose[5])),
-                    Timer.getFPGATimestamp() - botpose[6] / 1000.0);
-            timer.reset();
-        }
+	// TODO: Repurpose for align while seeing AprilTags	
+
   }
 
   // Called once the command ends or is interrupted.

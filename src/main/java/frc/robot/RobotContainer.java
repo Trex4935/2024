@@ -4,13 +4,11 @@
 
 package frc.robot;
 
-import java.util.List;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -29,9 +27,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
-import frc.robot.extension.NoteState;
 import frc.robot.subsystems.Rollers;
-import frc.robot.subsystems.Elevator;;
 
 public class RobotContainer {
   // News up our subsystems that we use throughout RobotContainer
@@ -96,9 +92,8 @@ public class RobotContainer {
 		joystick.rightBumper().onTrue(pivot.stateSwitcher(PivotAngle.Load));
 		joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
 
-		joystick.leftStick().onTrue(autoAlignAlt);
 
-		joystick.leftTrigger().whileTrue(align);
+		joystick.leftStick().whileTrue(align);
 
     joystick.rightTrigger()
         .whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));
