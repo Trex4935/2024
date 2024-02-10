@@ -44,7 +44,7 @@ public class Pivot extends SubsystemBase {
     relativeEncoder = pivotMotor.getEncoder();
     pivotMotor.getPIDController().setFeedbackDevice(relativeEncoder);
 
-    limitSwitch = new FlippedDIO(1);
+    limitSwitch = new FlippedDIO(4);
     stateAngle = new HashMap<String, Double>();
     stateAngle.put("Default", 30.0);
     stateAngle.put("Amp", 60.0);
