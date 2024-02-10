@@ -43,7 +43,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Test Folder",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }
