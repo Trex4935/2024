@@ -165,6 +165,8 @@ public final class Constants {
 			aprilTagPoses.add(i, aprilTagLayout.getTagPose(i + 1).get().toPose2d());
 		}
 
+		// Use following line for simulation instead
+		// if (DriverStation.getAlliance().equals(DriverStation.Alliance.Blue) || DriverStation.getAlliance().isEmpty()) {
 		if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
 
 			sourceAprilTags.addAll(aprilTagPoses.subList(0, 2));

@@ -9,14 +9,20 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.Constants.PoseOffset;
 import frc.robot.generated.TunerConstants;
 
 /**
@@ -84,6 +90,21 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
     }
+
+		public Command autoAlignAlt(int tagID) {
+			Pose2d tagLocation = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField()
+			.getTagPose(tagID).get().toPose2d();
+
+			PoseOffset offset = PoseOffset.LEFT;
+
+			double targetX = tagLocation.getX() + offset.offset.getX();
+			double targetY = tagLocation.getY() + offset.offset.getY();
+			Rotation2d targetTheta = offset.offset.getRotation();
+			Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
+
+			Command autoCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(3, 3, 3, 3), 0);
+			return autoCommand;
+		}
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);

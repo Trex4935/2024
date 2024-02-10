@@ -94,6 +94,7 @@ public class RobotContainer {
 
 
 		joystick.leftStick().whileTrue(align);
+		joystick.rightStick().whileTrue(drivetrain.autoAlignAlt(8));
 
     joystick.rightTrigger()
         .whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));
