@@ -18,6 +18,7 @@ public class LEDControl extends SubsystemBase {
   AddressableLEDBuffer ledBuffer;
   int ledBufferLength;
   boolean ledToggle;
+  private int walkStartingPosition = 0;
   // Makes a new state for the shooter
 
   /** Creates a new Shooter. */
@@ -120,9 +121,9 @@ public class LEDControl extends SubsystemBase {
 
   /**
    * 
-   * @param pirmaryColor Primary color of LED strip e.g Color.kRed
-   * @param secondaryColor Secondary color of LED strip e.g. Color.kBlack
-   * @param startPosition Initial position of Primary color
+   * @param pirmaryColor    Primary color of LED strip e.g Color.kRed
+   * @param secondaryColor  Secondary color of LED strip e.g. Color.kBlack
+   * @param startPosition   Initial position of Primary color
    * @param lengthOfPrimary Number of LEDs to set to Primary Color
    */
   public void setLEDSectionOn(Color pirmaryColor, Color secondaryColor, int startPosition, int lengthOfPrimary) {
@@ -144,6 +145,24 @@ public class LEDControl extends SubsystemBase {
       startPosition++;
     }
 
+  }
+
+  /**
+   * 
+   * @param primaryColor    Color that will be moving e.g. Color.kRed
+   * @param secondaryColor  Color that will be the background e.g. Color.kBlack
+   * @param lengthOfPrimary Length of moving strip.
+   */
+  public void setLEDsWalking(Color primaryColor, Color secondaryColor, int lengthOfPrimary) {
+
+    // Set up the strip based on our recorded starting position
+    setLEDSectionOn(primaryColor, secondaryColor, walkStartingPosition, lengthOfPrimary);
+
+    // Increment starting position
+    walkStartingPosition++;
+
+    // Make sure starting position isn't beyond the length of the strip
+    walkStartingPosition = walkStartingPosition % ledBufferLength;
   }
 
   @Override
