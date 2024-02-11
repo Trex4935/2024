@@ -125,12 +125,55 @@ public class LEDControl extends SubsystemBase {
 
   @Override
   public void periodic() {
+  switch (RobotContainer.noteLifecycle) {
+
+    case FIELD:
+      solidLEDS(175, 255, 32);
+      break;
+
+    case GROUNDINTAKE:
+      solidLEDS(0, 0, 32);
+      break;
   
-    // LEDController();
-    // This method will be called once per scheduler run
-    // solidLEDS(15, 255, 32);
-    solidLEDS(15, 255, 32);
-    solidLEDS(0, 0, 0);
+    case HUMANINTAKE:
+      solidLEDS(15, 255, 32);
+      break;
+
+    case GRABBED:
+      solidLEDS(5, 255, 32);
+      break;
+
+    case CONTROL:
+      solidLEDS(5, 255, 32);
+      break;
+
+    case STORAGE:
+      solidLEDS(250, 255, 32);
+      break;
+
+    case SPEAKER:
+      solidLEDS(220, 255, 32);
+      break;
+
+    case AMPLOADING:
+      solidLEDS(150, 255, 32);
+      break;
+
+    case AMP:
+      solidLEDS(150, 255, 32);
+      break;
+
+    case EJECT:
+      solidLEDS(1, 255, 32);
+      break;
+
+    default:
+      solidLEDS(175, 255, 32);
+      break;
   }
+
+  }
+  
+
 
 }
