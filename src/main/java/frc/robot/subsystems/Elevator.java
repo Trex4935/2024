@@ -14,27 +14,40 @@ public class Elevator extends SubsystemBase {
   CANSparkMax elevatorMotorOne;
   CANSparkMax elevatorMotorTwo;
 
+  // Sets Elevator Motor Object ID's
   public Elevator() {
-    elevatorMotorOne = SparkMax.createDefaultCANSparkMax(4);
-    elevatorMotorTwo = SparkMax.createDefaultCANSparkMax(5);
-    //makes elevator motors spin
+    elevatorMotorOne = SparkMax.createDefaultCANSparkMax(2);
+    elevatorMotorTwo = SparkMax.createDefaultCANSparkMax(3);
   }
-  public void elevatorMotorOneMovement(){
+
+  // Human control of elevator motors
+  public void elevatorMotorOneMovement() {
     elevatorMotorOne.set(0);
   }
-  public void elevatorMotorTwoMovement(){
+
+  public void elevatorMotorTwoMovement() {
     elevatorMotorTwo.set(0);
+
   }
-   //stops the elevator motors
-  public void stopelevatorMotorOne(){
+
+  public void elevatorMotorsMovements(){
+    elevatorMotorTwo.follow(elevatorMotorOne);
+    elevatorMotorOne.set(0);
+  }
+
+  // stops the elevator motors
+  public void stopElevatorMotorOne() {
     elevatorMotorOne.stopMotor();
   }
-  public void stopelevatorMotorTwo(){
+
+  public void stopElevatorMotorTwo() {
     elevatorMotorTwo.stopMotor();
   }
 
-
-
+  public void stopElevatorMotors() {
+    elevatorMotorOne.stopMotor();
+    elevatorMotorTwo.stopMotor();
+  }
 
   @Override
   public void periodic() {

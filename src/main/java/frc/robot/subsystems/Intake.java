@@ -9,57 +9,67 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.extension.NoteState;
-
+import frc.robot.RobotContainer;
 
 public class Intake extends SubsystemBase {
   // DoubleSolenoid doublesolenoid;
+
+  // Makes a New Solenoid
   Solenoid solenoid;
 
+  // Makes a new compressor
+  private final Compressor m_compressor;
 
-  private final Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-  NoteState intakeState;
- 
   /** Creates a new IntakeLift. */
   public Intake() {
     // doublesolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,33, 44);
-    solenoid = new Solenoid(PneumaticsModuleType.REVPH, 22);
 
-    intakeState = NoteState.FIELD;
+    // news up the solenoid and compressor
+    solenoid = new Solenoid(PneumaticsModuleType.REVPH, 9);
+
+    // Creates Compressor Object
+    m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+
   }
+
+  // Turns on the solenoid
   public void switchIntakeOn() {
     solenoid.set(true);
 
   }
+
+  // Turns off the solenoid
   public void switchIntakeOff() {
     solenoid.set(false);
   }
 
+  // Returns the current state of the solenoid-Used for Sendables
   public boolean getIntakeState() {
     return solenoid.get();
   }
-  
 
-  public void initSendable(SendableBuilder builder){
+  // puts the current state of the intake on the network table
+  public void initSendable(SendableBuilder builder) {
     builder.addBooleanProperty("Intake Dropped", this::getIntakeState, null);
   }
+
   @Override
   public void periodic() {
-    m_compressor.isEnabled();
     // This method will be called once per scheduler run
   }
 
-  public void intakeSwitch(){
-    switch (intakeState) {
-      case INTAKE:
-      // Turns Solenoid On
+  // State machine to switch the state of the note
+  public void intakeSwitch() {
+    switch (RobotContainer.noteLifecycle) {
+      case GROUNDINTAKE:
+        // Turns Solenoid On
         switchIntakeOn();
         break;
       case GRABBED:
         switchIntakeOn();
         break;
       default:
-      // Turns Solenoid Off
+        // Turns Solenoid Off
         switchIntakeOff();
     }
   }

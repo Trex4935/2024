@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.SparkMax;
 
 public class Shooter extends SubsystemBase {
@@ -16,39 +15,45 @@ public class Shooter extends SubsystemBase {
   CANSparkMax shootingmotor1;
   CANSparkMax shootingmotor2;
 
-  // Declaring Inputs
-  public FlippedDIO shooterSmacna;
-
   // Makes a new state for the shooter
 
   /** Creates a new Shooter. */
   public Shooter() {
 
     // Creating Motor Objects
-    shootingmotor1 = SparkMax.createDefaultCANSparkMax(16);
-    shootingmotor2 = SparkMax.createDefaultCANSparkMax(26);
-
-    // Creating Inputs
-    shooterSmacna = new FlippedDIO(0);
+    shootingmotor1 = SparkMax.createDefaultCANSparkMax(6);
+    shootingmotor2 = SparkMax.createDefaultCANSparkMax(8);
 
   }
 
   // makes motors spin YIPPIE
   public void shooterMovement(double speed) {
-    shootingmotor1.set(speed);
-    shootingmotor2.set(-speed);
+    shootingmotor1.set(0.8);
+    shootingmotor2.set(-0.8);
   }
 
-  // stops motors
+  // sets motor 1's speed
+  public void setshootingmotor1(double speed) {
+    shootingmotor1.set(speed);
+  }
+
+  // sets motor 2's speed
+  public void setshootingmotor2(double speed) {
+    shootingmotor2.set(speed);
+  }
+
+  // stops motor 1
   public void stopShootingMotor1() {
     shootingmotor1.stopMotor();
   }
 
+  // stops motor 2
   public void stopShootingMotor2() {
     shootingmotor2.stopMotor();
   }
 
-  public void stopAllMotors() {
+  // stop all motors
+  public void stopShooterMotors() {
     stopShootingMotor1();
     stopShootingMotor2();
   }
@@ -57,23 +62,23 @@ public class Shooter extends SubsystemBase {
   public void shooterSwitch() {
     switch (RobotContainer.noteLifecycle) {
 
+      // Note is moving to the amp drop position
       case AMPLOADING:
         shooterMovement(0);
         break;
-
+      // Note is dropped into the amp
       case AMP:
         shooterMovement(0);
-
         break;
-
+      // Note is shot out towards speaker
       case SPEAKER:
         shooterMovement(0);
 
         break;
-
+      // Deafult Position of the Shooter angled at 180 degrees approximately
       default:
         // turns all the motors off
-        stopAllMotors();
+        stopShooterMotors();
 
     }
 
