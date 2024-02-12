@@ -1,13 +1,11 @@
 package frc.robot.subsystems;
 
-import java.util.EnumSet;
 
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.extension.SparkMax;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.NoteState;
