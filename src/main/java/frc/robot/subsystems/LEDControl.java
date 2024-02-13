@@ -18,11 +18,11 @@ public class LEDControl extends SubsystemBase {
   int m_rainbowFirstPixelHue;
   AddressableLED ledStrip;
   AddressableLEDBuffer ledBuffer;
+  // Declares a counter and a toggle to be used in flashing the LEDs
   boolean ledToggle;
   int counter;
-  // Makes a new state for the shooter
 
-  /** Creates a new Shooter. */
+  /** Creates a new LEDControl. */
   public LEDControl() {
 
     // Creating addressable led Objects
@@ -30,16 +30,16 @@ public class LEDControl extends SubsystemBase {
     ledStrip = new AddressableLED(7);
     ledBuffer = new AddressableLEDBuffer(60);
     ledStrip.setLength(ledBuffer.getLength());
+    // Makes the counter and toggle
     ledToggle = false;
     counter = 0;
     RobotContainer.noteLifecycle = NoteState.FIELD;
 
 
-    // Set the data
     
   }
     
-  // makes motors spin YIPPIE
+  // Used to create rainbow LEDs
   public void LEDController() {
     // For every pixel
     for (var i = 0; i < ledBuffer.getLength(); i++) {
@@ -56,6 +56,7 @@ public class LEDControl extends SubsystemBase {
     ledStrip.setData(ledBuffer);
     ledStrip.start();
   }
+  // Used to create a 'walking' LED
   public void sectionedLEDControl(){
     for (var i = 0; i< ledBuffer.getLength(); i++) {
       ledBuffer.setLED(i,Color.kBlue);
@@ -77,6 +78,7 @@ public class LEDControl extends SubsystemBase {
     }
 
   }
+  // A method used to create non changing LEDs or solid LEDs
   public void solidLEDS(int hue, int saturation, int brightness){
     for (var i = 0; i < ledBuffer.getLength(); i++) {
       // Calculate the hue - hue is easier for rainbows because the color
@@ -89,64 +91,36 @@ public class LEDControl extends SubsystemBase {
     ledStrip.setData(ledBuffer);
     ledStrip.start();
   }
-  
-  public void flashLEDS(int hue, int saturation, int brightness){
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
-      // Calculate the hue - hue is easier for rainbows because the color
-      // shape is a circle so only one value needs to precess
-      // Set the value
-      if (i%2 == 0){
-        if (ledToggle)
-        {
-          ledBuffer.setHSV(i, hue, saturation, brightness);
-        }
-        else
-        {
-          ledBuffer.setHSV(i, 0, 0, 0);
-        }
-      }
-
-      else
+  // A method used to create flashing LEDs taking blink rate into account//
+  public void flashLEDS(int hue, int saturation, int brightness, int blinkRate){
+    counter++;
+    // Checks to see how long one cycle has passed
+      if(counter%blinkRate == 0)
       {
-      if (ledToggle)
-      {
-      ledBuffer.setHSV(i, 0, 0, 0);
-      }
-      else
-      {
-        ledBuffer.setHSV(i, hue, saturation, brightness);
-      }
-      }
-    }
-    ledToggle = !ledToggle;
-    // Increase by to make the rainbow "move"
-    // Check bounds
-    Timer.delay(5);
-    ledStrip.setData(ledBuffer);
-    ledStrip.start();
-    
-  }
-
-
-  @Override
-  public void periodic() {
-  switch (RobotContainer.noteLifecycle) {
-
-    case FIELD:
-      counter++;
-      if(counter%100 == 0)
-      {
+      // Checks to see if LEDs are off and turns them on
       if(!ledToggle)
       {
-      solidLEDS(175, 255, 32);
+      solidLEDS(hue, saturation, brightness);
       ledToggle = true;
       }
+      // Turns off the LEDs if they are on
       else
       {
         solidLEDS(0, 0, 0);
         ledToggle = false;
       }
       }
+  }
+
+
+  @Override
+  public void periodic() {
+    //implementing LEDs into LED control
+  switch (RobotContainer.noteLifecycle) {
+
+    // Refer to LED guide in extension to see what each state changes the LEDs to
+    case FIELD:
+      solidLEDS(5, 255, 32);
       break;
 
     case GROUNDINTAKE:
@@ -158,11 +132,11 @@ public class LEDControl extends SubsystemBase {
       break;
 
     case GRABBED:
-      solidLEDS(5, 255, 32);
+      flashLEDS(5, 255, 32, 50);
       break;
 
     case CONTROL:
-      solidLEDS(5, 255, 32);
+      flashLEDS(5, 255, 32, 50);
       break;
 
     case STORAGE:
@@ -178,20 +152,18 @@ public class LEDControl extends SubsystemBase {
       break;
 
     case AMP:
-      solidLEDS(150, 255, 32);
+      flashLEDS(150, 255, 32, 50);
       break;
 
     case EJECT:
-      solidLEDS(1, 255, 32);
+      flashLEDS(1, 255, 32, 20);
       break;
 
     default:
-      solidLEDS(175, 255, 32);
+      solidLEDS(5, 255, 32);
       break;
   }
 
   }
   
-
-
 }
