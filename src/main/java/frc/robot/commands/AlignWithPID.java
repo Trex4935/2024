@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.Constants;
 
-public class align extends Command {
+public class AlignWithPID extends Command {
 	/** Creates a new DriveToPoseCommand. */
 	private static final double TRANSLATION_TOLERANCE = 0.1;
 	private static final double THETA_TOLERANCE = Units.degreesToRadians(2.0);
@@ -40,7 +40,7 @@ public class align extends Command {
 	private final boolean useAllianceColor;
 	private SwerveRequest.ApplyChassisSpeeds driveToPoint, finalDrive;
 
-	public align(CommandSwerveDrivetrain drivetrain, Supplier<Pose2d> goalPoseSupplier,
+	public AlignWithPID(CommandSwerveDrivetrain drivetrain, Supplier<Pose2d> goalPoseSupplier,
 			boolean useAllianceColor) {
 		// Use addRequirements() here to declare subsystem dependencies.
 		this.drivetrain = drivetrain;

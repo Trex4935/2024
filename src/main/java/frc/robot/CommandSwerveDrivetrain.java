@@ -91,15 +91,11 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return new PathPlannerAuto(pathName);
     }
 
-		public Command autoAlignAlt(int tagID) {
-			Pose2d tagLocation = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField()
-			.getTagPose(tagID).get().toPose2d();
+		public Command alignWithPathPlanner(Pose2d aprilTagPose, PoseOffset poseOffset) {
 
-			PoseOffset offset = PoseOffset.LEFT;
-
-			double targetX = tagLocation.getX() + offset.offset.getX();
-			double targetY = tagLocation.getY() + offset.offset.getY();
-			Rotation2d targetTheta = offset.offset.getRotation();
+			double targetX = aprilTagPose.getX() + poseOffset.offset.getX();
+			double targetY = aprilTagPose.getY() + poseOffset.offset.getY();
+			Rotation2d targetTheta = poseOffset.offset.getRotation();
 			Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
 
 			Command autoCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(3, 3, 3, 3), 0);

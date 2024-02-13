@@ -4,10 +4,9 @@
 
 package frc.robot;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -63,10 +62,16 @@ public final class Constants {
 	}
 
 	public static final class PoseEstimation {
+
+		public static final Pose2d testAmpPose = (new Pose2d(1.825, 7.5, new Rotation2d(-Math.PI / 2)));
+		public static final Pose2d testSpeakerPose = (new Pose2d(1.725, 5.5, new Rotation2d(Math.PI)));
+		public static final Pose2d testSourcePose = new Pose2d(15.4, 1.125, new Rotation2d(-Math.PI / 3));
+
 		public static ArrayList<Pose2d> scoringPositions = new ArrayList<Pose2d>() {
 			{
-				add(new Pose2d(1.725, 5.5, new Rotation2d(Math.PI)));// 0,
-				add(new Pose2d(1.825, 7.5, new Rotation2d(-Math.PI / 2)));// 1, center of grid
+				add(testSpeakerPose);
+				add(testAmpPose);
+				add(testSourcePose);
 			}
 		};
 
@@ -117,12 +122,12 @@ public final class Constants {
       new Translation3d(0.0, Units.inchesToMeters(197.765), Units.inchesToMeters(78.324));
 
 }
-	// TODO: Need to know values for limelight position
+	// TODO: Fix value for source
 	public enum PoseOffset {
-		RIGHT_DOUBLE_STATION(-CENTER_OFFSET, -0.9, 0.0, 0.0),
-		LEFT(CENTER_OFFSET, -0.53, 180.0, -180.0),
-		MIDDLE(CENTER_OFFSET, 0.0, 180.0, 180.0),
-		RIGHT(CENTER_OFFSET, 0.53, 180.0, 180.0);
+		SOURCE(-CENTER_OFFSET, -0.9, 45.0, 45.0),
+		SPEAKER(1.763, 0, 180.0, -180.0),
+		AMP(0, -0.7042, 90.0, 90.0),
+		STAGE(0.320528, 0.879128, -60.0, -60.0);
 
 		public final Pose2d offset;
 		public final Rotation2d heading;
@@ -135,16 +140,19 @@ public final class Constants {
 
 	// All AprilTag poses
 	public static List<Pose2d> aprilTagPoses = new ArrayList<Pose2d>(16);
-	// Poses used by your alliance
-	public static List<Pose2d> allianceAprilTags = new ArrayList<Pose2d>(8);
+	// Poses used by your alliance (extra tags not included)
+	public static List<Pose2d> allianceAprilTags = new ArrayList<Pose2d>(6);
 	// Poses used by the opposing alliance
 	public static List<Pose2d> opposingAllianceAprilTags = new ArrayList<Pose2d>(8);
-	// Poses provided speaker
-	public static List<Pose2d> speakerAprilTags = new ArrayList<>(2);
-	// Poses provided by trap
-	public static List<Pose2d> trapAprilTags = new ArrayList<>(3);
+	// Poses provided by speaker
+	// public static List<Pose2d> speakerAprilTags = new ArrayList<>(2);
+	public static Pose2d speakerAprilTag;
+	// Poses provided by stage
+	public static List<Pose2d> stageAprilTags = new ArrayList<>(3);
 	// Poses provided by human player station (source)
-	public static List<Pose2d> sourceAprilTags = new ArrayList<>(2);
+	// public static List<Pose2d> sourceAprilTags = new ArrayList<>(2);
+	// Pose provided by human player station (source)
+	public static Pose2d sourceAprilTag;
 	// Pose provided by amp
 	public static Pose2d ampAprilTag;
 
@@ -152,12 +160,12 @@ public final class Constants {
 
 	public static void updateAprilTagTranslations() {
 
-		// Clear lists
+		// Clear pose lists
 		aprilTagPoses.clear();
 		allianceAprilTags.clear();
-		speakerAprilTags.clear();
-		trapAprilTags.clear();
-		sourceAprilTags.clear();
+		// speakerAprilTags.clear();
+		stageAprilTags.clear();
+		// sourceAprilTags.clear();
 		opposingAllianceAprilTags.clear();
 
 		// Return a pose from each AprilTag
@@ -165,37 +173,45 @@ public final class Constants {
 			aprilTagPoses.add(i, aprilTagLayout.getTagPose(i + 1).get().toPose2d());
 		}
 
-		// Use following line for simulation instead
-		// if (DriverStation.getAlliance().equals(DriverStation.Alliance.Blue) || DriverStation.getAlliance().isEmpty()) {
-		if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
 
-			sourceAprilTags.addAll(aprilTagPoses.subList(0, 2));
-			allianceAprilTags.addAll(sourceAprilTags);
+		if (DriverStation.getAlliance().isEmpty() || 
+				DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+
+			// sourceAprilTags.addAll(aprilTagPoses.subList(0, 2));
+			// allianceAprilTags.addAll(sourceAprilTags);
+			sourceAprilTag = aprilTagPoses.get(0);
+			allianceAprilTags.add(sourceAprilTag);
 
 			ampAprilTag = aprilTagPoses.get(5);
 			allianceAprilTags.add(ampAprilTag);
 
-			speakerAprilTags.addAll(aprilTagPoses.subList(6, 8));
-			allianceAprilTags.addAll(speakerAprilTags);
+			// speakerAprilTags.addAll(aprilTagPoses.subList(6, 8));
+			// allianceAprilTags.addAll(speakerAprilTags);
+			speakerAprilTag = aprilTagPoses.get(6);
+			allianceAprilTags.add(speakerAprilTag);
 
-			trapAprilTags.addAll(aprilTagPoses.subList(13, 16));
-			allianceAprilTags.addAll(trapAprilTags);
+			stageAprilTags.addAll(aprilTagPoses.subList(13, 16));
+			allianceAprilTags.addAll(stageAprilTags);
 
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(2, 5));
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(8, 13));
 
 		} else {
-			speakerAprilTags.addAll(aprilTagPoses.subList(2, 4));
-			allianceAprilTags.addAll(speakerAprilTags);
+			// speakerAprilTags.addAll(aprilTagPoses.subList(2, 4));
+			// allianceAprilTags.addAll(speakerAprilTags);
+			speakerAprilTag = aprilTagPoses.get(2);
+			// allianceAprilTags.addAll(speakerAprilTags);
 
 			ampAprilTag = aprilTagPoses.get(4);
 			allianceAprilTags.add(ampAprilTag);
 
-			sourceAprilTags.addAll(aprilTagPoses.subList(8, 10));
-			allianceAprilTags.addAll(sourceAprilTags);
+			// sourceAprilTags.addAll(aprilTagPoses.subList(8, 10));
+			// allianceAprilTags.addAll(sourceAprilTags);
+			sourceAprilTag = aprilTagPoses.get(9);
+			allianceAprilTags.add(sourceAprilTag);
 
-			trapAprilTags.addAll(aprilTagPoses.subList(10, 13));
-			allianceAprilTags.addAll(trapAprilTags);
+			stageAprilTags.addAll(aprilTagPoses.subList(10, 13));
+			allianceAprilTags.addAll(stageAprilTags);
 
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(0, 2));
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(5, 8));

@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.PoseEstimation;
 import frc.robot.Constants.PoseOffset;
-import frc.robot.commands.AutoAlignAlt;
-import frc.robot.commands.align;
+import frc.robot.commands.AlignWithPID;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.PivotAngle;
 import frc.robot.generated.TunerConstants;
@@ -68,8 +68,7 @@ public class RobotContainer {
 
 	private final Telemetry logger = new Telemetry(MaxSpeed);
 
-	private final AutoAlignAlt autoAlignAlt = new AutoAlignAlt(drivetrain, PoseOffset.LEFT);
-	private final align align = new align(drivetrain, () -> drivetrain.getState().Pose.nearest(Constants.speakerAprilTags), false);
+	private final AlignWithPID align = new AlignWithPID(drivetrain, () -> Constants.speakerAprilTag, false);
 
   private final SendableChooser<Command> autoChooser;
 
@@ -92,11 +91,15 @@ public class RobotContainer {
 		// reset the field-centric heading on left bumper press
 		joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 		joystick.rightBumper().onTrue(pivot.stateSwitcher(PivotAngle.Load));
-		joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
+		// joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
 
 
-		joystick.leftStick().whileTrue(align);
-		joystick.rightStick().whileTrue(drivetrain.autoAlignAlt(8));
+		joystick.povUp().whileTrue(drivetrain.alignWithPathPlanner(Constants.speakerAprilTag, PoseOffset.SPEAKER).andThen(drivetrain.applyRequest(() -> brake)));
+		// joystick.povDown().whileTrue(drivetrain.alignWithPathPlanner(
+		// 	Constants.sourceAprilTag, PoseOffset.SOURCE));
+		joystick.povLeft().whileTrue(drivetrain.alignWithPathPlanner(Constants.ampAprilTag, PoseOffset.AMP));
+		joystick.povRight().whileTrue(drivetrain.alignWithPathPlanner(
+			drivetrain.getState().Pose.nearest(Constants.stageAprilTags), PoseOffset.STAGE));
 
     joystick.rightTrigger()
         .whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));
@@ -120,9 +123,14 @@ public class RobotContainer {
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
+		Constants.updateAprilTagTranslations();
     configureBindings();
 
+
     SmartDashboard.putString("angle", pivot.returnPivotAngle());
+
+		SmartDashboard.putNumber("OffsetX", PoseEstimation.testSourcePose.getX() - Constants.sourceAprilTag.getX());
+		SmartDashboard.putNumber("OffsetY", PoseEstimation.testSourcePose.getY() - Constants.sourceAprilTag.getY());
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
