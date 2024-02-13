@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import frc.robot.extension.NoteState;
 
 public class LEDControl extends SubsystemBase {
 
@@ -18,6 +19,7 @@ public class LEDControl extends SubsystemBase {
   AddressableLED ledStrip;
   AddressableLEDBuffer ledBuffer;
   boolean ledToggle;
+  int counter;
   // Makes a new state for the shooter
 
   /** Creates a new Shooter. */
@@ -28,7 +30,10 @@ public class LEDControl extends SubsystemBase {
     ledStrip = new AddressableLED(7);
     ledBuffer = new AddressableLEDBuffer(60);
     ledStrip.setLength(ledBuffer.getLength());
-    ledToggle = true;
+    ledToggle = false;
+    counter = 0;
+    RobotContainer.noteLifecycle = NoteState.FIELD;
+
 
     // Set the data
     
@@ -128,7 +133,20 @@ public class LEDControl extends SubsystemBase {
   switch (RobotContainer.noteLifecycle) {
 
     case FIELD:
+      counter++;
+      if(counter%100 == 0)
+      {
+      if(!ledToggle)
+      {
       solidLEDS(175, 255, 32);
+      ledToggle = true;
+      }
+      else
+      {
+        solidLEDS(0, 0, 0);
+        ledToggle = false;
+      }
+      }
       break;
 
     case GROUNDINTAKE:
