@@ -28,11 +28,13 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Rollers;
+import frc.robot.subsystems.LEDControl;
 
 public class RobotContainer {
   // News up our subsystems that we use throughout RobotContainer
   private final Elevator elevator = new Elevator();
   private final Intake intake = new Intake();
+  private final LEDControl ledControl = new LEDControl();
   private final Pivot pivot = new Pivot();
   private final Shooter shooter = new Shooter();
   private final Vision vision = new Vision("LL1");
