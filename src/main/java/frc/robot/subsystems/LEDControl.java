@@ -21,6 +21,9 @@ public class LEDControl extends SubsystemBase {
   // Declares a counter and a toggle to be used in flashing the LEDs
   boolean ledToggle;
   int counter;
+  int ledBufferLength;
+  private int walkStartingPosition = 0;
+  // Makes a new state for the shooter
 
   /** Creates a new LEDControl. */
   public LEDControl() {
@@ -29,6 +32,7 @@ public class LEDControl extends SubsystemBase {
     m_rainbowFirstPixelHue = 0;
     ledStrip = new AddressableLED(7);
     ledBuffer = new AddressableLEDBuffer(60);
+    ledBufferLength = ledBuffer.getLength();
     ledStrip.setLength(ledBuffer.getLength());
     // Makes the counter and toggle
     ledToggle = false;
@@ -64,22 +68,22 @@ public class LEDControl extends SubsystemBase {
           System.out.println("+1: "+(i+1));
           ledBuffer.setLED(i+1,Color.kBlack);
       }
-      if(i >= 1){
-        System.out.println("-1: "+(i-1));
-        ledBuffer.setLED(i-1,Color.kBlack);
+      if (i >= 1) {
+        System.out.println("-1: " + (i - 1));
+        ledBuffer.setLED(i - 1, Color.kBlack);
       }
-      if(i==0){
-        ledBuffer.setLED(89,Color.kBlack);
+      if (i == 0) {
+        ledBuffer.setLED(89, Color.kBlack);
       }
 
-    Timer.delay(.05); 
-    ledStrip.setData(ledBuffer);
-    ledStrip.start();
+      Timer.delay(.05);
+      ledStrip.setData(ledBuffer);
+      ledStrip.start();
     }
 
   }
   // A method used to create non changing LEDs or solid LEDs
-  public void solidLEDS(int hue, int saturation, int brightness){
+  public void solidLEDS(int hue, int saturation, int brightness) {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
       // Calculate the hue - hue is easier for rainbows because the color
       // shape is a circle so only one value needs to precess
@@ -112,6 +116,51 @@ public class LEDControl extends SubsystemBase {
       }
   }
 
+  /**
+   * 
+   * @param pirmaryColor    Primary color of LED strip e.g Color.kRed
+   * @param secondaryColor  Secondary color of LED strip e.g. Color.kBlack
+   * @param startPosition   Initial position of Primary color
+   * @param lengthOfPrimary Number of LEDs to set to Primary Color
+   */
+  public void setLEDSectionOn(Color pirmaryColor, Color secondaryColor, int startPosition, int lengthOfPrimary) {
+
+    // set all of the leds to the secondary color
+    for (int i = 0; i < ledBufferLength; i++) {
+      ledBuffer.setLED(i, secondaryColor);
+    }
+
+    // starting at the start position set lengthOfPrimary leds to the primary color
+    for (int j = 0; j < lengthOfPrimary; j++) {
+
+      // detect if we are at the end of the strip and reset the start of the strip
+      if (startPosition >= ledBufferLength) {
+        startPosition = 0;
+      }
+
+      ledBuffer.setLED(startPosition, pirmaryColor);
+      startPosition++;
+    }
+
+  }
+
+  /**
+   * 
+   * @param primaryColor    Color that will be moving e.g. Color.kRed
+   * @param secondaryColor  Color that will be the background e.g. Color.kBlack
+   * @param lengthOfPrimary Length of moving strip.
+   */
+  public void setLEDsWalking(Color primaryColor, Color secondaryColor, int lengthOfPrimary) {
+
+    // Set up the strip based on our recorded starting position
+    setLEDSectionOn(primaryColor, secondaryColor, walkStartingPosition, lengthOfPrimary);
+
+    // Increment starting position
+    walkStartingPosition++;
+
+    // Make sure starting position isn't beyond the length of the strip
+    walkStartingPosition = walkStartingPosition % ledBufferLength;
+  }
 
   @Override
   public void periodic() {

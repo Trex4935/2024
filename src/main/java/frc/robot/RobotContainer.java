@@ -24,9 +24,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
-import frc.robot.extension.NoteState;
 import frc.robot.subsystems.Rollers;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LEDControl;
 
 public class RobotContainer {
