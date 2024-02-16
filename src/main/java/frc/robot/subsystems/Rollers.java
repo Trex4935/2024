@@ -17,10 +17,7 @@ public class Rollers extends SubsystemBase {
   CANSparkMax lowMagazine;
   CANSparkMax highMagazine;
   NoteState rollerState;
-  CANSparkMax lowmagazine;
-  CANSparkMax highmagazine;
 
-  CANSparkMax magazinemotor;
   public FlippedDIO intakeSmacna;
   public FlippedDIO magazineSmacna;
   public FlippedDIO magneticFlap;
@@ -33,8 +30,9 @@ public class Rollers extends SubsystemBase {
 
   public Rollers() {
     // random id's and creating motor objects
-    lowMagazine = SparkMax.createDefaultCANSparkMax(9);
-    highMagazine = SparkMax.createDefaultCANSparkMax(10);
+    lowMagazine = SparkMax.createDefaultCANSparkMax(4);
+    lowMagazine.setInverted(true);
+    highMagazine = SparkMax.createDefaultCANSparkMax(5);
     rollerState = NoteState.FIELD;
     // Sensor Objects
     intakeSmacna = new FlippedDIO(0);
@@ -146,8 +144,8 @@ public class Rollers extends SubsystemBase {
         break;
   
       case EJECT:
-        highmagazine.set(0.1);
-        lowmagazine.set(0.1);
+        highMagazine.set(0.1);
+        lowMagazine.set(0.1);
         if (Helper.detectFallingRisingEdge(previousValue, currentValue, false))
         {
           timer.start();
