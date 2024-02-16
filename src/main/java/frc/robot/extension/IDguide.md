@@ -2,7 +2,7 @@ CAN MOTORS:
 
 CAN Motor2: Elevator Motor 1(LEFT)
 CAN Motor3: Elevator Motor 2(RIGHT)
-CAN Motor4: Magazine Motor Low
+CAN Motor4: Magazine Motor Low (Intake)
 CAN Motor5: Magazine Motor High
 CAN Motor6: First Shooting Motor(LEFT)
 CAN Motor7: Shooter Pivot Motor
