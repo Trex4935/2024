@@ -58,18 +58,19 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  // State machine to switch the state of the note
+  // Note Life Cycle state machine to control the intake
   public void intakeSwitch() {
     switch (RobotContainer.noteLifecycle) {
       case GROUNDINTAKE:
-        // Turns Solenoid On
+        // Turns Solenoid On when we want to intake a note
         switchIntakeOn();
         break;
       case GRABBED:
+      // Keeps solenoid on when note is inside robot just to be sure
         switchIntakeOn();
         break;
       default:
-        // Turns Solenoid Off
+        // Turns Solenoid Off in all other cases
         switchIntakeOff();
     }
   }

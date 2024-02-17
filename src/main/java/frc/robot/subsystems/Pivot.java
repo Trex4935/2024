@@ -17,6 +17,7 @@ import frc.robot.extension.PivotAngle;
 import frc.robot.extension.SparkMax;
 
 public class Pivot extends SubsystemBase {
+  // Creates two new limit switches
   FlippedDIO limitSwitch;
   FlippedDIO limitSwitch2;
 
@@ -33,14 +34,22 @@ public class Pivot extends SubsystemBase {
   public static boolean pivotAtAngle;
 
   public Pivot() {
-
+    // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
     pivotMotor = SparkMax.configPIDwithSmartMotion(pivotMotor, 0, 0, 0, 0, 0, 1, 1, 0);
+    
+    //Sets the pivot state machine
     pivotAngle = PivotAngle.Default;
+
+    // News up the relative encoder and configs it to the PID
     relativeEncoder = pivotMotor.getEncoder();
     pivotMotor.getPIDController().setFeedbackDevice(relativeEncoder);
 
+    // News up the limit switches
     limitSwitch = new FlippedDIO(4);
+    limitSwitch2 = new FlippedDIO(5);
+
+    // News up the Hash Map and adds the pivot values to it
     stateAngle = new HashMap<String, Double>();
     stateAngle.put("Default", 30.0);
     stateAngle.put("Amp", 60.0);
@@ -54,7 +63,7 @@ public class Pivot extends SubsystemBase {
   public void runPivotMotor() {
     pivotMotor.set(0.1);
   }
-
+  // Reverses pivot motor
   public void reversePivotMotor() {
     pivotMotor.set(-0.1);
   }
@@ -95,11 +104,12 @@ public class Pivot extends SubsystemBase {
   public void pivotStateMachine() {
     double targetAngle = stateAngle.get(returnPivotAngle());
     pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kSmartMotion);
-    // Checks to see if the pivot angle is close to the expected angle, can be used
-    // anywhere
+
+    // Checks to see if the pivot angle is close to the expected angle, can be used anywhere
     pivotAtAngle = MathUtil.isNear(targetAngle, pivotMotor.getEncoder().getPosition(), 50.0);
   }
 
+  // Checks if the magazine hits the limit switches
   public void limitSwitchStop() {
     if (limitSwitch.get()) {
 

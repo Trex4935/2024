@@ -21,4 +21,5 @@ Dio0: Intake Smacna
 Dio1: Magazine Smacna
 Dio2: Magnetic Flap
 Dio3: Shooter Smacna
-Dio4: Pivot Limit Switch
+Dio4: Pivot Limit Switch 1
+Dio5: Pivot Limit Switch 2
