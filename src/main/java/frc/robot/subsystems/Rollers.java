@@ -3,12 +3,14 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.extension.SparkMax;
 import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.NoteState;
+import frc.robot.extension.PivotAngle;
 import frc.robot.extension.Helper;
 
 
@@ -49,6 +51,14 @@ public class Rollers extends SubsystemBase {
     lowMagazine.set(speed);
   }
 
+  public void changeNoteState(NoteState desiredState) {
+    rollerState = desiredState;
+    // System.out.println(pivotAngle);
+  }
+  public Command stateSwitcher(NoteState desiredState) {
+    return runOnce(
+      () -> changeNoteState(desiredState));
+  }
   public void onHighMagazine(double speed) {
     highMagazine.set(speed);
   }

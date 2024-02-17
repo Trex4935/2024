@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.PivotAngle;
@@ -46,7 +47,8 @@ public class RobotContainer {
   // Setting up bindings for necessary control of the swerve drive platform
 
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
-  private final CommandXboxController operatorButtonBindings = new CommandXboxController(1);
+  private final CommandGenericHID operatorButtonBindings = new CommandGenericHID(1);
+  
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   // Make sure things are feild centric for swerve
@@ -102,10 +104,14 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
     // maps the button bindings for the operator
-    operatorButtonBindings.a().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
-    operatorButtonBindings.b().onTrue(pivot.stateSwitcher(PivotAngle.Speaker));
-    operatorButtonBindings.x().onTrue(pivot.stateSwitcher(PivotAngle.Feed));
-    operatorButtonBindings.y().onTrue(pivot.stateSwitcher(PivotAngle.Load));
+    operatorButtonBindings.button(13).onTrue(rollers.stateSwitcher((NoteState.GROUNDINTAKE)));
+    operatorButtonBindings.button(12).onTrue(rollers.stateSwitcher(NoteState.HUMANINTAKE));
+    operatorButtonBindings.button(11).onTrue(rollers.stateSwitcher(NoteState.SPEAKER));
+    operatorButtonBindings.button(9).onTrue(rollers.stateSwitcher(NoteState.AMP));
+    operatorButtonBindings.button(7).onTrue(rollers.stateSwitcher(NoteState.FIELD));
+    operatorButtonBindings.button(8).onTrue(rollers.stateSwitcher(NoteState.EJECT));
+    operatorButtonBindings.button(10).onTrue(rollers.stateSwitcher(NoteState.AMPLOADING));
+
 
   }
 
