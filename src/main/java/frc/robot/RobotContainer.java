@@ -102,10 +102,16 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
     // maps the button bindings for the operator
-    operatorButtonBindings.a().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
-    operatorButtonBindings.b().onTrue(pivot.stateSwitcher(PivotAngle.Speaker));
-    operatorButtonBindings.x().onTrue(pivot.stateSwitcher(PivotAngle.Feed));
-    operatorButtonBindings.y().onTrue(pivot.stateSwitcher(PivotAngle.Load));
+    // operatorButtonBindings.a().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
+    // operatorButtonBindings.b().onTrue(pivot.stateSwitcher(PivotAngle.Speaker));
+    // operatorButtonBindings.x().onTrue(pivot.stateSwitcher(PivotAngle.Feed));
+    // operatorButtonBindings.y().onTrue(pivot.stateSwitcher(PivotAngle.Load));
+
+    operatorButtonBindings.y().whileTrue(rollers.runEnd(() -> rollers.onLowMagalzine(0.7, 0.9),() -> rollers.stopLowMagazine()).alongWith(shooter.runEnd(() -> shooter.shooterMovement(0.8),() -> shooter.stopShooterMotors())));
+    // operatorButtonBindings.x().whileTrue(rollers.runEnd(() -> rollers.onHighMagazine(0.7),() -> rollers.stopHighMagazine()).alongWith(rollers.runEnd(() -> rollers.onLowMagazine(0.9),() -> rollers.stopLowMagazine())));
+    operatorButtonBindings.a().whileTrue(pivot.runEnd(() -> pivot.runPivotMotor(),() -> pivot.stopPivotMotor()));
+    operatorButtonBindings.leftBumper().whileTrue(shooter.runEnd(() -> shooter.setshootingmotor1(0.6),() -> shooter.stopShootingMotor1()));
+    operatorButtonBindings.rightBumper().whileTrue(shooter.runEnd(() -> shooter.setshootingmotor2(0.6),() -> shooter.stopShootingMotor2()));
 
   }
 

@@ -48,12 +48,18 @@ public class Rollers extends SubsystemBase {
     lowMagazine.set(speed);
   }
 
+  public void onLowMagalzine(double speed1, double speed2) {
+    lowMagazine.set(speed1);
+    highMagazine.set(speed2);
+  }
+
   public void onHighMagazine(double speed) {
     highMagazine.set(speed);
   }
 
   public void stopLowMagazine() {
     lowMagazine.stopMotor();
+    highMagazine.stopMotor();
   }
 
   public void stopHighMagazine() {

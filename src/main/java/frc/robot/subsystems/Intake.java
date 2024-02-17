@@ -25,10 +25,11 @@ public class Intake extends SubsystemBase {
     // doublesolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,33, 44);
 
     // news up the solenoid and compressor
-    solenoid = new Solenoid(PneumaticsModuleType.REVPH, 9);
+    solenoid = new Solenoid(9,PneumaticsModuleType.REVPH, 2);
 
     // Creates Compressor Object
-    m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+    m_compressor = new Compressor(14,PneumaticsModuleType.CTREPCM);
+    m_compressor.enableDigital();
 
   }
 

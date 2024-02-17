@@ -52,7 +52,7 @@ public class Pivot extends SubsystemBase {
 
   /** makes pivot motor move */
   public void runPivotMotor() {
-    pivotMotor.set(0.1);
+    pivotMotor.set(0.4);
   }
 
   public void reversePivotMotor() {
