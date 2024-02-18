@@ -16,7 +16,6 @@ import frc.robot.extension.Helper;
 public class Rollers extends SubsystemBase {
   CANSparkMax lowMagazine;
   CANSparkMax highMagazine;
-  NoteState rollerState;
 
   public FlippedDIO intakeSmacnaLeft;
   public FlippedDIO intakeSmacnaRight;
@@ -54,7 +53,6 @@ public class Rollers extends SubsystemBase {
   public void onLowMagalzine(double speed1, double speed2) {
     lowMagazine.set(speed1);
     highMagazine.set(speed2);
-    System.out.println("Magazine on");
   }
 
   public void onHighMagazine(double speed) {
@@ -87,11 +85,11 @@ public class Rollers extends SubsystemBase {
 
   // Switches the state that the rollers operate in
   public void rollerSwitch() {
-    switch (rollerState) {
+    switch (RobotContainer.noteLifecycle) {
 
       // Turns low rollers on and switches state when the smacna detects note
       case GROUNDINTAKE:
-        onLowMagazine(0.1);
+        onLowMagazine(0.3);
         // intake sensor detects leading edge of note -> Grabbed state
         currentValue = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
         if (Helper.detectFallingRisingEdge(previousValue, currentValue, true)) {

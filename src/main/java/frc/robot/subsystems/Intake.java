@@ -37,15 +37,11 @@ public class Intake extends SubsystemBase {
   // Turns on the solenoid, brings intake up
   public void switchIntakeOn() {
     solenoid.set(true);
-    System.out.println("Intake on");
-
   }
 
   // Turns off the solenoid, brings intake down
   public void switchIntakeOff() {
     solenoid.set(false);
-    System.out.println("Intake off");
-
   }
 
   // Returns the current state of the solenoid-Used for Sendables
@@ -81,11 +77,11 @@ public class Intake extends SubsystemBase {
       case CONTROL:
         System.out.println("Control");
         // Keeps solenoid on when note is inside robot just to be sure
-        switchIntakeOff();
+        switchIntakeOn();
         break;
       default:
         // Turns Solenoid Off in all other cases
-        switchIntakeOn();
+        switchIntakeOff();
     }
   }
 }
