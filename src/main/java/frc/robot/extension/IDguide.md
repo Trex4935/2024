@@ -17,9 +17,10 @@ Module 4: 41, 42, 43:  BACK LEFT
 
 DIO PORTS:
 
-Dio0: Intake Smacna
+Dio0: Intake Smacna Left
 Dio1: Magazine Smacna
 Dio2: Magnetic Flap
 Dio3: Shooter Smacna
 Dio4: Pivot Limit Switch 1
 Dio5: Pivot Limit Switch 2
+Dio6: Intake Smacna Right

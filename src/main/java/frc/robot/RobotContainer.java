@@ -58,6 +58,8 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
+  double[] llPose = vision.botPose();
+
   // note cycle return
   public static NoteState getCycle() {
     return noteLifecycle;
@@ -117,6 +119,7 @@ public class RobotContainer {
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
+    SmartDashboard.putNumberArray("LLPose", llPose);
 
     // sendable for
   }
