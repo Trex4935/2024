@@ -51,14 +51,11 @@ public class Rollers extends SubsystemBase {
     lowMagazine.set(speed);
   }
 
-  public void changeNoteState(NoteState desiredState) {
-    rollerState = desiredState;
-    // System.out.println(pivotAngle);
+  public void onLowMagalzine(double speed1, double speed2) {
+    lowMagazine.set(speed1);
+    highMagazine.set(speed2);
   }
-  public Command stateSwitcher(NoteState desiredState) {
-    return runOnce(
-      () -> changeNoteState(desiredState));
-  }
+
   public void onHighMagazine(double speed) {
     highMagazine.set(speed);
   }
@@ -66,6 +63,7 @@ public class Rollers extends SubsystemBase {
 // Stops magazines
   public void stopLowMagazine() {
     lowMagazine.stopMotor();
+    highMagazine.stopMotor();
   }
 
   public void stopHighMagazine() {
