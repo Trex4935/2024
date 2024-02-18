@@ -25,10 +25,11 @@ public class Intake extends SubsystemBase {
     // doublesolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,33, 44);
 
     // news up the solenoid and compressor
-    solenoid = new Solenoid(PneumaticsModuleType.REVPH, 9);
+    solenoid = new Solenoid(9,PneumaticsModuleType.REVPH, 2);
 
     // Creates Compressor Object
-    m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+    m_compressor = new Compressor(14,PneumaticsModuleType.CTREPCM);
+    m_compressor.enableDigital();
 
   }
 
@@ -58,18 +59,19 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  // State machine to switch the state of the note
+  // Note Life Cycle state machine to control the intake
   public void intakeSwitch() {
     switch (RobotContainer.noteLifecycle) {
       case GROUNDINTAKE:
-        // Turns Solenoid On
+        // Turns Solenoid On when we want to intake a note
         switchIntakeOn();
         break;
       case GRABBED:
+      // Keeps solenoid on when note is inside robot just to be sure
         switchIntakeOn();
         break;
       default:
-        // Turns Solenoid Off
+        // Turns Solenoid Off in all other cases
         switchIntakeOff();
     }
   }

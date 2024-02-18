@@ -27,9 +27,9 @@ public class Elevator extends SubsystemBase {
 
   public void elevatorMotorTwoMovement() {
     elevatorMotorTwo.set(0);
-
   }
 
+// Makes the elevator motors run at the same time
   public void elevatorMotorsMovements(){
     elevatorMotorTwo.follow(elevatorMotorOne);
     elevatorMotorOne.set(0);
