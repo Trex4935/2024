@@ -23,8 +23,6 @@ import frc.robot.Constants;
 
 public class AlignWithPID extends Command {
 	/** Creates a new DriveToPoseCommand. */
-	private static final double TRANSLATION_TOLERANCE = 0.1;
-	private static final double THETA_TOLERANCE = Units.degreesToRadians(2.0);
 
 	private static final TrapezoidProfile.Constraints DEFAULT_XY_CONSTRAINTS = new TrapezoidProfile.Constraints(
 			3,
@@ -53,7 +51,7 @@ public class AlignWithPID extends Command {
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
 		xController.setTolerance(0.1);
-		yController.setTolerance(TRANSLATION_TOLERANCE);
+		yController.setTolerance(0.1);
 		thetaController.setTolerance(Units.degreesToRadians(2.0));
 
 		driveToPoint = new SwerveRequest.ApplyChassisSpeeds();

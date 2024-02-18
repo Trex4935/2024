@@ -122,28 +122,12 @@ public final class Constants {
       new Translation3d(0.0, Units.inchesToMeters(197.765), Units.inchesToMeters(78.324));
 
 }
-	// TODO: Fix value for source
-	public enum PoseOffset {
-		SOURCE(0.320528, 0.879128, -60.0, -60.0),
-		SPEAKER(1.763, 0, 180.0, -180.0),
-		AMP(0, -0.7042, 90.0, 90.0),
-		STAGE(0, 0.53, 180.0, 180.0);
 
-		public final Pose2d offset;
-		public final Rotation2d heading;
-
-		PoseOffset(double x, double y, double heading, double rotation) {
-			this.offset = new Pose2d(x, y, Rotation2d.fromDegrees(rotation));
-			this.heading = Rotation2d.fromDegrees(heading);
-		}
-	}
-
-	public static double[] sourceOffset = new double[4];
-	public static double[] speakerOffset = new double[4];
-	public static double[] ampOffset = new double[4];
-	public static double[] stageOffset = new double[4];
-
-	
+	// Position offsets for field elements
+	public static double[] sourceOffset = new double[3];
+	public static double[] speakerOffset = new double[3];
+	public static double[] ampOffset = new double[3];
+	public static double[] stageOffset = new double[3];
 
 	// All AprilTag poses
 	public static List<Pose2d> aprilTagPoses = new ArrayList<Pose2d>(16);
@@ -151,13 +135,10 @@ public final class Constants {
 	public static List<Pose2d> allianceAprilTags = new ArrayList<Pose2d>(6);
 	// Poses used by the opposing alliance
 	public static List<Pose2d> opposingAllianceAprilTags = new ArrayList<Pose2d>(8);
-	// Poses provided by speaker
-	// public static List<Pose2d> speakerAprilTags = new ArrayList<>(2);
+	// Pose provided by speaker
 	public static Pose2d speakerAprilTag;
 	// Poses provided by stage
 	public static List<Pose2d> stageAprilTags = new ArrayList<>(3);
-	// Poses provided by human player station (source)
-	// public static List<Pose2d> sourceAprilTags = new ArrayList<>(2);
 	// Pose provided by human player station (source)
 	public static Pose2d sourceAprilTag;
 	// Pose provided by amp
@@ -170,9 +151,7 @@ public final class Constants {
 		// Clear pose lists
 		aprilTagPoses.clear();
 		allianceAprilTags.clear();
-		// speakerAprilTags.clear();
 		stageAprilTags.clear();
-		// sourceAprilTags.clear();
 		opposingAllianceAprilTags.clear();
 
 
@@ -181,20 +160,16 @@ public final class Constants {
 			aprilTagPoses.add(i, aprilTagLayout.getTagPose(i + 1).get().toPose2d());
 		}
 
-
+		// Adds AprilTag poses to lists and sets offsets according to alliance
 		if (DriverStation.getAlliance().isEmpty() || 
 				DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
 
-			// sourceAprilTags.addAll(aprilTagPoses.subList(0, 2));
-			// allianceAprilTags.addAll(sourceAprilTags);
 			sourceAprilTag = aprilTagPoses.get(0);
 			allianceAprilTags.add(sourceAprilTag);
 
 			ampAprilTag = aprilTagPoses.get(5);
 			allianceAprilTags.add(ampAprilTag);
 
-			// speakerAprilTags.addAll(aprilTagPoses.subList(6, 8));
-			// allianceAprilTags.addAll(speakerAprilTags);
 			speakerAprilTag = aprilTagPoses.get(6);
 			allianceAprilTags.add(speakerAprilTag);
 
@@ -204,37 +179,26 @@ public final class Constants {
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(2, 5));
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(8, 13));
 
-			sourceOffset[0] = 0.320528;
+				sourceOffset[0] = 0.320528;
 				sourceOffset[1] = 0.879128;
 				sourceOffset[2] = -60.0;
-				sourceOffset[3] = -60.0;
 					
 				speakerOffset[0] = 1.763;
 				speakerOffset[1] = 0;
-				speakerOffset[2] = 180.0;
-				speakerOffset[3] = -180.0;
+				speakerOffset[2] = -180.0;
 					
 				ampOffset[0] = 0;
 				ampOffset[1] = -0.7042;
 				ampOffset[2] = 90.0;
-				ampOffset[3] = 90.0;
 					
 				stageOffset[0] = 0;
 				stageOffset[1] = 0.53;
-				stageOffset[2] = 180.0;
-				stageOffset[3] = 180.0;  
+				stageOffset[2] = 180.0; 
 
 		} else {
-			// speakerAprilTags.addAll(aprilTagPoses.subList(2, 4));
-			// allianceAprilTags.addAll(speakerAprilTags);
-			speakerAprilTag = aprilTagPoses.get(2);
-			// allianceAprilTags.addAll(speakerAprilTags);
-
+			speakerAprilTag = aprilTagPoses.get(3);
 			ampAprilTag = aprilTagPoses.get(4);
 			allianceAprilTags.add(ampAprilTag);
-
-			// sourceAprilTags.addAll(aprilTagPoses.subList(8, 10));
-			// allianceAprilTags.addAll(sourceAprilTags);
 			sourceAprilTag = aprilTagPoses.get(9);
 			allianceAprilTags.add(sourceAprilTag);
 
@@ -248,22 +212,18 @@ public final class Constants {
 			sourceOffset[0] = 0.320528;
 			sourceOffset[1] = 0.879128;
 			sourceOffset[2] = -120.0;
-			sourceOffset[3] = -120.0;
 				
-			speakerOffset[0] = 1.763;
+			speakerOffset[0] = -1.763;
 			speakerOffset[1] = 0;
-			speakerOffset[2] = 180.0;
-			speakerOffset[3] = -180.0;
+			speakerOffset[2] = 0;
 				
 			ampOffset[0] = 0;
 			ampOffset[1] = -0.7042;
 			ampOffset[2] = 90.0;
-			ampOffset[3] = 90.0;
 				
 			stageOffset[0] = 0;
 			stageOffset[1] = 0.53;
 			stageOffset[2] = 180.0;
-			stageOffset[3] = 180.0;
 		}
 	}
 

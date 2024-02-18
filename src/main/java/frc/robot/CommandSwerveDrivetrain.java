@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.Constants.PoseOffset;
 import frc.robot.generated.TunerConstants;
 
 /**
@@ -90,26 +89,23 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return new PathPlannerAuto(pathName);
     }
 
-		public Command alignWithPathPlanner(Pose2d aprilTagPose, PoseOffset poseOffset) {
-
-			double targetX = aprilTagPose.getX() + poseOffset.offset.getX();
-			double targetY = aprilTagPose.getY() + poseOffset.offset.getY();
-			Rotation2d targetTheta = poseOffset.offset.getRotation();
-			Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
-
-			Command autoCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(3, 3, 3, 3), 0);
-			return autoCommand;
-		}
-
-		public Command alignWithPathPlannerDA(Pose2d aprilTagPose, double[] offsetArray) {
-
-			 Pose2d pose2dOffset = new Pose2d(offsetArray[0], offsetArray[1], Rotation2d.fromDegrees(offsetArray[3]));
+		/**
+		 * A method of auto-alignment that uses the PathPlanner automatic path generation to align
+		 * @param aprilTagPose The desired AprilTag Pose
+		 * @param offsetArray The offset values for the desired pose
+		 * @return An auto-generated command that goes to a desired pose
+		 */
+		public Command alignWithPathPlanner(Pose2d aprilTagPose, double[] offsetArray) {
+			// Creates an offset pose from the offset array
+			 Pose2d pose2dOffset = new Pose2d(offsetArray[0], offsetArray[1], Rotation2d.fromDegrees(offsetArray[2]));
+			// Gets target values from the tag poses and the offset
 			double targetX = aprilTagPose.getX() + pose2dOffset.getX();
-			double targetY = aprilTagPose.getY() + pose2dOffset.getX();
+			double targetY = aprilTagPose.getY() + pose2dOffset.getY();
 			Rotation2d targetTheta = pose2dOffset.getRotation();
+			// Makes a target pose
 			Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
-
-			Command autoCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(3, 3, 3, 3), 0);
+			// Creates and returns an auto-generated pathfinding command
+			Command autoCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(1, 1, 1, 1), 0);
 			return autoCommand;
 		}
 

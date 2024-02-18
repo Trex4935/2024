@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.PoseEstimation;
-import frc.robot.Constants.PoseOffset;
 import frc.robot.commands.AlignWithPID;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.PivotAngle;
@@ -71,7 +70,9 @@ public class RobotContainer {
 
 	private final Telemetry logger = new Telemetry(MaxSpeed);
 
-	private final AlignWithPID align = new AlignWithPID(drivetrain, () -> Constants.speakerAprilTag, false);
+	// Alternate align command
+	private final AlignWithPID align = new AlignWithPID(drivetrain, () -> 
+	getTargetPose(Constants.speakerAprilTag, Constants.speakerOffset), false);
 
   private final SendableChooser<Command> autoChooser;
 
@@ -84,7 +85,7 @@ public class RobotContainer {
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive right with Joystick
         ));
 
-    // A button acts as a break, and turns all wheels inward
+    // A button acts as a brake, and turns all wheels inward
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
     // B button saves the current state of the wheels, and when you let go, it
     // reverts back to them.
@@ -97,12 +98,12 @@ public class RobotContainer {
 		// joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
 
 
-		joystick.povUp().whileTrue(drivetrain.alignWithPathPlannerDA(Constants.speakerAprilTag, Constants.speakerOffset).andThen(drivetrain.applyRequest(() -> brake)));
-		joystick.povDown().whileTrue(drivetrain.alignWithPathPlannerDA(
-			Constants.sourceAprilTag, Constants.sourceOffset));
-		joystick.povLeft().whileTrue(drivetrain.alignWithPathPlannerDA(Constants.ampAprilTag, Constants.ampOffset));
-		joystick.povRight().whileTrue(drivetrain.alignWithPathPlannerDA(
-			drivetrain.getState().Pose.nearest(Constants.stageAprilTags), Constants.stageOffset));
+		joystick.povUp().whileTrue(drivetrain.alignWithPathPlanner(Constants.speakerAprilTag, Constants.speakerOffset).andThen(drivetrain.applyRequest(() -> brake)));
+		joystick.povDown().whileTrue(drivetrain.alignWithPathPlanner(
+			Constants.sourceAprilTag, Constants.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
+		joystick.povLeft().whileTrue(drivetrain.alignWithPathPlanner(Constants.ampAprilTag, Constants.ampOffset).andThen(drivetrain.applyRequest(() -> brake)));
+		joystick.povRight().whileTrue(drivetrain.alignWithPathPlanner(
+			drivetrain.getState().Pose.nearest(Constants.stageAprilTags), Constants.stageOffset).andThen(drivetrain.applyRequest(() -> brake)));
 
     joystick.rightTrigger()
         .whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));
@@ -149,14 +150,25 @@ public class RobotContainer {
 		SmartDashboard.putNumber("OffsetX", PoseEstimation.testSourcePose.getX() - Constants.sourceAprilTag.getX());
 		SmartDashboard.putNumber("OffsetY", PoseEstimation.testSourcePose.getY() - Constants.sourceAprilTag.getY());
 
-		SmartDashboard.putNumber("Speaker Array 0", Constants.sourceOffset[0]);
-		SmartDashboard.putNumber("Speaker Array 1", Constants.sourceOffset[1]);
-		SmartDashboard.putNumber("Speaker Array 2", Constants.sourceOffset[2]);
-		SmartDashboard.putNumber("Speaker Array 3", Constants.sourceOffset[3]);
+		SmartDashboard.putNumber("Speaker Array 0", Constants.speakerAprilTag.getX());
+		SmartDashboard.putNumber("Speaker Array 1", Constants.speakerAprilTag.getY());
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
 
+	}
+
+	
+	public Pose2d getTargetPose(Pose2d aprilTagPose, double[] offsetArray) {
+		// Creates an offset pose from the offset array
+		 Pose2d pose2dOffset = new Pose2d(offsetArray[0], offsetArray[1], Rotation2d.fromDegrees(offsetArray[2]));
+		// Gets target values from the tag poses and the offset
+		double targetX = aprilTagPose.getX() + pose2dOffset.getX();
+		double targetY = aprilTagPose.getY() + pose2dOffset.getY();
+		Rotation2d targetTheta = pose2dOffset.getRotation();
+		// Makes a target pose
+		Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
+		return targetPose;
 	}
 
   // Runs autoChooser :)

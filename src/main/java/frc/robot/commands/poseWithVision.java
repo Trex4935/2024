@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.CommandSwerveDrivetrain;
@@ -35,7 +33,7 @@ public class poseWithVision extends Command {
             return;
         }
 
-	// TODO: Repurpose for align while seeing AprilTags	
+	// TODO: Repurpose for align while seeing AprilTags?	
 
   }
 
