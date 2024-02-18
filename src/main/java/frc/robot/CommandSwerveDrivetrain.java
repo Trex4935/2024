@@ -14,7 +14,6 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -96,6 +95,18 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 			double targetX = aprilTagPose.getX() + poseOffset.offset.getX();
 			double targetY = aprilTagPose.getY() + poseOffset.offset.getY();
 			Rotation2d targetTheta = poseOffset.offset.getRotation();
+			Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
+
+			Command autoCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(3, 3, 3, 3), 0);
+			return autoCommand;
+		}
+
+		public Command alignWithPathPlannerDA(Pose2d aprilTagPose, double[] offsetArray) {
+
+			 Pose2d pose2dOffset = new Pose2d(offsetArray[0], offsetArray[1], Rotation2d.fromDegrees(offsetArray[3]));
+			double targetX = aprilTagPose.getX() + pose2dOffset.getX();
+			double targetY = aprilTagPose.getY() + pose2dOffset.getX();
+			Rotation2d targetTheta = pose2dOffset.getRotation();
 			Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
 
 			Command autoCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(3, 3, 3, 3), 0);

@@ -94,12 +94,12 @@ public class RobotContainer {
 		// joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
 
 
-		joystick.povUp().whileTrue(drivetrain.alignWithPathPlanner(Constants.speakerAprilTag, PoseOffset.SPEAKER).andThen(drivetrain.applyRequest(() -> brake)));
-		// joystick.povDown().whileTrue(drivetrain.alignWithPathPlanner(
-		// 	Constants.sourceAprilTag, PoseOffset.SOURCE));
-		joystick.povLeft().whileTrue(drivetrain.alignWithPathPlanner(Constants.ampAprilTag, PoseOffset.AMP));
-		joystick.povRight().whileTrue(drivetrain.alignWithPathPlanner(
-			drivetrain.getState().Pose.nearest(Constants.stageAprilTags), PoseOffset.STAGE));
+		joystick.povUp().whileTrue(drivetrain.alignWithPathPlannerDA(Constants.speakerAprilTag, Constants.speakerOffset).andThen(drivetrain.applyRequest(() -> brake)));
+		joystick.povDown().whileTrue(drivetrain.alignWithPathPlannerDA(
+			Constants.sourceAprilTag, Constants.sourceOffset));
+		joystick.povLeft().whileTrue(drivetrain.alignWithPathPlannerDA(Constants.ampAprilTag, Constants.ampOffset));
+		joystick.povRight().whileTrue(drivetrain.alignWithPathPlannerDA(
+			drivetrain.getState().Pose.nearest(Constants.stageAprilTags), Constants.stageOffset));
 
     joystick.rightTrigger()
         .whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));
@@ -131,6 +131,11 @@ public class RobotContainer {
 
 		SmartDashboard.putNumber("OffsetX", PoseEstimation.testSourcePose.getX() - Constants.sourceAprilTag.getX());
 		SmartDashboard.putNumber("OffsetY", PoseEstimation.testSourcePose.getY() - Constants.sourceAprilTag.getY());
+
+		SmartDashboard.putNumber("Speaker Array 0", Constants.sourceOffset[0]);
+		SmartDashboard.putNumber("Speaker Array 1", Constants.sourceOffset[1]);
+		SmartDashboard.putNumber("Speaker Array 2", Constants.sourceOffset[2]);
+		SmartDashboard.putNumber("Speaker Array 3", Constants.sourceOffset[3]);
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);

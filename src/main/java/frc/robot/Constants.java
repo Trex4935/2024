@@ -124,10 +124,10 @@ public final class Constants {
 }
 	// TODO: Fix value for source
 	public enum PoseOffset {
-		SOURCE(-CENTER_OFFSET, -0.9, 45.0, 45.0),
+		SOURCE(0.320528, 0.879128, -60.0, -60.0),
 		SPEAKER(1.763, 0, 180.0, -180.0),
 		AMP(0, -0.7042, 90.0, 90.0),
-		STAGE(0.320528, 0.879128, -60.0, -60.0);
+		STAGE(0, 0.53, 180.0, 180.0);
 
 		public final Pose2d offset;
 		public final Rotation2d heading;
@@ -137,6 +137,13 @@ public final class Constants {
 			this.heading = Rotation2d.fromDegrees(heading);
 		}
 	}
+
+	public static double[] sourceOffset = new double[4];
+	public static double[] speakerOffset = new double[4];
+	public static double[] ampOffset = new double[4];
+	public static double[] stageOffset = new double[4];
+
+	
 
 	// All AprilTag poses
 	public static List<Pose2d> aprilTagPoses = new ArrayList<Pose2d>(16);
@@ -168,6 +175,7 @@ public final class Constants {
 		// sourceAprilTags.clear();
 		opposingAllianceAprilTags.clear();
 
+
 		// Return a pose from each AprilTag
 		for (int i = 0; i < aprilTagLayout.getTags().size(); i++) {
 			aprilTagPoses.add(i, aprilTagLayout.getTagPose(i + 1).get().toPose2d());
@@ -196,6 +204,26 @@ public final class Constants {
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(2, 5));
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(8, 13));
 
+			sourceOffset[0] = 0.320528;
+				sourceOffset[1] = 0.879128;
+				sourceOffset[2] = -60.0;
+				sourceOffset[3] = -60.0;
+					
+				speakerOffset[0] = 1.763;
+				speakerOffset[1] = 0;
+				speakerOffset[2] = 180.0;
+				speakerOffset[3] = -180.0;
+					
+				ampOffset[0] = 0;
+				ampOffset[1] = -0.7042;
+				ampOffset[2] = 90.0;
+				ampOffset[3] = 90.0;
+					
+				stageOffset[0] = 0;
+				stageOffset[1] = 0.53;
+				stageOffset[2] = 180.0;
+				stageOffset[3] = 180.0;  
+
 		} else {
 			// speakerAprilTags.addAll(aprilTagPoses.subList(2, 4));
 			// allianceAprilTags.addAll(speakerAprilTags);
@@ -216,6 +244,26 @@ public final class Constants {
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(0, 2));
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(5, 8));
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(13, 16));
+
+			sourceOffset[0] = 0.320528;
+			sourceOffset[1] = 0.879128;
+			sourceOffset[2] = -120.0;
+			sourceOffset[3] = -120.0;
+				
+			speakerOffset[0] = 1.763;
+			speakerOffset[1] = 0;
+			speakerOffset[2] = 180.0;
+			speakerOffset[3] = -180.0;
+				
+			ampOffset[0] = 0;
+			ampOffset[1] = -0.7042;
+			ampOffset[2] = 90.0;
+			ampOffset[3] = 90.0;
+				
+			stageOffset[0] = 0;
+			stageOffset[1] = 0.53;
+			stageOffset[2] = 180.0;
+			stageOffset[3] = 180.0;
 		}
 	}
 
