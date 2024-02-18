@@ -95,7 +95,7 @@ public class LEDControl extends SubsystemBase {
     ledStrip.setData(ledBuffer);
     ledStrip.start();
   }
-  // A method used to create flashing LEDs taking blink rate into account//
+  // A method used to create flashing LEDs taking blink rate into account 
   public void flashLEDS(int hue, int saturation, int brightness, int blinkRate){
     counter++;
     // Checks to see how long one cycle has passed
