@@ -114,14 +114,14 @@ public class RobotContainer {
     // operatorButtonBindings.x().whileTrue(rollers.runEnd(() -> rollers.onHighMagazine(0.7),() -> rollers.stopHighMagazine()).alongWith(rollers.runEnd(() -> rollers.onLowMagazine(0.9),() -> rollers.stopLowMagazine())));
     operatorButtonBindings.a().whileTrue(pivot.runEnd(() -> pivot.runPivotMotor(),() -> pivot.stopPivotMotor()));
     operatorButtonBindings.leftBumper().whileTrue(shooter.runEnd(() -> shooter.setshootingmotor1(0.6),() -> shooter.stopShootingMotor1()));
-    operatorButtonBindings.rightBumper().whileTrue(shooter.runEnd(() -> shooter.setshootingmotor2(0.6),() -> shooter.stopShootingMotor2()));
-    operatorTestButton.button(13).onTrue(rollers.stateSwitcher((NoteState.GROUNDINTAKE)));
-    operatorTestButton.button(12).onTrue(rollers.stateSwitcher(NoteState.HUMANINTAKE));
-    operatorTestButton.button(11).onTrue(rollers.stateSwitcher(NoteState.SPEAKER));
-    operatorTestButton.button(9).onTrue(rollers.stateSwitcher(NoteState.AMP));
-    operatorTestButton.button(7).onTrue(rollers.stateSwitcher(NoteState.FIELD));
-    operatorTestButton.button(8).onTrue(rollers.stateSwitcher(NoteState.EJECT));
-    operatorTestButton.button(10).onTrue(rollers.stateSwitcher(NoteState.AMPLOADING));
+   // operatorButtonBindings.rightBumper().whileTrue(shooter.runEnd(() -> shooter.setshootingmotor2(0.6),() -> shooter.stopShootingMotor2()));
+  // operatorTestButton.button(13).onTrue(rollers.stateSwitcher((NoteState.GROUNDINTAKE)));
+    // operatorTestButton.button(12).onTrue(rollers.stateSwitcher(NoteState.HUMANINTAKE));
+    // operatorTestButton.button(11).onTrue(rollers.stateSwitcher(NoteState.SPEAKER));
+    // operatorTestButton.button(9).onTrue(rollers.stateSwitcher(NoteState.AMP));
+    // operatorTestButton.button(7).onTrue(rollers.stateSwitcher(NoteState.FIELD));
+    // operatorTestButton.button(8).onTrue(rollers.stateSwitcher(NoteState.EJECT));
+    // operatorTestButton.button(10).onTrue(rollers.stateSwitcher(NoteState.AMPLOADING));
 
 
   }
