@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import frc.robot.extension.NoteState;
 
 public class Intake extends SubsystemBase {
   // DoubleSolenoid doublesolenoid;
@@ -25,23 +26,26 @@ public class Intake extends SubsystemBase {
     // doublesolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,33, 44);
 
     // news up the solenoid and compressor
-    solenoid = new Solenoid(9,PneumaticsModuleType.REVPH, 2);
+    solenoid = new Solenoid(14, PneumaticsModuleType.CTREPCM, 2);
 
     // Creates Compressor Object
-    m_compressor = new Compressor(14,PneumaticsModuleType.CTREPCM);
+    m_compressor = new Compressor(14, PneumaticsModuleType.CTREPCM);
     m_compressor.enableDigital();
 
   }
 
-  // Turns on the solenoid
+  // Turns on the solenoid, brings intake up
   public void switchIntakeOn() {
     solenoid.set(true);
+    System.out.println("Intake on");
 
   }
 
-  // Turns off the solenoid
+  // Turns off the solenoid, brings intake down
   public void switchIntakeOff() {
     solenoid.set(false);
+    System.out.println("Intake off");
+
   }
 
   // Returns the current state of the solenoid-Used for Sendables
@@ -62,17 +66,26 @@ public class Intake extends SubsystemBase {
   // Note Life Cycle state machine to control the intake
   public void intakeSwitch() {
     switch (RobotContainer.noteLifecycle) {
-      case GROUNDINTAKE:
-        // Turns Solenoid On when we want to intake a note
+      case FIELD:
         switchIntakeOn();
         break;
+      case GROUNDINTAKE:
+        // Turns Solenoid On when we want to intake a note
+        switchIntakeOff();
+        break;
       case GRABBED:
-      // Keeps solenoid on when note is inside robot just to be sure
-        switchIntakeOn();
+        System.out.println("Grabbed");
+        // Keeps solenoid on when note is inside robot just to be sure
+        switchIntakeOff();
+        break;
+      case CONTROL:
+        System.out.println("Control");
+        // Keeps solenoid on when note is inside robot just to be sure
+        switchIntakeOff();
         break;
       default:
         // Turns Solenoid Off in all other cases
-        switchIntakeOff();
+        switchIntakeOn();
     }
   }
 }

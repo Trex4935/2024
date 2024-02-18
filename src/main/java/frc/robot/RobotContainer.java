@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.GadgeteerUartClient.GadgeteerConnection;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -47,9 +48,8 @@ public class RobotContainer {
   // Setting up bindings for necessary control of the swerve drive platform
 
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
-  private final CommandXboxController operatorButtonBindings = new CommandXboxController(0); // My joystick
   private final CommandGenericHID operatorTestButton = new CommandGenericHID(1);
-  
+
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   // Make sure things are feild centric for swerve
@@ -72,6 +72,9 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   private void configureBindings() {
+    intake.setDefaultCommand(intake.run(() -> intake.intakeSwitch()));
+    rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
+
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
         // Driving with joysticks
@@ -108,22 +111,23 @@ public class RobotContainer {
     // operatorButtonBindings.a().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
     // operatorButtonBindings.b().onTrue(pivot.stateSwitcher(PivotAngle.Speaker));
     // operatorButtonBindings.x().onTrue(pivot.stateSwitcher(PivotAngle.Feed));
-    // operatorButtonBindings.y().onTrue(pivot.stateSwitcher(PivotAngle.Load));
+    // operatorButtonBindings.y().onTrue(pivot.stateSwitcher(PivotAngle.Load))
 
-    operatorButtonBindings.y().whileTrue(rollers.runEnd(() -> rollers.onLowMagalzine(0.7, 0.9),() -> rollers.stopLowMagazine()).alongWith(shooter.runEnd(() -> shooter.shooterMovement(0.8),() -> shooter.stopShooterMotors())));
-    // operatorButtonBindings.x().whileTrue(rollers.runEnd(() -> rollers.onHighMagazine(0.7),() -> rollers.stopHighMagazine()).alongWith(rollers.runEnd(() -> rollers.onLowMagazine(0.9),() -> rollers.stopLowMagazine())));
-    operatorButtonBindings.a().whileTrue(pivot.runEnd(() -> pivot.runPivotMotor(),() -> pivot.stopPivotMotor()));
-    operatorButtonBindings.leftBumper().whileTrue(shooter.runEnd(() -> shooter.setshootingmotor1(0.6),() -> shooter.stopShootingMotor1()));
-   // operatorButtonBindings.rightBumper().whileTrue(shooter.runEnd(() -> shooter.setshootingmotor2(0.6),() -> shooter.stopShootingMotor2()));
-  // operatorTestButton.button(13).onTrue(rollers.stateSwitcher((NoteState.GROUNDINTAKE)));
-    // operatorTestButton.button(12).onTrue(rollers.stateSwitcher(NoteState.HUMANINTAKE));
-    // operatorTestButton.button(11).onTrue(rollers.stateSwitcher(NoteState.SPEAKER));
-    // operatorTestButton.button(9).onTrue(rollers.stateSwitcher(NoteState.AMP));
-    // operatorTestButton.button(7).onTrue(rollers.stateSwitcher(NoteState.FIELD));
-    // operatorTestButton.button(8).onTrue(rollers.stateSwitcher(NoteState.EJECT));
-    // operatorTestButton.button(10).onTrue(rollers.stateSwitcher(NoteState.AMPLOADING));
-
-
+    operatorTestButton.button(14)
+        .whileTrue(rollers.runEnd(() -> rollers.onLowMagalzine(0.3, 0.9), () -> rollers.stopLowMagazine())
+            .alongWith(shooter.runEnd(() -> shooter.shooterMovement(0.9, 0.7), () -> shooter.stopShooterMotors())));
+    // operatorButtonBindings.x().whileTrue(rollers.runEnd(() ->
+    // rollers.onHighMagazine(0.7),() ->
+    // rollers.stopHighMagazine()).alongWith(rollers.runEnd(() ->
+    // rollers.onLowMagazine(0.9),() -> rollers.stopLowMagazine())));
+    operatorTestButton.button(10).whileTrue(pivot.runEnd(() -> pivot.runPivotMotor(), () -> pivot.stopPivotMotor()));
+    operatorTestButton.button(8).whileTrue(pivot.runEnd(() -> pivot.reversePivotMotor(), () -> pivot.stopPivotMotor()));
+    operatorTestButton.button(12)
+        .whileTrue(shooter.runEnd(() -> shooter.setshootingmotor1(0.9), () -> shooter.stopShootingMotor1()));
+    operatorTestButton.button(13)
+        .whileTrue(shooter.runEnd(() -> shooter.setshootingmotor2(0.7), () -> shooter.stopShootingMotor2()));
+    operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
+    // operatorTestButton.button(11).onTrue();
   }
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
@@ -135,6 +139,7 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
 
+    SmartDashboard.putBoolean("Intake Solenoid", intake.getIntakeState());
     // sendable for
   }
 
