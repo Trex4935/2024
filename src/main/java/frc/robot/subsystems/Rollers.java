@@ -70,12 +70,10 @@ public class Rollers extends SubsystemBase {
 
   public void changeNoteState(NoteState noteState) {
     RobotContainer.noteLifecycle = NoteState.GROUNDINTAKE;
-    // System.out.println(noteState);
   }
 
   public void returnToField(NoteState noteState) {
     RobotContainer.noteLifecycle = NoteState.FIELD;
-    // System.out.println(noteState);
   }
 
   @Override
@@ -111,7 +109,6 @@ public class Rollers extends SubsystemBase {
           RobotContainer.noteLifecycle = NoteState.CONTROL;
         }
         previousIntakeSmacnaState = currentIntakeSmacnaState;
-        System.out.println("GRABBED");
         break;
 
       // Keeps low roller on
@@ -123,13 +120,11 @@ public class Rollers extends SubsystemBase {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
         previousIntakeSmacnaState = currentIntakeSmacnaState;
-        System.out.println("CONTROL");
         break;
 
       // Stops low rollers
       case STORAGE:
         stopLowMagazine();
-        System.out.println("STORAGE");
         break;
 
       // Turns on both low and high rollers
@@ -140,7 +135,6 @@ public class Rollers extends SubsystemBase {
         // If the magnetic flap moes away from magnet -> Amp state
         currentIntakeSmacnaState = magneticFlap.get();
         previousIntakeSmacnaState = currentIntakeSmacnaState;
-        System.out.println("AMPLOADING");
         break;
 
       // Turns on both high and low rollers and returns to Field state after 5 seconds
@@ -156,7 +150,6 @@ public class Rollers extends SubsystemBase {
           }
         }
         previousIntakeSmacnaState = currentIntakeSmacnaState;
-        System.out.println("SPEAKER");
         break;
 
       // Reverses low and high rollers when maganetic flap is pushed, returns to field
@@ -173,7 +166,6 @@ public class Rollers extends SubsystemBase {
           }
         }
         previousIntakeSmacnaState = currentIntakeSmacnaState;
-        System.out.println("AMP");
         break;
 
       // Turns and keeps both high and low rollers on and turns them off again after 7
@@ -188,7 +180,6 @@ public class Rollers extends SubsystemBase {
             timer.reset();
           }
         }
-        System.out.println("EJECT");
 
         // Keeps rolllers off
       default:

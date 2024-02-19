@@ -133,7 +133,7 @@ public class RobotContainer {
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
     configureBindings();
-
+    SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
     SmartDashboard.putString("angle", pivot.returnPivotAngle(PivotAngle.Default));
 
     autoChooser = AutoBuilder.buildAutoChooser();
