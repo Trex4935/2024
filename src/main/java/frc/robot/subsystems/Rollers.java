@@ -22,8 +22,8 @@ public class Rollers extends SubsystemBase {
   public FlippedDIO magneticFlap;
   public FlippedDIO shooterSmacna;
 
-  boolean previousSmacnaValue;
-  boolean currentValue;
+  boolean previousIntakeSmacnaState;
+  boolean currentIntakeSmacnaState;
 
   Timer timer;
 
@@ -95,22 +95,22 @@ public class Rollers extends SubsystemBase {
       case GROUNDINTAKE:
         onLowMagazine(0.5);
         // intake sensor detects leading edge of note -> Grabbed state
-        currentValue = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousSmacnaValue, currentValue, true)) {
+        currentIntakeSmacnaState = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
+        if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, true)) {
           RobotContainer.noteLifecycle = NoteState.GRABBED;
         }
-        previousSmacnaValue = currentValue;
+        previousIntakeSmacnaState = currentIntakeSmacnaState;
         break;
 
       // Keeps low roller on
       case GRABBED:
         onLowMagazine(0.5);
         // intake sensor detects back edge of the note -> Control state
-        currentValue = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousSmacnaValue, currentValue, false)) {
+        currentIntakeSmacnaState = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
+        if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, false)) {
           RobotContainer.noteLifecycle = NoteState.CONTROL;
         }
-        previousSmacnaValue = currentValue;
+        previousIntakeSmacnaState = currentIntakeSmacnaState;
         System.out.println("GRABBED");
         break;
 
@@ -118,11 +118,11 @@ public class Rollers extends SubsystemBase {
       case CONTROL:
         onLowMagazine(0.5);
         // magazine sensor detects leading edge of note -> Storage state
-        currentValue = magneticFlap.get();
-        if (Helper.detectFallingRisingEdge(previousSmacnaValue, currentValue, true)) {
+        currentIntakeSmacnaState = magneticFlap.get();
+        if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, true)) {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
-        previousSmacnaValue = currentValue;
+        previousIntakeSmacnaState = currentIntakeSmacnaState;
         System.out.println("CONTROL");
         break;
 
@@ -138,8 +138,8 @@ public class Rollers extends SubsystemBase {
         onHighMagazine(0.1);
         onLowMagazine(0.1);
         // If the magnetic flap moes away from magnet -> Amp state
-        currentValue = magneticFlap.get();
-        previousSmacnaValue = currentValue;
+        currentIntakeSmacnaState = magneticFlap.get();
+        previousIntakeSmacnaState = currentIntakeSmacnaState;
         System.out.println("AMPLOADING");
         break;
 
@@ -147,15 +147,15 @@ public class Rollers extends SubsystemBase {
       case SPEAKER:
         onLowMagazine(0.1);
         onHighMagazine(0.1);
-        currentValue = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousSmacnaValue, currentValue, false)) {
+        currentIntakeSmacnaState = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
+        if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, false)) {
           timer.start();
           if (timer.hasElapsed(5)) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
             timer.reset();
           }
         }
-        previousSmacnaValue = currentValue;
+        previousIntakeSmacnaState = currentIntakeSmacnaState;
         System.out.println("SPEAKER");
         break;
 
@@ -164,15 +164,15 @@ public class Rollers extends SubsystemBase {
       case AMP:
         onLowMagazine(-0.1);
         onHighMagazine(-0.1);
-        currentValue = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousSmacnaValue, currentValue, false)) {
+        currentIntakeSmacnaState = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
+        if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, false)) {
           timer.start();
           if (timer.hasElapsed(5)) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
             timer.reset();
           }
         }
-        previousSmacnaValue = currentValue;
+        previousIntakeSmacnaState = currentIntakeSmacnaState;
         System.out.println("AMP");
         break;
 
@@ -181,7 +181,7 @@ public class Rollers extends SubsystemBase {
       case EJECT:
         highMagazine.set(0.1);
         lowMagazine.set(0.1);
-        if (Helper.detectFallingRisingEdge(previousSmacnaValue, currentValue, false)) {
+        if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, false)) {
           timer.start();
           if (timer.hasElapsed(7)) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
