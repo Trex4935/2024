@@ -28,19 +28,23 @@ public class Shooter extends SubsystemBase {
   }
 
   // makes motors spin YIPPIE!!
-  public void shooterMovement(double speed) {
-    shootingmotor1.set(0.8);
-    shootingmotor2.set(0.8);
+  public void shooterMovement(double speed, double speed1) {
+    shootingmotor1.set(speed);
+    shootingmotor2.set(speed1);
   }
 
   // sets motor 1's speed
   public void setshootingmotor1(double speed) {
     shootingmotor1.set(speed);
+    System.out.println("SHooting motor 1");
+
   }
 
   // sets motor 2's speed
   public void setshootingmotor2(double speed) {
     shootingmotor2.set(speed);
+    System.out.println("Shooting motor 2");
+
   }
 
   // stops motor 1
@@ -65,15 +69,15 @@ public class Shooter extends SubsystemBase {
 
       // Note is moving to the amp drop position
       case AMPLOADING:
-        shooterMovement(0);
+        shooterMovement(0, 0);
         break;
       // Note is dropped into the amp
       case AMP:
-        shooterMovement(0);
+        shooterMovement(0, 0);
         break;
       // Note is shot out towards speaker
       case SPEAKER:
-        shooterMovement(0);
+        shooterMovement(0, 0);
 
         break;
       // Deafult Position of the Shooter angled at 180 degrees approximately
