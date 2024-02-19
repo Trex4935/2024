@@ -19,7 +19,6 @@ public class Rollers extends SubsystemBase {
 
   public FlippedDIO intakeSmacnaLeft;
   public FlippedDIO intakeSmacnaRight;
-  public FlippedDIO magazineSmacna;
   public FlippedDIO magneticFlap;
   public FlippedDIO shooterSmacna;
 
@@ -36,7 +35,7 @@ public class Rollers extends SubsystemBase {
 
     // Sensor Objects
     intakeSmacnaLeft = new FlippedDIO(0);
-    intakeSmacnaRight = magazineSmacna = new FlippedDIO(1);
+    intakeSmacnaRight = new FlippedDIO(9);
     magneticFlap = new FlippedDIO(2);
     shooterSmacna = new FlippedDIO(3);
 
@@ -74,11 +73,16 @@ public class Rollers extends SubsystemBase {
     // System.out.println(noteState);
   }
 
+  public void returnToField(NoteState noteState) {
+    RobotContainer.noteLifecycle = NoteState.FIELD;
+    // System.out.println(noteState);
+  }
+
   @Override
   public void periodic() {
     //
     SmartDashboard.putBoolean("intakeSmacnaLeft", intakeSmacnaLeft.get());
-    SmartDashboard.putBoolean("magazineSmacna", magazineSmacna.get());
+    SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
     SmartDashboard.putBoolean("intakeSmacnaRight", intakeSmacnaRight.get());
     SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
   }
@@ -89,7 +93,7 @@ public class Rollers extends SubsystemBase {
 
       // Turns low rollers on and switches state when the smacna detects note
       case GROUNDINTAKE:
-        onLowMagazine(0.3);
+        onLowMagazine(0.5);
         // intake sensor detects leading edge of note -> Grabbed state
         currentValue = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
         if (Helper.detectFallingRisingEdge(previousValue, currentValue, true)) {
@@ -100,7 +104,7 @@ public class Rollers extends SubsystemBase {
 
       // Keeps low roller on
       case GRABBED:
-        onLowMagazine(0.1);
+        onLowMagazine(0.5);
         // intake sensor detects back edge of the note -> Control state
         currentValue = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
         if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)) {
@@ -112,9 +116,9 @@ public class Rollers extends SubsystemBase {
 
       // Keeps low roller on
       case CONTROL:
-        onLowMagazine(0.1);
+        onLowMagazine(0.5);
         // magazine sensor detects leading edge of note -> Storage state
-        currentValue = magazineSmacna.get();
+        currentValue = magneticFlap.get();
         if (Helper.detectFallingRisingEdge(previousValue, currentValue, true)) {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
@@ -134,7 +138,7 @@ public class Rollers extends SubsystemBase {
         onHighMagazine(0.1);
         onLowMagazine(0.1);
         // If the magnetic flap moes away from magnet -> Amp state
-        currentValue = magazineSmacna.get();
+        currentValue = magneticFlap.get();
         previousValue = currentValue;
         System.out.println("AMPLOADING");
         break;
