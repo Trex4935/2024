@@ -16,7 +16,6 @@ import frc.robot.extension.Helper;
 public class Rollers extends SubsystemBase {
   CANSparkMax lowMagazine;
   CANSparkMax highMagazine;
-  NoteState rollerState;
 
   public FlippedDIO intakeSmacnaLeft;
   public FlippedDIO intakeSmacnaRight;
@@ -71,19 +70,27 @@ public class Rollers extends SubsystemBase {
     highMagazine.stopMotor();
   }
 
+  public void changeNoteState(NoteState noteState) {
+    RobotContainer.noteLifecycle = NoteState.GROUNDINTAKE;
+    // System.out.println(noteState);
+  }
+
   @Override
   public void periodic() {
     //
-
+    SmartDashboard.putBoolean("intakeSmacnaLeft", intakeSmacnaLeft.get());
+    SmartDashboard.putBoolean("magazineSmacna", magazineSmacna.get());
+    SmartDashboard.putBoolean("intakeSmacnaRight", intakeSmacnaRight.get());
+    SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
   }
 
   // Switches the state that the rollers operate in
   public void rollerSwitch() {
-    switch (rollerState) {
+    switch (RobotContainer.noteLifecycle) {
 
       // Turns low rollers on and switches state when the smacna detects note
       case GROUNDINTAKE:
-        onLowMagazine(0.1);
+        onLowMagazine(0.3);
         // intake sensor detects leading edge of note -> Grabbed state
         currentValue = intakeSmacnaLeft.get() && intakeSmacnaRight.get();
         if (Helper.detectFallingRisingEdge(previousValue, currentValue, true)) {
@@ -101,6 +108,7 @@ public class Rollers extends SubsystemBase {
           RobotContainer.noteLifecycle = NoteState.CONTROL;
         }
         previousValue = currentValue;
+        System.out.println("GRABBED");
         break;
 
       // Keeps low roller on
@@ -112,11 +120,13 @@ public class Rollers extends SubsystemBase {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
         previousValue = currentValue;
+        System.out.println("CONTROL");
         break;
 
       // Stops low rollers
       case STORAGE:
         stopLowMagazine();
+        System.out.println("STORAGE");
         break;
 
       // Turns on both low and high rollers
@@ -127,6 +137,7 @@ public class Rollers extends SubsystemBase {
         // If the magnetic flap moes away from magnet -> Amp state
         currentValue = magazineSmacna.get();
         previousValue = currentValue;
+        System.out.println("AMPLOADING");
         break;
 
       // Turns on both high and low rollers and returns to Field state after 5 seconds
@@ -142,6 +153,7 @@ public class Rollers extends SubsystemBase {
           }
         }
         previousValue = currentValue;
+        System.out.println("SPEAKER");
         break;
 
       // Reverses low and high rollers when maganetic flap is pushed, returns to field
@@ -158,6 +170,7 @@ public class Rollers extends SubsystemBase {
           }
         }
         previousValue = currentValue;
+        System.out.println("AMP");
         break;
 
       // Turns and keeps both high and low rollers on and turns them off again after 7
@@ -172,7 +185,6 @@ public class Rollers extends SubsystemBase {
             timer.reset();
           }
         }
-
         // Keeps rolllers off
       default:
         stopHighMagazine();

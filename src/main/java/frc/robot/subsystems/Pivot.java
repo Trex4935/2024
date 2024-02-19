@@ -37,8 +37,8 @@ public class Pivot extends SubsystemBase {
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
     pivotMotor = SparkMax.configPIDwithSmartMotion(pivotMotor, 0, 0, 0, 0, 0, 1, 1, 0);
-    
-    //Sets the pivot state machine
+
+    // Sets the pivot state machine
     pivotAngle = PivotAngle.Default;
 
     // News up the relative encoder and configs it to the PID
@@ -61,17 +61,23 @@ public class Pivot extends SubsystemBase {
 
   /** makes pivot motor move */
   public void runPivotMotor() {
-    pivotMotor.set(0.4);
+    pivotMotor.set(0.2);
+    System.out.println("Forward Pivot");
+
   }
+
   // Reverses pivot motor
   public void reversePivotMotor() {
-    pivotMotor.set(-0.1);
+    pivotMotor.set(-0.2);
+    System.out.println("Reverse Pivot");
   }
-// Manual movement for the PID
-  public void setPID(String wantedPosition){
+
+  // Manual movement for the PID
+  public void setPID(String wantedPosition) {
     double targetAngle = stateAngle.get(wantedPosition);
     pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kSmartMotion);
   }
+
   // Stop pivot motor
   public void stopPivotMotor() {
     pivotMotor.stopMotor();
@@ -84,8 +90,8 @@ public class Pivot extends SubsystemBase {
   }
 
   // returns the current state of the shooter
-  public String returnPivotAngle() {
-    // System.out.println(pivotAngle.toString());
+  public String returnPivotAngle(PivotAngle wantedAngle) {
+    wantedAngle = pivotAngle;
     return pivotAngle.toString();
   }
 
@@ -101,11 +107,12 @@ public class Pivot extends SubsystemBase {
   }
 
   // Shooter state machine that switches between different angles
-  public void pivotStateMachine() {
-    double targetAngle = stateAngle.get(returnPivotAngle());
+  public void pivotStateMachine(PivotAngle wantedAngle) {
+    double targetAngle = stateAngle.get(returnPivotAngle(wantedAngle));
     pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kSmartMotion);
 
-    // Checks to see if the pivot angle is close to the expected angle, can be used anywhere
+    // Checks to see if the pivot angle is close to the expected angle, can be used
+    // anywhere
     pivotAtAngle = MathUtil.isNear(targetAngle, pivotMotor.getEncoder().getPosition(), 50.0);
   }
 
