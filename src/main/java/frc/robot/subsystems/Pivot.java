@@ -90,8 +90,8 @@ public class Pivot extends SubsystemBase {
   }
 
   // returns the current state of the shooter
-  public String returnPivotAngle() {
-    // System.out.println(pivotAngle.toString());
+  public String returnPivotAngle(PivotAngle wantedAngle) {
+    wantedAngle = pivotAngle;
     return pivotAngle.toString();
   }
 
@@ -107,8 +107,8 @@ public class Pivot extends SubsystemBase {
   }
 
   // Shooter state machine that switches between different angles
-  public void pivotStateMachine() {
-    double targetAngle = stateAngle.get(returnPivotAngle());
+  public void pivotStateMachine(PivotAngle wantedAngle) {
+    double targetAngle = stateAngle.get(returnPivotAngle(wantedAngle));
     pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kSmartMotion);
 
     // Checks to see if the pivot angle is close to the expected angle, can be used

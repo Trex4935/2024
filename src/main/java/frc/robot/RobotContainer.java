@@ -134,7 +134,7 @@ public class RobotContainer {
   public RobotContainer() {
     configureBindings();
 
-    SmartDashboard.putString("angle", pivot.returnPivotAngle());
+    SmartDashboard.putString("angle", pivot.returnPivotAngle(PivotAngle.Default));
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
