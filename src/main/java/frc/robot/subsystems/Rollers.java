@@ -22,7 +22,7 @@ public class Rollers extends SubsystemBase {
   public FlippedDIO magneticFlap;
   public FlippedDIO shooterSmacna;
 
-  boolean previousValue;
+  boolean previousSmacnaValue;
   boolean currentValue;
 
   Timer timer;
@@ -96,10 +96,10 @@ public class Rollers extends SubsystemBase {
         onLowMagazine(0.5);
         // intake sensor detects leading edge of note -> Grabbed state
         currentValue = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousValue, currentValue, true)) {
+        if (Helper.detectFallingRisingEdge(previousSmacnaValue, currentValue, true)) {
           RobotContainer.noteLifecycle = NoteState.GRABBED;
         }
-        previousValue = currentValue;
+        previousSmacnaValue = currentValue;
         break;
 
       // Keeps low roller on
@@ -107,10 +107,10 @@ public class Rollers extends SubsystemBase {
         onLowMagazine(0.5);
         // intake sensor detects back edge of the note -> Control state
         currentValue = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)) {
+        if (Helper.detectFallingRisingEdge(previousSmacnaValue, currentValue, false)) {
           RobotContainer.noteLifecycle = NoteState.CONTROL;
         }
-        previousValue = currentValue;
+        previousSmacnaValue = currentValue;
         System.out.println("GRABBED");
         break;
 
@@ -119,10 +119,10 @@ public class Rollers extends SubsystemBase {
         onLowMagazine(0.5);
         // magazine sensor detects leading edge of note -> Storage state
         currentValue = magneticFlap.get();
-        if (Helper.detectFallingRisingEdge(previousValue, currentValue, true)) {
+        if (Helper.detectFallingRisingEdge(previousSmacnaValue, currentValue, true)) {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
-        previousValue = currentValue;
+        previousSmacnaValue = currentValue;
         System.out.println("CONTROL");
         break;
 
@@ -139,7 +139,7 @@ public class Rollers extends SubsystemBase {
         onLowMagazine(0.1);
         // If the magnetic flap moes away from magnet -> Amp state
         currentValue = magneticFlap.get();
-        previousValue = currentValue;
+        previousSmacnaValue = currentValue;
         System.out.println("AMPLOADING");
         break;
 
@@ -148,14 +148,14 @@ public class Rollers extends SubsystemBase {
         onLowMagazine(0.1);
         onHighMagazine(0.1);
         currentValue = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)) {
+        if (Helper.detectFallingRisingEdge(previousSmacnaValue, currentValue, false)) {
           timer.start();
           if (timer.hasElapsed(5)) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
             timer.reset();
           }
         }
-        previousValue = currentValue;
+        previousSmacnaValue = currentValue;
         System.out.println("SPEAKER");
         break;
 
@@ -165,14 +165,14 @@ public class Rollers extends SubsystemBase {
         onLowMagazine(-0.1);
         onHighMagazine(-0.1);
         currentValue = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)) {
+        if (Helper.detectFallingRisingEdge(previousSmacnaValue, currentValue, false)) {
           timer.start();
           if (timer.hasElapsed(5)) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
             timer.reset();
           }
         }
-        previousValue = currentValue;
+        previousSmacnaValue = currentValue;
         System.out.println("AMP");
         break;
 
@@ -181,7 +181,7 @@ public class Rollers extends SubsystemBase {
       case EJECT:
         highMagazine.set(0.1);
         lowMagazine.set(0.1);
-        if (Helper.detectFallingRisingEdge(previousValue, currentValue, false)) {
+        if (Helper.detectFallingRisingEdge(previousSmacnaValue, currentValue, false)) {
           timer.start();
           if (timer.hasElapsed(7)) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
