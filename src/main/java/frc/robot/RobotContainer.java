@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.PivotAngle;
@@ -46,7 +47,9 @@ public class RobotContainer {
   // Setting up bindings for necessary control of the swerve drive platform
 
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
-  private final CommandXboxController operatorButtonBindings = new CommandXboxController(1);
+  private final CommandXboxController operatorButtonBindings = new CommandXboxController(0); // My joystick
+  private final CommandGenericHID operatorTestButton = new CommandGenericHID(1);
+  
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   // Make sure things are feild centric for swerve
@@ -104,10 +107,24 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
     // maps the button bindings for the operator
-    operatorButtonBindings.a().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
-    operatorButtonBindings.b().onTrue(pivot.stateSwitcher(PivotAngle.Speaker));
-    operatorButtonBindings.x().onTrue(pivot.stateSwitcher(PivotAngle.Feed));
-    operatorButtonBindings.y().onTrue(pivot.stateSwitcher(PivotAngle.Load));
+    // operatorButtonBindings.a().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
+    // operatorButtonBindings.b().onTrue(pivot.stateSwitcher(PivotAngle.Speaker));
+    // operatorButtonBindings.x().onTrue(pivot.stateSwitcher(PivotAngle.Feed));
+    // operatorButtonBindings.y().onTrue(pivot.stateSwitcher(PivotAngle.Load));
+
+    operatorButtonBindings.y().whileTrue(rollers.runEnd(() -> rollers.onLowMagalzine(0.7, 0.9),() -> rollers.stopLowMagazine()).alongWith(shooter.runEnd(() -> shooter.shooterMovement(0.8),() -> shooter.stopShooterMotors())));
+    // operatorButtonBindings.x().whileTrue(rollers.runEnd(() -> rollers.onHighMagazine(0.7),() -> rollers.stopHighMagazine()).alongWith(rollers.runEnd(() -> rollers.onLowMagazine(0.9),() -> rollers.stopLowMagazine())));
+    operatorButtonBindings.a().whileTrue(pivot.runEnd(() -> pivot.runPivotMotor(),() -> pivot.stopPivotMotor()));
+    operatorButtonBindings.leftBumper().whileTrue(shooter.runEnd(() -> shooter.setshootingmotor1(0.6),() -> shooter.stopShootingMotor1()));
+   // operatorButtonBindings.rightBumper().whileTrue(shooter.runEnd(() -> shooter.setshootingmotor2(0.6),() -> shooter.stopShootingMotor2()));
+  // operatorTestButton.button(13).onTrue(rollers.stateSwitcher((NoteState.GROUNDINTAKE)));
+    // operatorTestButton.button(12).onTrue(rollers.stateSwitcher(NoteState.HUMANINTAKE));
+    // operatorTestButton.button(11).onTrue(rollers.stateSwitcher(NoteState.SPEAKER));
+    // operatorTestButton.button(9).onTrue(rollers.stateSwitcher(NoteState.AMP));
+    // operatorTestButton.button(7).onTrue(rollers.stateSwitcher(NoteState.FIELD));
+    // operatorTestButton.button(8).onTrue(rollers.stateSwitcher(NoteState.EJECT));
+    // operatorTestButton.button(10).onTrue(rollers.stateSwitcher(NoteState.AMPLOADING));
+
 
   }
 

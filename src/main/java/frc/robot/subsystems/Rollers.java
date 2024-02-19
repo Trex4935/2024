@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DIOSim;
@@ -9,6 +10,7 @@ import frc.robot.extension.SparkMax;
 import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.NoteState;
+import frc.robot.extension.PivotAngle;
 import frc.robot.extension.Helper;
 
 public class Rollers extends SubsystemBase {
@@ -50,6 +52,11 @@ public class Rollers extends SubsystemBase {
     lowMagazine.set(speed);
   }
 
+  public void onLowMagalzine(double speed1, double speed2) {
+    lowMagazine.set(speed1);
+    highMagazine.set(speed2);
+  }
+
   public void onHighMagazine(double speed) {
     highMagazine.set(speed);
   }
@@ -57,6 +64,7 @@ public class Rollers extends SubsystemBase {
   // Stops magazines
   public void stopLowMagazine() {
     lowMagazine.stopMotor();
+    highMagazine.stopMotor();
   }
 
   public void stopHighMagazine() {

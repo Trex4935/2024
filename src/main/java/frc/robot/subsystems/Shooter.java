@@ -23,13 +23,14 @@ public class Shooter extends SubsystemBase {
     // Creating Motor Objects
     shootingmotor1 = SparkMax.createDefaultCANSparkMax(6);
     shootingmotor2 = SparkMax.createDefaultCANSparkMax(8);
+    shootingmotor2.setInverted(true);
 
   }
 
   // makes motors spin YIPPIE!!
   public void shooterMovement(double speed) {
     shootingmotor1.set(0.8);
-    shootingmotor2.set(-0.8);
+    shootingmotor2.set(0.8);
   }
 
   // sets motor 1's speed
