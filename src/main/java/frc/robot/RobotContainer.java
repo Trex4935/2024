@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.PoseEstimation;
-import frc.robot.commands.alignWithPID;
+import frc.robot.commands.AlignWithPID;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.PivotAngle;
 import frc.robot.generated.TunerConstants;
@@ -70,7 +70,7 @@ public class RobotContainer {
 	private final Telemetry logger = new Telemetry(MaxSpeed);
 
 	// Alternate align command
-	private final alignWithPID align = new alignWithPID(drivetrain, () -> 
+	private final AlignWithPID align = new AlignWithPID(drivetrain, () -> 
 	getTargetPose(Constants.speakerAprilTag, Constants.speakerOffset), false);
 
   private final SendableChooser<Command> autoChooser;

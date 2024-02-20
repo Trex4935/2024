@@ -16,7 +16,7 @@ public class poseWithVision extends Command {
   /** Creates a new poseWithVision. */
   CommandSwerveDrivetrain drivetrain;
   Timer timer = new Timer();
-	alignWithPID align;
+	AlignWithPID align;
   public poseWithVision(CommandSwerveDrivetrain drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     timer.start();
@@ -38,7 +38,7 @@ public class poseWithVision extends Command {
 		int tagID = (int) LimelightHelpers.getFiducialID("LL1");
 
 		
-		align = new alignWithPID(drivetrain, () -> getOffsetTarget(tagID), false);
+		align = new AlignWithPID(drivetrain, () -> getOffsetTarget(tagID), false);
 
 		align.execute();
 		
