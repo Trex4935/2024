@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTable;
@@ -17,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Vision extends SubsystemBase {
   private boolean initialized = false;
   private NetworkTableEntry tTarget = null;
+	private NetworkTableEntry tid = null;
   private NetworkTableEntry tx = null;
   private NetworkTableEntry ty = null;
   private NetworkTableEntry ta = null;
@@ -24,19 +24,20 @@ public class Vision extends SubsystemBase {
   private NetworkTableEntry targetpose = null;
   private NetworkTableEntry tl = null;
   private NetworkTableEntry cl = null;
-  private Optional<Alliance> alliance = Optional.of(Alliance.Blue);
+  private Alliance alliance = Alliance.Blue;
   private String limeLightName = "limelight";
   public Vision(String limeLightName) {
     this.limeLightName = limeLightName;
-    this.alliance = DriverStation.getAlliance();
+    this.alliance = DriverStation.getAlliance().get();
     NetworkTable table = NetworkTableInstance.getDefault().getTable(limeLightName);
     
     try {
       tTarget = table.getEntry("tv");
+			tid = table.getEntry("tid");
       tx = table.getEntry("tx");
       ty = table.getEntry("ty");
       ta = table.getEntry("ta");
-      if (this.alliance == (Optional.of(Alliance.Blue))) {
+      if (this.alliance == Alliance.Blue) {
         botpose = table.getEntry("botpose_wpiblue");
       } else {
         botpose = table.getEntry("botpose_wpired");
@@ -52,7 +53,7 @@ public class Vision extends SubsystemBase {
 
 
   public void setAlliance(Alliance alliance) {
-    this.alliance = Optional.of(alliance);
+    this.alliance = alliance;
   }
 
   @Override
@@ -64,7 +65,7 @@ public class Vision extends SubsystemBase {
       tx = table.getEntry("tx");
       ty = table.getEntry("ty");
       ta = table.getEntry("ta");
-      if (this.alliance == (Optional.of(Alliance.Blue))) {
+      if (this.alliance == Alliance.Blue) {
         botpose = table.getEntry("botpose_wpiblue");
       }
       else {

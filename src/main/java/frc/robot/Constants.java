@@ -161,8 +161,8 @@ public final class Constants {
 		}
 
 		// Adds AprilTag poses to lists and sets offsets according to alliance
-		if (DriverStation.getAlliance().isEmpty() || 
-				DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+		if ((DriverStation.getAlliance().isEmpty() || 
+				DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)) {
 
 			sourceAprilTag = aprilTagPoses.get(0);
 			allianceAprilTags.add(sourceAprilTag);

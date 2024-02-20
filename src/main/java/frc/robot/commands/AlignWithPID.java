@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.Constants;
 
-public class AlignWithPID extends Command {
+public class alignWithPID extends Command {
 	/** Creates a new DriveToPoseCommand. */
 
 	private static final TrapezoidProfile.Constraints DEFAULT_XY_CONSTRAINTS = new TrapezoidProfile.Constraints(
@@ -38,7 +38,7 @@ public class AlignWithPID extends Command {
 	private final boolean useAllianceColor;
 	private SwerveRequest.ApplyChassisSpeeds driveToPoint, finalDrive;
 
-	public AlignWithPID(CommandSwerveDrivetrain drivetrain, Supplier<Pose2d> goalPoseSupplier,
+	public alignWithPID(CommandSwerveDrivetrain drivetrain, Supplier<Pose2d> goalPoseSupplier,
 			boolean useAllianceColor) {
 		// Use addRequirements() here to declare subsystem dependencies.
 		this.drivetrain = drivetrain;
