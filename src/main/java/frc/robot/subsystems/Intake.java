@@ -8,6 +8,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.extension.NoteState;
@@ -35,12 +36,12 @@ public class Intake extends SubsystemBase {
   }
 
   // Turns on the solenoid, brings intake up
-  public void switchIntakeOn() {
+  public void DustPanUp() {
     solenoid.set(true);
   }
 
   // Turns off the solenoid, brings intake down
-  public void switchIntakeOff() {
+  public void DustPanDown() {
     solenoid.set(false);
   }
 
@@ -63,25 +64,23 @@ public class Intake extends SubsystemBase {
   public void intakeSwitch() {
     switch (RobotContainer.noteLifecycle) {
       case FIELD:
-        switchIntakeOn();
+        DustPanUp();
         break;
       case GROUNDINTAKE:
         // Turns Solenoid On when we want to intake a note
-        switchIntakeOff();
+        DustPanDown();
         break;
       case GRABBED:
-        System.out.println("Grabbed");
         // Keeps solenoid on when note is inside robot just to be sure
-        switchIntakeOff();
+        DustPanDown();
         break;
       case CONTROL:
-        System.out.println("Control");
         // Keeps solenoid on when note is inside robot just to be sure
-        switchIntakeOn();
+        DustPanUp();
         break;
       default:
         // Turns Solenoid Off in all other cases
-        switchIntakeOff();
+        DustPanDown();
     }
   }
 }

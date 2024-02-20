@@ -127,13 +127,13 @@ public class RobotContainer {
     operatorTestButton.button(13)
         .whileTrue(shooter.runEnd(() -> shooter.setshootingmotor2(0.7), () -> shooter.stopShootingMotor2()));
     operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
-    // operatorTestButton.button(11).onTrue();
+    operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField(NoteState.FIELD)));
   }
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
     configureBindings();
-
+    SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
     SmartDashboard.putString("angle", pivot.returnPivotAngle(PivotAngle.Default));
 
     autoChooser = AutoBuilder.buildAutoChooser();
