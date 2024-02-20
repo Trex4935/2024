@@ -114,7 +114,7 @@ public class RobotContainer {
     // operatorButtonBindings.y().onTrue(pivot.stateSwitcher(PivotAngle.Load))
 
     operatorTestButton.button(14)
-        .whileTrue(rollers.runEnd(() -> rollers.onLowMagalzine(0.3, 0.9), () -> rollers.stopLowMagazine())
+        .whileTrue(rollers.runEnd(() -> rollers.onLowMagalzine(0.7, 0.7), () -> rollers.stopLowMagazine())
             .alongWith(shooter.runEnd(() -> shooter.shooterMovement(0.9, 0.7), () -> shooter.stopShooterMotors())));
     // operatorButtonBindings.x().whileTrue(rollers.runEnd(() ->
     // rollers.onHighMagazine(0.7),() ->
@@ -130,7 +130,8 @@ public class RobotContainer {
     operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField(NoteState.FIELD)));
   }
 
-  // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
+  // Sendables to put autoCh
+  // ooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
     configureBindings();
     SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
@@ -141,6 +142,7 @@ public class RobotContainer {
 
     SmartDashboard.putBoolean("Intake Solenoid", intake.getIntakeState());
     // sendable for
+
   }
 
   // Runs autoChooser :)

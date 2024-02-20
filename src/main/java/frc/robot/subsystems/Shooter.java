@@ -28,9 +28,9 @@ public class Shooter extends SubsystemBase {
   }
 
   // makes motors spin YIPPIE!!
-  public void shooterMovement(double speed, double speed1) {
-    shootingmotor1.set(speed);
-    shootingmotor2.set(speed1);
+  public void shooterMovement(double motor1Speed, double motor2Speed) {
+    shootingmotor1.set(motor1Speed);
+    shootingmotor2.set(motor2Speed);
   }
 
   // sets motor 1's speed
