@@ -60,16 +60,14 @@ public class Pivot extends SubsystemBase {
   }
 
   /** makes pivot motor move */
-  public void runPivotMotor() {
-    pivotMotor.set(0.2);
+  public void runPivotMotor(double speed) {
+    pivotMotor.set(speed);
+    if (speed > 0) {
     System.out.println("Forward Pivot");
-
-  }
-
-  // Reverses pivot motor
-  public void reversePivotMotor() {
-    pivotMotor.set(-0.2);
+    }
+    if (speed < 0) {
     System.out.println("Reverse Pivot");
+    }
   }
 
   // Manual movement for the PID

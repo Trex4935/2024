@@ -12,8 +12,8 @@ import frc.robot.extension.SparkMax;
 public class Shooter extends SubsystemBase {
 
   // Declaring Motors
-  CANSparkMax shootingmotor1;
-  CANSparkMax shootingmotor2;
+  CANSparkMax shootingMotorLeft;
+  CANSparkMax shootingMotorRight;
 
   // Makes a new state for the shooter
 
@@ -21,46 +21,46 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
 
     // Creating Motor Objects
-    shootingmotor1 = SparkMax.createDefaultCANSparkMax(6);
-    shootingmotor2 = SparkMax.createDefaultCANSparkMax(8);
-    shootingmotor2.setInverted(true);
+    shootingMotorLeft = SparkMax.createDefaultCANSparkMax(6);
+    shootingMotorRight = SparkMax.createDefaultCANSparkMax(8);
+    shootingMotorRight.setInverted(true);
 
   }
 
   // makes motors spin YIPPIE!!
-  public void shooterMovement(double motor1Speed, double motor2Speed) {
-    shootingmotor1.set(motor1Speed);
-    shootingmotor2.set(motor2Speed);
+  public void setShooters(double motor1Speed, double motor2Speed) {
+    shootingMotorLeft.set(motor1Speed);
+    shootingMotorRight.set(motor2Speed);
   }
 
   // sets motor 1's speed
-  public void setshootingmotor1(double speed) {
-    shootingmotor1.set(speed);
+  public void setShootingMotorLeft(double speed) {
+    shootingMotorLeft.set(speed);
     System.out.println("SHooting motor 1");
 
   }
 
   // sets motor 2's speed
-  public void setshootingmotor2(double speed) {
-    shootingmotor2.set(speed);
+  public void setShootingMotorRight(double speed) {
+    shootingMotorRight.set(speed);
     System.out.println("Shooting motor 2");
 
   }
 
   // stops motor 1
-  public void stopShootingMotor1() {
-    shootingmotor1.stopMotor();
+  public void stopShootingMotorLeft() {
+    shootingMotorLeft.stopMotor();
   }
 
   // stops motor 2
-  public void stopShootingMotor2() {
-    shootingmotor2.stopMotor();
+  public void stopShootingMotorRight() {
+    shootingMotorRight.stopMotor();
   }
 
   // stop all motors
-  public void stopShooterMotors() {
-    stopShootingMotor1();
-    stopShootingMotor2();
+  public void stopShootingMotors() {
+    stopShootingMotorLeft();
+    stopShootingMotorRight();
   }
 
   // state machine for shooter motors
@@ -69,21 +69,21 @@ public class Shooter extends SubsystemBase {
 
       // Note is moving to the amp drop position
       case AMPLOADING:
-        shooterMovement(0, 0);
+        setShooters(0, 0);
         break;
       // Note is dropped into the amp
       case AMP:
-        shooterMovement(0, 0);
+        setShooters(0, 0);
         break;
       // Note is shot out towards speaker
       case SPEAKER:
-        shooterMovement(0, 0);
+        setShooters(0, 0);
 
         break;
       // Deafult Position of the Shooter angled at 180 degrees approximately
       default:
         // turns all the motors off
-        stopShooterMotors();
+        stopShootingMotors();
 
     }
 

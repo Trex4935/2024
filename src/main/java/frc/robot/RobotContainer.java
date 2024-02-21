@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.GadgeteerUartClient.GadgeteerConnection;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -22,7 +21,7 @@ import frc.robot.extension.NoteState;
 import frc.robot.extension.PivotAngle;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.DustPan;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
@@ -31,15 +30,15 @@ import frc.robot.subsystems.LEDControl;
 
 public class RobotContainer {
   // News up our subsystems that we use throughout RobotContainer
-  private final Elevator elevator = new Elevator();
-  private final Intake intake = new Intake();
-  private final LEDControl ledControl = new LEDControl();
+  private final DustPan dustpan = new DustPan();
   private final Pivot pivot = new Pivot();
+  private final Rollers rollers = new Rollers();
   private final Shooter shooter = new Shooter();
+  private final Elevator elevator = new Elevator();
   private final Vision vision = new Vision("LL1");
+  private final LEDControl ledControl = new LEDControl();
 
   // Sets the default state in the Note Life Cycle
-  private final Rollers rollers = new Rollers();
   public static NoteState noteLifecycle = NoteState.FIELD;
 
   private double MaxSpeed = 1; // 6 meters per second desired top speed
@@ -72,7 +71,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   private void configureBindings() {
-    intake.setDefaultCommand(intake.run(() -> intake.intakeSwitch()));
+    dustpan.setDefaultCommand(dustpan.run(() -> dustpan.intakeSwitch()));
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -113,25 +112,36 @@ public class RobotContainer {
     // operatorButtonBindings.x().onTrue(pivot.stateSwitcher(PivotAngle.Feed));
     // operatorButtonBindings.y().onTrue(pivot.stateSwitcher(PivotAngle.Load))
 
+    // Button 14 runs mag and shooter
     operatorTestButton.button(14)
-        .whileTrue(rollers.runEnd(() -> rollers.onLowMagalzine(0.7, 0.7), () -> rollers.stopLowMagazine())
-            .alongWith(shooter.runEnd(() -> shooter.shooterMovement(0.9, 0.7), () -> shooter.stopShooterMotors())));
+        .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () -> rollers.stopIntake())
+            .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors())));
     // operatorButtonBindings.x().whileTrue(rollers.runEnd(() ->
     // rollers.onHighMagazine(0.7),() ->
     // rollers.stopHighMagazine()).alongWith(rollers.runEnd(() ->
     // rollers.onLowMagazine(0.9),() -> rollers.stopLowMagazine())));
-    operatorTestButton.button(10).whileTrue(pivot.runEnd(() -> pivot.runPivotMotor(), () -> pivot.stopPivotMotor()));
-    operatorTestButton.button(8).whileTrue(pivot.runEnd(() -> pivot.reversePivotMotor(), () -> pivot.stopPivotMotor()));
-    operatorTestButton.button(12)
-        .whileTrue(shooter.runEnd(() -> shooter.setshootingmotor1(0.9), () -> shooter.stopShootingMotor1()));
+    // Button 10 runs pivot
+    operatorTestButton.button(10).whileTrue(pivot.runEnd(() -> pivot.runPivotMotor(0.2), () -> pivot.stopPivotMotor()));
+    // Buttton 8 runs pivot in reverse
+    operatorTestButton.button(8)
+        .whileTrue(pivot.runEnd(() -> pivot.runPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
+    // Button 13 runs shooting motors
     operatorTestButton.button(13)
-        .whileTrue(shooter.runEnd(() -> shooter.setshootingmotor2(0.7), () -> shooter.stopShootingMotor2()));
+        .whileTrue(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors()));
+    // Button 12 runs magazine
+    operatorTestButton.button(12)
+        .whileTrue(pivot.runEnd(() -> rollers.setMagazine(0.7), () -> rollers.stopMagazine()));
+
+    // Button 9 changes state to ground intake
     operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
+    // Button 11 changes state to field
     operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField(NoteState.FIELD)));
+
+    // operatorTestButton.button(12).onTrue(rollers.runOnce(() ->
+    // rollers.changeNoteState(NoteState.);))
   }
 
-  // Sendables to put autoCh
-  // ooser and Pivot Angle in the SmartDashboard.
+  // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
     configureBindings();
     SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
@@ -140,7 +150,7 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
 
-    SmartDashboard.putBoolean("Intake Solenoid", intake.getIntakeState());
+    SmartDashboard.putBoolean("DustPan Solenoid", dustpan.getDustPanState());
     // sendable for
 
   }
