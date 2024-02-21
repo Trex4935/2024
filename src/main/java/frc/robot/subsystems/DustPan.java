@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.extension.NoteState;
 
-public class Intake extends SubsystemBase {
+public class DustPan extends SubsystemBase {
   // DoubleSolenoid doublesolenoid;
 
   // Makes a New Solenoid
@@ -22,8 +22,8 @@ public class Intake extends SubsystemBase {
   // Makes a new compressor
   private final Compressor m_compressor;
 
-  /** Creates a new IntakeLift. */
-  public Intake() {
+  /** Creates a new DustPan. */
+  public DustPan() {
     // doublesolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,33, 44);
 
     // news up the solenoid and compressor
@@ -35,24 +35,24 @@ public class Intake extends SubsystemBase {
 
   }
 
-  // Turns on the solenoid, brings intake up
-  public void DustPanUp() {
+  // Turns on the solenoid, brings dustpan up
+  public void dustPanUp() {
     solenoid.set(true);
   }
 
-  // Turns off the solenoid, brings intake down
-  public void DustPanDown() {
+  // Turns off the solenoid, brings dustpan down
+  public void dustPanDown() {
     solenoid.set(false);
   }
 
   // Returns the current state of the solenoid-Used for Sendables
-  public boolean getIntakeState() {
+  public boolean getDustPanState() {
     return solenoid.get();
   }
 
   // puts the current state of the intake on the network table
   public void initSendable(SendableBuilder builder) {
-    builder.addBooleanProperty("Intake Dropped", this::getIntakeState, null);
+    builder.addBooleanProperty("DustPan Dropped", this::getDustPanState, null);
   }
 
   @Override
@@ -64,23 +64,23 @@ public class Intake extends SubsystemBase {
   public void intakeSwitch() {
     switch (RobotContainer.noteLifecycle) {
       case FIELD:
-        DustPanUp();
+        dustPanUp();
         break;
       case GROUNDINTAKE:
         // Turns Solenoid On when we want to intake a note
-        DustPanDown();
+        dustPanDown();
         break;
       case GRABBED:
         // Keeps solenoid on when note is inside robot just to be sure
-        DustPanDown();
+        dustPanDown();
         break;
       case CONTROL:
         // Keeps solenoid on when note is inside robot just to be sure
-        DustPanUp();
+        dustPanUp();
         break;
       default:
         // Turns Solenoid Off in all other cases
-        DustPanDown();
+        dustPanDown();
     }
   }
 }
