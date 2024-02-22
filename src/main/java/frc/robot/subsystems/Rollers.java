@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -10,7 +9,6 @@ import frc.robot.extension.SparkMax;
 import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.NoteState;
-import frc.robot.extension.PivotAngle;
 import frc.robot.extension.Helper;
 
 public class Rollers extends SubsystemBase {
@@ -103,6 +101,7 @@ public class Rollers extends SubsystemBase {
       // Keeps low roller on
       case GRABBED:
         setIntake(0.9);
+        setMagazine(0.0);
         // intake sensor detects back edge of the note -> Control state
         currentIntakeSmacnaState = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
         if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, false)) {
@@ -114,6 +113,7 @@ public class Rollers extends SubsystemBase {
       // Keeps low roller on
       case CONTROL:
         setIntake(0.9);
+        setMagazine(0.9);
         // magazine sensor detects leading edge of note -> Storage state
         currentIntakeSmacnaState = magneticFlap.get();
         if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, true)) {
