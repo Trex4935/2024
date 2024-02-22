@@ -112,7 +112,7 @@ public class RobotContainer {
 
     // Button 14 runs mag and shooter
     operatorTestButton.button(14)
-        .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () -> rollers.stopIntake())
+        .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () -> rollers.stopDustpan())
             .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors())));
     // operatorButtonBindings.x().whileTrue(rollers.runEnd(() ->
     // rollers.onHighMagazine(0.7),() ->

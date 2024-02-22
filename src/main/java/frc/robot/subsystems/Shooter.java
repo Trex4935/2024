@@ -82,7 +82,7 @@ public class Shooter extends SubsystemBase {
       case EJECT:
         setShooters(0.1, 0.1);
         break;
-      // Deafult Position of the Shooter angled at 180 degrees approximately
+      // Default Position of the Shooter angled at 180 degrees approximately
       default:
         // turns all the motors off
         stopShootingMotors();
