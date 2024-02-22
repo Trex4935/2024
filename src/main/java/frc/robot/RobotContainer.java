@@ -24,7 +24,6 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.DustPan;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Rollers;
 import frc.robot.subsystems.LEDControl;
 
@@ -36,7 +35,6 @@ public class RobotContainer {
   private final Rollers rollers = new Rollers();
   private final Shooter shooter = new Shooter();
   private final Elevator elevator = new Elevator();
-  private final Vision vision = new Vision("LL1");
   private final LEDControl ledControl = new LEDControl();
 
   // Sets the default state in the Note Life Cycle
@@ -69,7 +67,7 @@ public class RobotContainer {
   private final CommandGenericHID operatorTestButton = new CommandGenericHID(1);
 
   private void configureBindings() {
-  
+
     // Setup Default commands
     dustpan.setDefaultCommand(dustpan.run(() -> dustpan.intakeSwitch()));
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
@@ -154,7 +152,7 @@ public class RobotContainer {
     // sendable for
 
   }
-  
+
   // note cycle return
   public static NoteState getCycle() {
     return noteLifecycle;
