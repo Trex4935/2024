@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.extension.SparkMax;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.NoteState;
@@ -14,15 +15,18 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Rollers extends SubsystemBase {
-  // Creating mototrs; ID's shown in IDguide.md
-  CANSparkMax intake;
+  CANSparkMax dustpanRollers;
   CANSparkMax magazine;
 
-  // Creating Sesors; ID's shown in IDguide.md
+  public FlippedDIO dustpanSmacnaLeft;
+  public FlippedDIO dustpanSmacnaRight;
+
+  // Creating Sensors; ID's shown in IDguide.md
   public FlippedDIO intakeSmacnaLeft;
   public FlippedDIO intakeSmacnaRight;
   public FlippedDIO magneticFlap;
   public FlippedDIO shooterSmacna;
+  public FlippedDIO storageButton;
 
   boolean previousIntakeSmacnaState;
   boolean currentIntakeSmacnaState;
@@ -32,15 +36,16 @@ public class Rollers extends SubsystemBase {
 
   public Rollers() {
     // News up motor objects
-    intake = SparkMax.createDefaultCANSparkMax(4);
-    intake.setInverted(true);
+    dustpanRollers = SparkMax.createDefaultCANSparkMax(4);
+    dustpanRollers.setInverted(true);
     magazine = SparkMax.createDefaultCANSparkMax(5);
 
     // Sensor Objects
-    intakeSmacnaLeft = new FlippedDIO(0);
-    intakeSmacnaRight = new FlippedDIO(9);
+    dustpanSmacnaLeft = new FlippedDIO(0);
+    dustpanSmacnaRight = new FlippedDIO(9);
     magneticFlap = new FlippedDIO(2);
     shooterSmacna = new FlippedDIO(3);
+    storageButton = new FlippedDIO(4);
 
     // News up a timer object
     timer = new Timer();
@@ -48,35 +53,35 @@ public class Rollers extends SubsystemBase {
     final CommandGenericHID driverStationButtonPress = new CommandGenericHID(1);
   }
 
-  // moves intake motor; Sets speed
-  public void setIntake(double speed) {
-    intake.set(speed);
+  // sets dustpan speed
+  public void setDustpan(double speed) {
+    dustpanRollers.set(speed);
   }
 
-  // stops intake motor
-  public void stopIntake() {
-    intake.stopMotor();
+  // stops dustpan motor
+  public void stopDustpan() {
+    dustpanRollers.stopMotor();
   }
 
-  // moves magazine motor; Sets speed
+  // sets magazine speed
   public void setMagazine(double speed) {
     magazine.set(speed);
   }
 
-  // stops intake motor
+  // stops magazine motor
   public void stopMagazine() {
     magazine.stopMotor();
   }
 
-  // moves both motors at set speeds
-  public void setRollers(double intakeSpeed, double magSpeed) {
-    intake.set(intakeSpeed);
+  // sets intake speed and magazine speed.
+  public void setRollers(double dustpanSpeed, double magSpeed) {
+    dustpanRollers.set(dustpanSpeed);
     magazine.set(magSpeed);
   }
 
-  // stops both motors
+  // stops rollers
   public void stopRollers() {
-    stopIntake();
+    stopDustpan();
     stopMagazine();
   }
 
@@ -105,81 +110,79 @@ public class Rollers extends SubsystemBase {
       // GROUND INTAKE: Turns low rollers on and switches state when the smacna
       // detects note
       case GROUNDINTAKE:
-        setIntake(0.9);
+        setDustpan(0.9);
         // intake sensor detects leading edge of note -> Grabbed state
-        currentIntakeSmacnaState = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, true)) {
+        currentDustpanSmacnaState = dustpanSmacnaLeft.get() || dustpanSmacnaRight.get();
+        if (Helper.detectFallingRisingEdge(previousDustpanSmacnaState, currentDustpanSmacnaState, true)) {
           RobotContainer.noteLifecycle = NoteState.GRABBED;
         }
-        previousIntakeSmacnaState = currentIntakeSmacnaState;
+        previousDustpanSmacnaState = currentDustpanSmacnaState;
         break;
 
       // GRABBED STATE: Keeps low roller on
       case GRABBED:
-        setIntake(0.9);
-        setMagazine(0.9);
+        setDustpan(0.9);
         // intake sensor detects back edge of the note -> Control state
-        currentIntakeSmacnaState = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, false)) {
+        currentDustpanSmacnaState = dustpanSmacnaLeft.get() || dustpanSmacnaRight.get();
+        if (Helper.detectFallingRisingEdge(previousDustpanSmacnaState, currentDustpanSmacnaState, false)) {
           RobotContainer.noteLifecycle = NoteState.CONTROL;
         }
-        previousIntakeSmacnaState = currentIntakeSmacnaState;
+        previousDustpanSmacnaState = currentDustpanSmacnaState;
         break;
 
       // CONTROL STATE: Keeps low roller on
       case CONTROL:
-        setIntake(0.9);
+        setDustpan(0.9);
         setMagazine(0.9);
-        // magazine sensor detects leading edge of note -> Storage state
-        currentIntakeSmacnaState = magneticFlap.get();
-        if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, true)) {
+        if (storageButton.equals(true)) {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
-        previousIntakeSmacnaState = currentIntakeSmacnaState;
+
         break;
 
       // STORAGE STATE: Stops low rollers
       case STORAGE:
-        stopIntake();
+        stopDustpan();
+        stopMagazine();
         break;
 
       // AMPLOADING STATE: Turns on both low and high rollers
       case AMPLOADING:
         // Turns low roller on
         setMagazine(0.1);
-        setIntake(0.1);
+        setDustpan(0.1);
         // If the magnetic flap moes away from magnet -> Amp state
-        currentIntakeSmacnaState = magneticFlap.get();
-        previousIntakeSmacnaState = currentIntakeSmacnaState;
+        currentDustpanSmacnaState = magneticFlap.get();
+        previousDustpanSmacnaState = currentDustpanSmacnaState;
         break;
 
       // SPEAKER STATE: Turns on both high and low rollers and returns to Field state
       // after 5 seconds
       case SPEAKER:
-        setIntake(0.1);
+        setDustpan(0.1);
         setMagazine(0.1);
       // changes the state to field when button thirteen is true
         if (driverStationButtonPress.button(13).getAsBoolean()) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
         }
-        previousIntakeSmacnaState = currentIntakeSmacnaState;
+        previousDustpanSmacnaState = currentDustpanSmacnaState;
         break;
 
       // AMP STATE: Reverses low and high rollers when maganetic flap is pushed,
       // returns to field
       // state after 5 seconds have passed
       case AMP:
-        setIntake(-0.1);
+        setDustpan(-0.1);
         setMagazine(-0.1);
-        currentIntakeSmacnaState = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, false)) {
+        currentDustpanSmacnaState = dustpanSmacnaLeft.get() || dustpanSmacnaRight.get();
+        if (Helper.detectFallingRisingEdge(previousDustpanSmacnaState, currentDustpanSmacnaState, false)) {
           timer.start();
           if (timer.hasElapsed(5)) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
             timer.reset();
           }
         }
-        previousIntakeSmacnaState = currentIntakeSmacnaState;
+        previousDustpanSmacnaState = currentDustpanSmacnaState;
         break;
 
       // EJECT STATE: Turns and keeps both high and low rollers on and turns them off
@@ -187,8 +190,8 @@ public class Rollers extends SubsystemBase {
       // seconds
       case EJECT:
         magazine.set(0.1);
-        intake.set(0.1);
-        if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, false)) {
+        dustpanRollers.set(0.1);
+        if (Helper.detectFallingRisingEdge(previousDustpanSmacnaState, currentDustpanSmacnaState, false)) {
           timer.start();
           if (timer.hasElapsed(7)) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
@@ -196,10 +199,10 @@ public class Rollers extends SubsystemBase {
           }
         }
 
-        // Keeps rolllers off
+        // Keeps rollers off for magazine and dustpan
       default:
         stopMagazine();
-        stopIntake();
+        stopDustpan();
 
     }
   }
@@ -207,10 +210,9 @@ public class Rollers extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // Values to showcase the sensor values on the SmartDashboard :)
-    SmartDashboard.putBoolean("intakeSmacnaLeft", intakeSmacnaLeft.get());
+    SmartDashboard.putBoolean("dustpanSmacnaLeft", dustpanSmacnaLeft.get());
     SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
-    SmartDashboard.putBoolean("intakeSmacnaRight", intakeSmacnaRight.get());
+    SmartDashboard.putBoolean("dustpanSmacnaRight", dustpanSmacnaRight.get());
     SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
 
   }
