@@ -12,9 +12,11 @@ import frc.robot.extension.NoteState;
 import frc.robot.extension.Helper;
 
 public class Rollers extends SubsystemBase {
+  // Creating mototrs; ID's shown in IDguide.md
   CANSparkMax intake;
   CANSparkMax magazine;
 
+  // Creating Sesors; ID's shown in IDguide.md
   public FlippedDIO intakeSmacnaLeft;
   public FlippedDIO intakeSmacnaRight;
   public FlippedDIO magneticFlap;
@@ -39,55 +41,64 @@ public class Rollers extends SubsystemBase {
 
     // News up a timer object
     timer = new Timer();
-
   }
 
-  // Sets magazine speed
+  // moves intake motor; Sets speed
   public void setIntake(double speed) {
     intake.set(speed);
   }
 
+  // stops intake motor
+  public void stopIntake() {
+    intake.stopMotor();
+  }
+
+  // moves magazine motor; Sets speed
+  public void setMagazine(double speed) {
+    magazine.set(speed);
+  }
+
+  // stops intake motor
+  public void stopMagazine() {
+    magazine.stopMotor();
+  }
+
+  // moves both motors at set speeds
   public void setRollers(double intakeSpeed, double magSpeed) {
     intake.set(intakeSpeed);
     magazine.set(magSpeed);
   }
 
-  public void setMagazine(double speed) {
-    magazine.set(speed);
+  // stops both motors
+  public void stopRollers() {
+    stopIntake();
+    stopMagazine();
   }
 
-  // Stops magazines
-  public void stopIntake() {
-    intake.stopMotor();
-    magazine.stopMotor();
-  }
-
-  public void stopMagazine() {
-    magazine.stopMotor();
-  }
-
+  // sets up Intake note state
   public void changeNoteState(NoteState noteState) {
     RobotContainer.noteLifecycle = NoteState.GROUNDINTAKE;
   }
 
+  // sets up Field note state; default state
   public void returnToField(NoteState noteState) {
     RobotContainer.noteLifecycle = NoteState.FIELD;
-  }
-
-  @Override
-  public void periodic() {
-    //
-    SmartDashboard.putBoolean("intakeSmacnaLeft", intakeSmacnaLeft.get());
-    SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
-    SmartDashboard.putBoolean("intakeSmacnaRight", intakeSmacnaRight.get());
-    SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
   }
 
   // Switches the state that the rollers operate in
   public void rollerSwitch() {
     switch (RobotContainer.noteLifecycle) {
 
-      // Turns low rollers on and switches state when the smacna detects note
+      // Explanation for rising and falling edge code
+
+      // Rising & Falling edge detection code, compares the previous value of the
+      // smacna to
+      // the current value, this allows for precise commands depending on whether or
+      // not there
+      // is a rising or falling edge;
+
+      // GROUND INTAKE: Turns low rollers on and switches state when the smacna
+      // detects note
       case GROUNDINTAKE:
         setIntake(0.9);
         // intake sensor detects leading edge of note -> Grabbed state
@@ -98,7 +109,7 @@ public class Rollers extends SubsystemBase {
         previousIntakeSmacnaState = currentIntakeSmacnaState;
         break;
 
-      // Keeps low roller on
+      // GRABBED STATE: Keeps low roller on
       case GRABBED:
         setIntake(0.9);
         setMagazine(0.9);
@@ -110,7 +121,7 @@ public class Rollers extends SubsystemBase {
         previousIntakeSmacnaState = currentIntakeSmacnaState;
         break;
 
-      // Keeps low roller on
+      // CONTROL STATE: Keeps low roller on
       case CONTROL:
         setIntake(0.9);
         setMagazine(0.9);
@@ -122,12 +133,12 @@ public class Rollers extends SubsystemBase {
         previousIntakeSmacnaState = currentIntakeSmacnaState;
         break;
 
-      // Stops low rollers
+      // STORAGE STATE: Stops low rollers
       case STORAGE:
         stopIntake();
         break;
 
-      // Turns on both low and high rollers
+      // AMPLOADING STATE: Turns on both low and high rollers
       case AMPLOADING:
         // Turns low roller on
         setMagazine(0.1);
@@ -137,7 +148,8 @@ public class Rollers extends SubsystemBase {
         previousIntakeSmacnaState = currentIntakeSmacnaState;
         break;
 
-      // Turns on both high and low rollers and returns to Field state after 5 seconds
+      // SPEAKER STATE: Turns on both high and low rollers and returns to Field state
+      // after 5 seconds
       case SPEAKER:
         setIntake(0.1);
         setMagazine(0.1);
@@ -152,7 +164,8 @@ public class Rollers extends SubsystemBase {
         previousIntakeSmacnaState = currentIntakeSmacnaState;
         break;
 
-      // Reverses low and high rollers when maganetic flap is pushed, returns to field
+      // AMP STATE: Reverses low and high rollers when maganetic flap is pushed,
+      // returns to field
       // state after 5 seconds have passed
       case AMP:
         setIntake(-0.1);
@@ -168,7 +181,8 @@ public class Rollers extends SubsystemBase {
         previousIntakeSmacnaState = currentIntakeSmacnaState;
         break;
 
-      // Turns and keeps both high and low rollers on and turns them off again after 7
+      // EJECT STATE: Turns and keeps both high and low rollers on and turns them off
+      // again after 7
       // seconds
       case EJECT:
         magazine.set(0.1);
@@ -188,4 +202,14 @@ public class Rollers extends SubsystemBase {
 
     }
   }
+
+  @Override
+  public void periodic() {
+    // Values to showcase the sensor values on the SmartDashboard :)
+    SmartDashboard.putBoolean("intakeSmacnaLeft", intakeSmacnaLeft.get());
+    SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
+    SmartDashboard.putBoolean("intakeSmacnaRight", intakeSmacnaRight.get());
+    SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
+  }
+
 }

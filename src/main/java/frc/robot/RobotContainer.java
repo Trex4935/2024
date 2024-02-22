@@ -29,6 +29,7 @@ import frc.robot.subsystems.Rollers;
 import frc.robot.subsystems.LEDControl;
 
 public class RobotContainer {
+
   // News up our subsystems that we use throughout RobotContainer
   private final DustPan dustpan = new DustPan();
   private final Pivot pivot = new Pivot();
@@ -41,14 +42,12 @@ public class RobotContainer {
   // Sets the default state in the Note Life Cycle
   public static NoteState noteLifecycle = NoteState.FIELD;
 
+  // Swerve settings
   private double MaxSpeed = 1; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   // Setting up bindings for necessary control of the swerve drive platform
-
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
-  private final CommandGenericHID operatorTestButton = new CommandGenericHID(1);
-
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   // Make sure things are feild centric for swerve
@@ -60,17 +59,18 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-  // note cycle return
-  public static NoteState getCycle() {
-    return noteLifecycle;
-  }
-
+  // Swerve Telemetry
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
   // Creates the autoChooser to use in the sendables
   private final SendableChooser<Command> autoChooser;
 
+  // Setting up the Button Box
+  private final CommandGenericHID operatorTestButton = new CommandGenericHID(1);
+
   private void configureBindings() {
+  
+    // Setup Default commands
     dustpan.setDefaultCommand(dustpan.run(() -> dustpan.intakeSwitch()));
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
 
@@ -153,6 +153,11 @@ public class RobotContainer {
     SmartDashboard.putBoolean("DustPan Solenoid", dustpan.getDustPanState());
     // sendable for
 
+  }
+  
+  // note cycle return
+  public static NoteState getCycle() {
+    return noteLifecycle;
   }
 
   // Runs autoChooser :)
