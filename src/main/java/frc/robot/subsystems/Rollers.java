@@ -44,28 +44,31 @@ public class Rollers extends SubsystemBase {
 
   }
 
-  // Sets magazine speed
+
   public void setIntake(double speed) {
     intake.set(speed);
   }
 
-  public void setRollers(double intakeSpeed, double magSpeed) {
-    intake.set(intakeSpeed);
-    magazine.set(magSpeed);
+  public void stopIntake() {
+    intake.stopMotor();
   }
 
   public void setMagazine(double speed) {
     magazine.set(speed);
-  }
-
-  // Stops magazines
-  public void stopIntake() {
-    intake.stopMotor();
-    magazine.stopMotor();
-  }
+  }  
 
   public void stopMagazine() {
     magazine.stopMotor();
+  }
+
+    public void setRollers(double intakeSpeed, double magSpeed) {
+    intake.set(intakeSpeed);
+    magazine.set(magSpeed);
+  }
+
+  public void stopRollers(){
+    stopIntake();
+    stopMagazine();
   }
 
   public void changeNoteState(NoteState noteState) {
@@ -74,15 +77,6 @@ public class Rollers extends SubsystemBase {
 
   public void returnToField(NoteState noteState) {
     RobotContainer.noteLifecycle = NoteState.FIELD;
-  }
-
-  @Override
-  public void periodic() {
-    //
-    SmartDashboard.putBoolean("intakeSmacnaLeft", intakeSmacnaLeft.get());
-    SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
-    SmartDashboard.putBoolean("intakeSmacnaRight", intakeSmacnaRight.get());
-    SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
   }
 
   // Switches the state that the rollers operate in
@@ -188,4 +182,14 @@ public class Rollers extends SubsystemBase {
 
     }
   }
+
+  @Override
+  public void periodic() {
+    //
+    SmartDashboard.putBoolean("intakeSmacnaLeft", intakeSmacnaLeft.get());
+    SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
+    SmartDashboard.putBoolean("intakeSmacnaRight", intakeSmacnaRight.get());
+    SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
+  }
+  
 }
