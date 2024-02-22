@@ -79,15 +79,6 @@ public class Rollers extends SubsystemBase {
     RobotContainer.noteLifecycle = NoteState.FIELD;
   }
 
-  @Override
-  public void periodic() {
-    //
-    SmartDashboard.putBoolean("intakeSmacnaLeft", intakeSmacnaLeft.get());
-    SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
-    SmartDashboard.putBoolean("intakeSmacnaRight", intakeSmacnaRight.get());
-    SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
-  }
-
   // Switches the state that the rollers operate in
   public void rollerSwitch() {
     switch (RobotContainer.noteLifecycle) {
@@ -191,4 +182,14 @@ public class Rollers extends SubsystemBase {
 
     }
   }
+
+  @Override
+  public void periodic() {
+    //
+    SmartDashboard.putBoolean("intakeSmacnaLeft", intakeSmacnaLeft.get());
+    SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
+    SmartDashboard.putBoolean("intakeSmacnaRight", intakeSmacnaRight.get());
+    SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
+  }
+  
 }
