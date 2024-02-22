@@ -101,7 +101,7 @@ public class Rollers extends SubsystemBase {
       // Keeps low roller on
       case GRABBED:
         setIntake(0.9);
-        setMagazine(0.0);
+        setMagazine(0.9);
         // intake sensor detects back edge of the note -> Control state
         currentIntakeSmacnaState = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
         if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, false)) {
