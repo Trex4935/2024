@@ -10,6 +10,8 @@ import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.Helper;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Rollers extends SubsystemBase {
   // Creating mototrs; ID's shown in IDguide.md
@@ -24,6 +26,7 @@ public class Rollers extends SubsystemBase {
 
   boolean previousIntakeSmacnaState;
   boolean currentIntakeSmacnaState;
+  CommandGenericHID driverStationButtonPress;
 
   Timer timer;
 
@@ -41,6 +44,8 @@ public class Rollers extends SubsystemBase {
 
     // News up a timer object
     timer = new Timer();
+
+    final CommandGenericHID driverStationButtonPress = new CommandGenericHID(1);
   }
 
   // moves intake motor; Sets speed
@@ -153,13 +158,9 @@ public class Rollers extends SubsystemBase {
       case SPEAKER:
         setIntake(0.1);
         setMagazine(0.1);
-        currentIntakeSmacnaState = intakeSmacnaLeft.get() || intakeSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousIntakeSmacnaState, currentIntakeSmacnaState, false)) {
-          timer.start();
-          if (timer.hasElapsed(5)) {
+      // changes the state to field when button thirteen is true
+        if (driverStationButtonPress.button(13).getAsBoolean()) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
-            timer.reset();
-          }
         }
         previousIntakeSmacnaState = currentIntakeSmacnaState;
         break;
@@ -203,6 +204,7 @@ public class Rollers extends SubsystemBase {
     }
   }
 
+
   @Override
   public void periodic() {
     // Values to showcase the sensor values on the SmartDashboard :)
@@ -210,6 +212,7 @@ public class Rollers extends SubsystemBase {
     SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
     SmartDashboard.putBoolean("intakeSmacnaRight", intakeSmacnaRight.get());
     SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
+
   }
 
 }
