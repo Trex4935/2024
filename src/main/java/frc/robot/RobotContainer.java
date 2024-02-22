@@ -26,7 +26,6 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Rollers;
 import frc.robot.subsystems.LEDControl;
 
@@ -37,7 +36,6 @@ public class RobotContainer {
   private final LEDControl ledControl = new LEDControl();
   private final Pivot pivot = new Pivot();
   private final Shooter shooter = new Shooter();
-  private final Vision vision = new Vision("LL1");
   private final Rollers rollers = new Rollers();
 
   // Sets the default state in the Note Life Cycle
@@ -70,8 +68,9 @@ public class RobotContainer {
 	private final Telemetry logger = new Telemetry(MaxSpeed);
 
 	// Alternate align command
+	// TODO: Tune offset values
 	private final AlignWithPID align = new AlignWithPID(drivetrain, () -> 
-	getTargetPose(Constants.speakerAprilTag, Constants.speakerOffset), false);
+	getTargetPose(Constants.speakerAprilTag, Constants.speakerOffset), false, false);
 
   private final SendableChooser<Command> autoChooser;
 

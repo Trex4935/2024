@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.Constants;
+import frc.robot.extension.LimelightHelpers;
 
 public class AlignWithPID extends Command {
 	/** Creates a new DriveToPoseCommand. */
@@ -35,23 +36,24 @@ public class AlignWithPID extends Command {
 
 	private final CommandSwerveDrivetrain drivetrain;
 	private final Supplier<Pose2d> goalPoseSupplier;
-	private final boolean useAllianceColor;
+	private final boolean useAllianceColor, useVision;
 	private SwerveRequest.ApplyChassisSpeeds driveToPoint, finalDrive;
 
 	public AlignWithPID(CommandSwerveDrivetrain drivetrain, Supplier<Pose2d> goalPoseSupplier,
-			boolean useAllianceColor) {
+			boolean useAllianceColor, boolean useVision) {
 		// Use addRequirements() here to declare subsystem dependencies.
 		this.drivetrain = drivetrain;
 		this.goalPoseSupplier = goalPoseSupplier;
 		this.useAllianceColor = useAllianceColor;
+		this.useVision = useVision;
 
 		xController = new ProfiledPIDController(0.2, 0, 0, DEFAULT_XY_CONSTRAINTS);
 		yController = new ProfiledPIDController(0.2, 0, 0, DEFAULT_XY_CONSTRAINTS);
 		thetaController = new ProfiledPIDController(0.2, 0, 0, DEFAULT_OMEGA_CONSTRAINTS);
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-		xController.setTolerance(0.1);
-		yController.setTolerance(0.1);
+		xController.setTolerance(0.01);
+		yController.setTolerance(0.01);
 		thetaController.setTolerance(Units.degreesToRadians(2.0));
 
 		driveToPoint = new SwerveRequest.ApplyChassisSpeeds();
@@ -65,15 +67,27 @@ public class AlignWithPID extends Command {
 	public void initialize() {
 
 		resetPIDControllers();
-		Pose2d pose = goalPoseSupplier.get();
-		if (useAllianceColor && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-			Translation2d transformedTranslation = new Translation2d(pose.getX(), Constants.fieldWidth - pose.getY());
-			Rotation2d transformedHeading = pose.getRotation();
-			pose = new Pose2d(transformedTranslation, transformedHeading);
+		if (useVision) {
+			int tagID = (int) LimelightHelpers.getFiducialID("LL1");
+			Supplier<Pose2d> visionGoalPoseSupplier = (() -> getOffsetTarget(tagID));
+			Pose2d pose = visionGoalPoseSupplier.get();
+
+			xController.setGoal(pose.getX());
+			yController.setGoal(pose.getY());
+			thetaController.setGoal(pose.getRotation().getRadians());
+		} else {
+			Pose2d pose = goalPoseSupplier.get();
+			if (useAllianceColor && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+				Translation2d transformedTranslation = new Translation2d(pose.getX(), Constants.fieldWidth - pose.getY());
+				Rotation2d transformedHeading = pose.getRotation();
+				pose = new Pose2d(transformedTranslation, transformedHeading);
+			}
+
+			xController.setGoal(pose.getX());
+			yController.setGoal(pose.getY());
+			thetaController.setGoal(pose.getRotation().getRadians());
+			
 		}
-		xController.setGoal(pose.getX());
-		yController.setGoal(pose.getY());
-		thetaController.setGoal(pose.getRotation().getRadians());
 	}
 
 	public boolean atGoal() {
@@ -90,6 +104,12 @@ public class AlignWithPID extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
+		if (useVision) {
+			if (!LimelightHelpers.getTV("LL1")) {
+				this.cancel();
+			}
+		}
+
 		Pose2d robotPose = drivetrain.getState().Pose;
 
 		double xSpeed = xController.calculate(robotPose.getX());
@@ -109,9 +129,9 @@ public class AlignWithPID extends Command {
 
 		driveToPoint = driveToPoint.withSpeeds(
 				ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, thetaSpeed, robotPose.getRotation()));
-				System.out.println(xSpeed);
-				System.out.println(ySpeed);
-				System.out.println(thetaSpeed);
+		System.out.println(xSpeed);
+		System.out.println(ySpeed);
+		System.out.println(thetaSpeed);
 
 		drivetrain.setControl(driveToPoint);
 
@@ -136,5 +156,71 @@ public class AlignWithPID extends Command {
 	@Override
 	public boolean isFinished() {
 		return atGoal();
+	}
+
+	private Pose2d getOffsetTarget(int id) {
+		Pose2d tagPose = Constants.aprilTagLayout.getTagPose(id).get().toPose2d();
+		// TODO: Find all offsets
+		switch (id) {
+			case 1:
+				return getTargetPose(tagPose, 0.320528, 0.879128, -60.0);
+
+			case 2:
+				return getTargetPose(tagPose, 0, 0, 0);
+
+			case 3:
+				return getTargetPose(tagPose, 0, 0, 0);
+
+			case 4:
+				return getTargetPose(tagPose, -1.763, 0, 0);
+
+			case 5, 6:
+				return getTargetPose(tagPose, 0, -0.7042, 90.0);
+
+			case 7:
+				return getTargetPose(tagPose, 1.763, 0, -180.0);
+
+			case 8:
+				return getTargetPose(tagPose, 0, 0, 0);
+
+			case 9:
+				return getTargetPose(tagPose, 0, 0, 0);
+
+			case 10:
+				return getTargetPose(tagPose, 0.320528, 0.879128, -120.0);
+
+			case 11:
+				return getTargetPose(tagPose, 0, 0, 0);
+
+			case 12:
+				return getTargetPose(tagPose, 0, 0, 0);
+
+			case 13:
+				return getTargetPose(tagPose, 0, 0, 0);
+
+			case 14:
+				return getTargetPose(tagPose, 0, 0, 0);
+
+			case 15:
+				return getTargetPose(tagPose, 0, 0, 0);
+
+			case 16:
+				return getTargetPose(tagPose, 0, 0, 0);
+
+			default:
+				return getTargetPose(tagPose, 0, 0, 0);
+		}
+	}
+
+	private Pose2d getTargetPose(Pose2d aprilTagPose, double xOffset, double yOffset, double rotDeg) {
+		// Creates an offset pose from the offset array
+		Pose2d pose2dOffset = new Pose2d(xOffset, yOffset, Rotation2d.fromDegrees(rotDeg));
+		// Gets target values from the tag poses and the offset
+		double targetX = aprilTagPose.getX() + pose2dOffset.getX();
+		double targetY = aprilTagPose.getY() + pose2dOffset.getY();
+		Rotation2d targetTheta = pose2dOffset.getRotation();
+		// Makes a target pose
+		Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
+		return targetPose;
 	}
 }
