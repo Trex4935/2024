@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.PivotAngle;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DustPan;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
@@ -34,7 +34,7 @@ public class RobotContainer {
   private final Pivot pivot = new Pivot();
   private final Rollers rollers = new Rollers();
   private final Shooter shooter = new Shooter();
-  private final Elevator elevator = new Elevator();
+  private final Climber elevator = new Climber();
   private final LEDControl ledControl = new LEDControl();
 
   // Sets the default state in the Note Life Cycle
@@ -71,6 +71,8 @@ public class RobotContainer {
     // Setup Default commands
     dustpan.setDefaultCommand(dustpan.run(() -> dustpan.intakeSwitch()));
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
+    shooter.setDefaultCommand(shooter.run(() -> shooter.shooterSwitch()));
+    pivot.setDefaultCommand(pivot.run(() -> pivot.pivotStateMachine(PivotAngle.Default)));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
