@@ -114,7 +114,7 @@ public class RobotContainer {
 
     // Button 14 runs mag and shooter
     operatorTestButton.button(14)
-        .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () -> rollers.stopDustpan())
+        .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () -> rollers.stopIntake())
             .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors())));
     // operatorButtonBindings.x().whileTrue(rollers.runEnd(() ->
     // rollers.onHighMagazine(0.7),() ->
@@ -144,6 +144,8 @@ public class RobotContainer {
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
     configureBindings();
+		SmartDashboard.putData(dustpan);
+		SmartDashboard.putData(rollers);
     SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
     SmartDashboard.putString("angle", pivot.returnPivotAngle(PivotAngle.Default));
 
