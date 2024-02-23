@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.extension.SparkMax;
@@ -15,18 +16,18 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 
 public class Rollers extends SubsystemBase {
   // Intake refers to the rollers collecting into the dustpan
-	CANSparkMax intake;
+  CANSparkMax intake;
   CANSparkMax magazine;
 
-  public FlippedDIO dustpanSmacnaLeft;
-  public FlippedDIO dustpanSmacnaRight;
+  // public FlippedDIO dustpanSmacnaLeft;
+  public FlippedDIO dustpanSmacna;
 
   // Creating Sensors; ID's shown in IDguide.md
   public FlippedDIO intakeSmacnaLeft;
   public FlippedDIO intakeSmacnaRight;
   public FlippedDIO magneticFlap;
   public FlippedDIO shooterSmacna;
-  public FlippedDIO storageButton;
+  public DigitalInput storageButton;
   boolean currentIntakeSmacnaState;
 
   boolean previousIntakeSmacnaState;
@@ -41,11 +42,11 @@ public class Rollers extends SubsystemBase {
     magazine = SparkMax.createDefaultCANSparkMax(5);
 
     // Sensor Objects
-    dustpanSmacnaLeft = new FlippedDIO(0);
-    dustpanSmacnaRight = new FlippedDIO(9);
+    // dustpanSmacnaLeft = new FlippedDIO(0);
+    dustpanSmacna = new FlippedDIO(8);
     magneticFlap = new FlippedDIO(2);
     shooterSmacna = new FlippedDIO(3);
-		// Assuming that storageButton replaces magazineSmacna
+    // Assuming that storageButton replaces magazineSmacna
     storageButton = new FlippedDIO(1);
 
     // News up a timer object
@@ -113,8 +114,8 @@ public class Rollers extends SubsystemBase {
       case GROUNDINTAKE:
         setIntake(0.9);
         // intake sensor detects leading edge of note -> Grabbed state
-        currentDustpanSmacnaState = (dustpanSmacnaLeft.get() || dustpanSmacnaRight.get());
-        if (Helper.detectFallingRisingEdge(previousDustpanSmacnaState, currentDustpanSmacnaState, true)) {
+        currentDustpanSmacnaState = dustpanSmacna.get();
+        if (currentDustpanSmacnaState != previousDustpanSmacnaState) {
           RobotContainer.noteLifecycle = NoteState.GRABBED;
         }
         previousDustpanSmacnaState = currentDustpanSmacnaState;
@@ -124,8 +125,8 @@ public class Rollers extends SubsystemBase {
       case GRABBED:
         setIntake(0.9);
         // intake sensor detects back edge of the note -> Control state
-        currentDustpanSmacnaState = (dustpanSmacnaLeft.get() || dustpanSmacnaRight.get());
-        if (Helper.detectFallingRisingEdge(previousDustpanSmacnaState, currentDustpanSmacnaState, false)) {
+        currentDustpanSmacnaState = dustpanSmacna.get();
+        if (currentDustpanSmacnaState != previousDustpanSmacnaState) {
           RobotContainer.noteLifecycle = NoteState.CONTROL;
         }
         previousDustpanSmacnaState = currentDustpanSmacnaState;
@@ -162,17 +163,12 @@ public class Rollers extends SubsystemBase {
       case SPEAKER:
         setIntake(0.1);
         setMagazine(0.1);
-      // changes the state to field when button thirteen is true
-        if (driverStationButtonPress.button(13).getAsBoolean()) {
-            RobotContainer.noteLifecycle = NoteState.FIELD;
-        }
-      // AMP STATE: Reverses low and high rollers when maganetic flap is pushed,
-      // returns to field
-      // state after 5 seconds have passed
+
+        // AMP STATE: Reverses low and high rollers when maganetic flap is pushed,
       case AMP:
         setIntake(-0.1);
         setMagazine(-0.1);
-        currentDustpanSmacnaState = dustpanSmacnaLeft.get() || dustpanSmacnaRight.get();
+        currentDustpanSmacnaState = dustpanSmacna.get();
         if (Helper.detectFallingRisingEdge(previousDustpanSmacnaState, currentDustpanSmacnaState, false)) {
           timer.start();
           if (timer.hasElapsed(5)) {
@@ -203,17 +199,20 @@ public class Rollers extends SubsystemBase {
         stopIntake();
 
     }
+    System.out.println(RobotContainer.noteLifecycle.toString());
+    System.out.println(storageButton.get());
   }
 
-	public void initSendable(SendableBuilder builder) {
-		SmartDashboard.putBoolean("dustpanSmacnaLeft", dustpanSmacnaLeft.get());
-		SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
-		SmartDashboard.putBoolean("dustpanSmacnaRight", dustpanSmacnaRight.get());
-		SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
+  public void initSendable(SendableBuilder builder) {
+    SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
+    SmartDashboard.putBoolean("dustpanSmacnaRight", dustpanSmacna.get());
+    SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
+    SmartDashboard.putBoolean("Storage Button", storageButton.get());
+    SmartDashboard.putString("currentNoteLifeCycle", RobotContainer.noteLifecycle.toString());
   }
-
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+  }
 
 }

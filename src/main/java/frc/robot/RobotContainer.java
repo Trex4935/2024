@@ -41,7 +41,7 @@ public class RobotContainer {
   public static NoteState noteLifecycle = NoteState.FIELD;
 
   // Swerve settings
-  private double MaxSpeed = 1; // 6 meters per second desired top speed
+  private double MaxSpeed = 6; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   // Setting up bindings for necessary control of the swerve drive platform
@@ -142,10 +142,12 @@ public class RobotContainer {
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
     configureBindings();
-		SmartDashboard.putData(dustpan);
-		SmartDashboard.putData(rollers);
-    SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
-    SmartDashboard.putString("angle", pivot.returnPivotAngle(PivotAngle.Default));
+    SmartDashboard.putData(dustpan);
+    SmartDashboard.putData(rollers);
+    SmartDashboard.putData(pivot);
+    // SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
+    // SmartDashboard.putString("angle",
+    // pivot.returnPivotAngle(PivotAngle.Default));
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);

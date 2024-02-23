@@ -77,10 +77,10 @@ public class Shooter extends SubsystemBase {
         break;
       // Note is shot out towards speaker
       case SPEAKER:
-        setShooters(0, 0);
+        setShooters(0.7, 0.9);
         break;
       case EJECT:
-        setShooters(0.1, 0.1);
+        setShooters(0.2, 0.2);
         break;
       // Default Position of the Shooter angled at 180 degrees approximately
       default:
