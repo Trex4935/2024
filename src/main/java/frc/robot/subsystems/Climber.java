@@ -9,13 +9,13 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.SparkMax;
 
-public class Elevator extends SubsystemBase {
+public class Climber extends SubsystemBase {
   /** Creates a new Elevator. */
   CANSparkMax elevatorMotorOne;
   CANSparkMax elevatorMotorTwo;
 
   // Sets Elevator Motor Object ID's
-  public Elevator() {
+  public Climber() {
     elevatorMotorOne = SparkMax.createDefaultCANSparkMax(2);
     elevatorMotorTwo = SparkMax.createDefaultCANSparkMax(3);
   }
@@ -29,8 +29,8 @@ public class Elevator extends SubsystemBase {
     elevatorMotorTwo.set(0);
   }
 
-// Makes the elevator motors run at the same time
-  public void elevatorMotorsMovements(){
+  // Makes the elevator motors run at the same time
+  public void elevatorMotorsMovements() {
     elevatorMotorTwo.follow(elevatorMotorOne);
     elevatorMotorOne.set(0);
   }
