@@ -123,9 +123,4 @@ public class Pivot extends SubsystemBase {
     } else {
     }
   }
-
-  public Command applyRequest(Object object) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'applyRequest'");
-  }
 }
