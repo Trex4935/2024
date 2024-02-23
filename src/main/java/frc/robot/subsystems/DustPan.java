@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 
 public class DustPan extends SubsystemBase {
+	// DustPan refers to the solenoids for and the smacnas on the robot's dustpan only
   // DoubleSolenoid doublesolenoid;
 
   // Makes a New Solenoid
