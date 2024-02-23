@@ -27,9 +27,9 @@ public class Rollers extends SubsystemBase {
   public FlippedDIO magneticFlap;
   public FlippedDIO shooterSmacna;
   public FlippedDIO storageButton;
+  boolean currentIntakeSmacnaState;
 
   boolean previousIntakeSmacnaState;
-  boolean currentIntakeSmacnaState;
   CommandGenericHID driverStationButtonPress;
 
   Timer timer;
@@ -49,7 +49,6 @@ public class Rollers extends SubsystemBase {
 
     // News up a timer object
     timer = new Timer();
-
     final CommandGenericHID driverStationButtonPress = new CommandGenericHID(1);
   }
 
@@ -97,6 +96,8 @@ public class Rollers extends SubsystemBase {
 
   // Switches the state that the rollers operate in
   public void rollerSwitch() {
+    boolean currentDustpanSmacnaState = false;
+    boolean previousDustpanSmacnaState = false;
     switch (RobotContainer.noteLifecycle) {
 
       // Explanation for rising and falling edge code
@@ -165,9 +166,6 @@ public class Rollers extends SubsystemBase {
         if (driverStationButtonPress.button(13).getAsBoolean()) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
         }
-        previousDustpanSmacnaState = currentDustpanSmacnaState;
-        break;
-
       // AMP STATE: Reverses low and high rollers when maganetic flap is pushed,
       // returns to field
       // state after 5 seconds have passed
