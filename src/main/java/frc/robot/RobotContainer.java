@@ -123,9 +123,8 @@ public class RobotContainer {
     // Buttton 8 runs pivot in reverse
     operatorTestButton.button(8)
         .whileTrue(pivot.runEnd(() -> pivot.runPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
-    // Button 13 runs shooting motors
-    operatorTestButton.button(13)
-        .whileTrue(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors()));
+    // Button 13 changes state to ground
+    operatorTestButton.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
     // Button 12 runs magazine
     operatorTestButton.button(12)
         .whileTrue(pivot.runEnd(() -> rollers.setMagazine(0.7), () -> rollers.stopMagazine()));
