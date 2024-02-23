@@ -11,6 +11,8 @@ import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.Helper;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Rollers extends SubsystemBase {
   CANSparkMax dustpanRollers;
@@ -25,11 +27,10 @@ public class Rollers extends SubsystemBase {
   public FlippedDIO magneticFlap;
   public FlippedDIO shooterSmacna;
   public FlippedDIO storageButton;
+  boolean currentIntakeSmacnaState;
 
-  boolean previousDustpanSmacnaState;
-  boolean currentDustpanSmacnaState;
-  boolean previousMagneticFlapState;
-  boolean currentMagneticFlapState;
+  boolean previousIntakeSmacnaState;
+  CommandGenericHID driverStationButtonPress;
 
   Timer timer;
 
@@ -48,6 +49,7 @@ public class Rollers extends SubsystemBase {
 
     // News up a timer object
     timer = new Timer();
+    final CommandGenericHID driverStationButtonPress = new CommandGenericHID(1);
   }
 
   // sets dustpan speed
@@ -94,6 +96,8 @@ public class Rollers extends SubsystemBase {
 
   // Switches the state that the rollers operate in
   public void rollerSwitch() {
+    boolean currentDustpanSmacnaState = false;
+    boolean previousDustpanSmacnaState = false;
     switch (RobotContainer.noteLifecycle) {
 
       // Explanation for rising and falling edge code
@@ -158,17 +162,10 @@ public class Rollers extends SubsystemBase {
       case SPEAKER:
         setDustpan(0.1);
         setMagazine(0.1);
-        currentDustpanSmacnaState = dustpanSmacnaLeft.get() || dustpanSmacnaRight.get();
-        if (Helper.detectFallingRisingEdge(previousDustpanSmacnaState, currentDustpanSmacnaState, false)) {
-          timer.start();
-          if (timer.hasElapsed(5)) {
+      // changes the state to field when button thirteen is true
+        if (driverStationButtonPress.button(13).getAsBoolean()) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
-            timer.reset();
-          }
         }
-        previousDustpanSmacnaState = currentDustpanSmacnaState;
-        break;
-
       // AMP STATE: Reverses low and high rollers when maganetic flap is pushed,
       // returns to field
       // state after 5 seconds have passed
@@ -208,12 +205,14 @@ public class Rollers extends SubsystemBase {
     }
   }
 
+
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("dustpanSmacnaLeft", dustpanSmacnaLeft.get());
     SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
     SmartDashboard.putBoolean("dustpanSmacnaRight", dustpanSmacnaRight.get());
     SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
+
   }
 
 }
