@@ -87,7 +87,7 @@ public class Rollers extends SubsystemBase {
 
   // sets up Intake note state
   public void changeNoteState(NoteState noteState) {
-    RobotContainer.noteLifecycle = NoteState.GROUNDINTAKE;
+    RobotContainer.noteLifecycle = noteState;
   }
 
   // sets up Field note state; default state
@@ -161,8 +161,7 @@ public class Rollers extends SubsystemBase {
       // SPEAKER STATE: Turns on both high and low rollers and returns to Field state
       // after 5 seconds
       case SPEAKER:
-        setIntake(0.1);
-        setMagazine(0.1);
+        setMagazine(0.5);
 
         // AMP STATE: Reverses low and high rollers when maganetic flap is pushed,
       case AMP:
