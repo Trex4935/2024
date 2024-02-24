@@ -89,7 +89,7 @@ public class Pivot extends SubsystemBase {
   public void setPID(String wantedPosition) {
     double targetAngle = stateAngle.get(wantedPosition);
     double adjustedAngle = targetAngle + zeroRead;
-    pivotMotor.getPIDController().setReference(adjustedAngle, CANSparkBase.ControlType.kSmartMotion);
+    pivotMotor.getPIDController().setReference(adjustedAngle, CANSparkBase.ControlType.kPosition);
     System.out.println(adjustedAngle);
     testLimitSwitch();
   }
@@ -125,7 +125,7 @@ public class Pivot extends SubsystemBase {
   // Shooter state machine that switches between different angles
   public void pivotStateMachine(PivotAngle wantedAngle) {
     double targetAngle = stateAngle.get(returnPivotAngle(wantedAngle));
-    pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kSmartMotion);
+    pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kPosition);
 
     // Checks to see if the pivot angle is close to the expected angle, can be used
     // anywhere

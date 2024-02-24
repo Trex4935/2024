@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.extension.NoteState;
@@ -56,10 +57,10 @@ public class RobotContainer {
   // Setting up the brake and pointing function
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
+	
   // Swerve Telemetry
   private final Telemetry logger = new Telemetry(MaxSpeed);
-
+	
   // Creates the autoChooser to use in the sendables
   private final SendableChooser<Command> autoChooser;
 
@@ -81,6 +82,9 @@ public class RobotContainer {
             .withVelocityY(joystick.getLeftX() * MaxSpeed) // Drive left with Joystick
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive right with Joystick
         ));
+
+		// Makes a button that slows the speed down when needed
+		joystick.leftTrigger().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
 
     // A button acts as a break, and turns all wheels inward
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
