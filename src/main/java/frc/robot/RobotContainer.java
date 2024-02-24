@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.extension.NoteState;
@@ -43,7 +44,6 @@ public class RobotContainer {
   // Swerve settings
   private double MaxSpeed = 6; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
-  private double MinSpeed = 3;
 
   // Setting up bindings for necessary control of the swerve drive platform
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
@@ -57,10 +57,10 @@ public class RobotContainer {
   // Setting up the brake and pointing function
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
+	
   // Swerve Telemetry
   private final Telemetry logger = new Telemetry(MaxSpeed);
-
+	
   // Creates the autoChooser to use in the sendables
   private final SendableChooser<Command> autoChooser;
 
@@ -74,7 +74,7 @@ public class RobotContainer {
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
     shooter.setDefaultCommand(shooter.run(() -> shooter.shooterSwitch()));
     pivot.setDefaultCommand(pivot.run(() -> pivot.pivotStateMachine(PivotAngle.Default)));
-
+		
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
         // Driving with joysticks
@@ -82,6 +82,9 @@ public class RobotContainer {
             .withVelocityY(joystick.getLeftX() * MaxSpeed) // Drive left with Joystick
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive right with Joystick
         ));
+
+		// Makes a button that slows the speed down when needed
+		joystick.leftTrigger().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
 
     // A button acts as a break, and turns all wheels inward
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -101,10 +104,6 @@ public class RobotContainer {
     // Test button for the manual setting of the pivot PID
     joystick.y().onTrue(pivot.runOnce(() -> pivot.setPID("Default")));
 
-    // Makes a button that slows the speed down when needed
-    joystick.leftTrigger().onTrue(drivetrain.applyRequest(() -> drive.withVelocityX(joystick.getLeftY() * MinSpeed) // Drive forward with Joystick
-            .withVelocityY(joystick.getLeftX() * MinSpeed) // Drive left with Joystick
-            .withRotationalRate(-joystick.getRightX() * MaxAngularRate))); // Drive right with Joystick)
     // Helps run the simulation
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
