@@ -161,7 +161,7 @@ public class Rollers extends SubsystemBase {
       // SPEAKER STATE: Turns on both high and low rollers and returns to Field state
       // after 5 seconds
       case SPEAKER:
-        setMagazine(0.5);
+        setMagazine(0.9);
 
         // AMP STATE: Reverses low and high rollers when maganetic flap is pushed,
       case AMP:
@@ -200,6 +200,7 @@ public class Rollers extends SubsystemBase {
     }
     System.out.println(RobotContainer.noteLifecycle.toString());
     System.out.println(storageButton.get());
+    System.out.println(dustpanSmacna.get());
   }
 
   public void initSendable(SendableBuilder builder) {
