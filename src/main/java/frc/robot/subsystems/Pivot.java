@@ -65,9 +65,15 @@ public class Pivot extends SubsystemBase {
     pivotMotor.set(speed);
     if (speed > 0) {
       System.out.println("Forward Pivot");
+      if (limitSwitch.get()) {
+        stopPivotMotor();
+      }
     }
     if (speed < 0) {
       System.out.println("Reverse Pivot");
+      if (limitSwitch2.get()) {
+        stopPivotMotor();
+      }
     }
   }
 
@@ -75,6 +81,12 @@ public class Pivot extends SubsystemBase {
   public void setPID(String wantedPosition) {
     double targetAngle = stateAngle.get(wantedPosition);
     pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kSmartMotion);
+    if (limitSwitch.get()) {
+      stopPivotMotor();
+    }
+    if (limitSwitch2.get()) {
+      stopPivotMotor();
+    }
   }
 
   // Stop pivot motor
