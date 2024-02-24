@@ -21,6 +21,7 @@ public class Pivot extends SubsystemBase {
   // Creates two new limit switches
   FlippedDIO limitSwitch;
   FlippedDIO limitSwitch2;
+  double zeroRead;
 
   /** Creates a new Pivot. */
   CANSparkMax pivotMotor;
@@ -37,7 +38,7 @@ public class Pivot extends SubsystemBase {
   public Pivot() {
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
-    pivotMotor = SparkMax.configPIDwithSmartMotion(pivotMotor, 0, 0, 0, 0, 0, 1, 1, 0);
+    pivotMotor = SparkMax.configPIDwithSmartMotion(pivotMotor, 0.0005, 0, 0, 0, 0, 0.1, 0.1, 5);
 
     // Sets the pivot state machine
     pivotAngle = PivotAngle.Default;
@@ -63,18 +64,34 @@ public class Pivot extends SubsystemBase {
   /** makes pivot motor move */
   public void runPivotMotor(double speed) {
     pivotMotor.set(speed);
-    if (speed > 0) {
+    testLimitSwitch();
+
+  }
+
+  public void testLimitSwitch() {
+    if (pivotMotor.get() > 0) {
       System.out.println("Forward Pivot");
+      if (limitSwitch.get()) {
+        pivotMotor.set(0);
+      }
     }
-    if (speed < 0) {
+    if (pivotMotor.get() < 0) {
       System.out.println("Reverse Pivot");
+      if (limitSwitch2.get()) {
+        pivotMotor.set(0);
+        zeroRead = relativeEncoder.getPosition();
+      }
     }
+
   }
 
   // Manual movement for the PID
   public void setPID(String wantedPosition) {
     double targetAngle = stateAngle.get(wantedPosition);
-    pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kPosition);
+    double adjustedAngle = targetAngle + zeroRead;
+    pivotMotor.getPIDController().setReference(adjustedAngle, CANSparkBase.ControlType.kPosition);
+    System.out.println(adjustedAngle);
+    testLimitSwitch();
   }
 
   // Stop pivot motor
@@ -115,19 +132,10 @@ public class Pivot extends SubsystemBase {
     pivotAtAngle = MathUtil.isNear(targetAngle, pivotMotor.getEncoder().getPosition(), 50.0);
   }
 
-  // Checks if the magazine hits the limit switches
-  public void limitSwitchStop() {
-    if (limitSwitch.get()) {
-
-    } else if (limitSwitch2.get()) {
-
-    } else {
-    }
-  }
-
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(), null);
     builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
+    builder.addBooleanProperty("Limit Switch 2", () -> limitSwitch2.get(), null);
   }
 }
