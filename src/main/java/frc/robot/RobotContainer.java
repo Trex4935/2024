@@ -16,12 +16,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.PoseEstimation;
 import frc.robot.commands.AlignWithPID;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.PivotAngle;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DustPan;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
@@ -29,25 +28,24 @@ import frc.robot.subsystems.Rollers;
 import frc.robot.subsystems.LEDControl;
 
 public class RobotContainer {
+
   // News up our subsystems that we use throughout RobotContainer
   private final DustPan dustpan = new DustPan();
   private final Pivot pivot = new Pivot();
   private final Rollers rollers = new Rollers();
   private final Shooter shooter = new Shooter();
-  private final Elevator elevator = new Elevator();
+  private final Climber elevator = new Climber();
   private final LEDControl ledControl = new LEDControl();
 
   // Sets the default state in the Note Life Cycle
   public static NoteState noteLifecycle = NoteState.FIELD;
 
-  private double MaxSpeed = 1; // 6 meters per second desired top speed
+  // Swerve settings
+  private double MaxSpeed = 6; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   // Setting up bindings for necessary control of the swerve drive platform
-
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
-  private final CommandGenericHID operatorTestButton = new CommandGenericHID(1);
-  
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   // Make sure things are field centric for swerve
@@ -59,12 +57,8 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-  // note cycle return
-  public static NoteState getCycle() {
-    return noteLifecycle;
-  }
-
-	private final Telemetry logger = new Telemetry(MaxSpeed);
+  // Swerve Telemetry
+  private final Telemetry logger = new Telemetry(MaxSpeed);
 
 	// Alternate align command
 	// TODO: Tune offset values
@@ -73,9 +67,16 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
 
+  // Setting up the Button Box
+  private final CommandGenericHID operatorTestButton = new CommandGenericHID(1);
+
   private void configureBindings() {
+
+    // Setup Default commands
     dustpan.setDefaultCommand(dustpan.run(() -> dustpan.intakeSwitch()));
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
+    shooter.setDefaultCommand(shooter.run(() -> shooter.shooterSwitch()));
+    pivot.setDefaultCommand(pivot.run(() -> pivot.pivotStateMachine(PivotAngle.Default)));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
@@ -136,9 +137,8 @@ public class RobotContainer {
     // Buttton 8 runs pivot in reverse
     operatorTestButton.button(8)
         .whileTrue(pivot.runEnd(() -> pivot.runPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
-    // Button 13 runs shooting motors
-    operatorTestButton.button(13)
-        .whileTrue(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors()));
+    // Button 13 changes state to ground
+    operatorTestButton.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
     // Button 12 runs magazine
     operatorTestButton.button(12)
         .whileTrue(pivot.runEnd(() -> rollers.setMagazine(0.7), () -> rollers.stopMagazine()));
@@ -156,15 +156,12 @@ public class RobotContainer {
   public RobotContainer() {
 		Constants.updateAprilTagTranslations();
     configureBindings();
-    SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
-
-    SmartDashboard.putString("angle", pivot.returnPivotAngle(PivotAngle.Default));
-
-		SmartDashboard.putNumber("OffsetX", PoseEstimation.testSourcePose.getX() - Constants.sourceAprilTag.getX());
-		SmartDashboard.putNumber("OffsetY", PoseEstimation.testSourcePose.getY() - Constants.sourceAprilTag.getY());
-
-		SmartDashboard.putNumber("Speaker Array 0", Constants.speakerAprilTag.getX());
-		SmartDashboard.putNumber("Speaker Array 1", Constants.speakerAprilTag.getY());
+    SmartDashboard.putData(dustpan);
+    SmartDashboard.putData(rollers);
+    SmartDashboard.putData(pivot);
+    // SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
+    // SmartDashboard.putString("angle",
+    // pivot.returnPivotAngle(PivotAngle.Default));
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
@@ -184,7 +181,12 @@ public class RobotContainer {
 		Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
 		return targetPose;
 
-	}
+  }
+
+  // note cycle return
+  public static NoteState getCycle() {
+    return noteLifecycle;
+  }
 
   // Runs autoChooser :)
   public Command getAutonomousCommand() {

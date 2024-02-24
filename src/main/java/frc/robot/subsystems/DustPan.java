@@ -8,12 +8,11 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.extension.NoteState;
 
 public class DustPan extends SubsystemBase {
+	// DustPan refers to the solenoids for and the smacnas on the robot's dustpan only
   // DoubleSolenoid doublesolenoid;
 
   // Makes a New Solenoid

@@ -36,7 +36,7 @@ public class Shooter extends SubsystemBase {
   // sets motor 1's speed
   public void setShootingMotorLeft(double speed) {
     shootingMotorLeft.set(speed);
-    System.out.println("SHooting motor 1");
+    System.out.println("Shooting motor 1");
 
   }
 
@@ -77,10 +77,12 @@ public class Shooter extends SubsystemBase {
         break;
       // Note is shot out towards speaker
       case SPEAKER:
-        setShooters(0, 0);
-
+        setShooters(0.7, 0.9);
         break;
-      // Deafult Position of the Shooter angled at 180 degrees approximately
+      case EJECT:
+        setShooters(0.2, 0.2);
+        break;
+      // Default Position of the Shooter angled at 180 degrees approximately
       default:
         // turns all the motors off
         stopShootingMotors();
