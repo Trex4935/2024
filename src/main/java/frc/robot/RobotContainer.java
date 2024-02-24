@@ -41,7 +41,7 @@ public class RobotContainer {
   public static NoteState noteLifecycle = NoteState.FIELD;
 
   // Swerve settings
-  private double MaxSpeed = 1; // 6 meters per second desired top speed
+  private double MaxSpeed = 6; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   // Setting up bindings for necessary control of the swerve drive platform
@@ -125,9 +125,8 @@ public class RobotContainer {
     // Buttton 8 runs pivot in reverse
     operatorTestButton.button(8)
         .whileTrue(pivot.runEnd(() -> pivot.runPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
-    // Button 13 runs shooting motors
-    operatorTestButton.button(13)
-        .whileTrue(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors()));
+    // Button 13 changes state to ground
+    operatorTestButton.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
     // Button 12 runs magazine
     operatorTestButton.button(12)
         .whileTrue(pivot.runEnd(() -> rollers.setMagazine(0.7), () -> rollers.stopMagazine()));
@@ -144,10 +143,12 @@ public class RobotContainer {
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
     configureBindings();
-		SmartDashboard.putData(dustpan);
-		SmartDashboard.putData(rollers);
-    SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
-    SmartDashboard.putString("angle", pivot.returnPivotAngle(PivotAngle.Default));
+    SmartDashboard.putData(dustpan);
+    SmartDashboard.putData(rollers);
+    SmartDashboard.putData(pivot);
+    // SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
+    // SmartDashboard.putString("angle",
+    // pivot.returnPivotAngle(PivotAngle.Default));
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);

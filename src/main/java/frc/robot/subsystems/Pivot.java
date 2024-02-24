@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.FlippedDIO;
@@ -63,10 +64,10 @@ public class Pivot extends SubsystemBase {
   public void runPivotMotor(double speed) {
     pivotMotor.set(speed);
     if (speed > 0) {
-    System.out.println("Forward Pivot");
+      System.out.println("Forward Pivot");
     }
     if (speed < 0) {
-    System.out.println("Reverse Pivot");
+      System.out.println("Reverse Pivot");
     }
   }
 
@@ -122,5 +123,11 @@ public class Pivot extends SubsystemBase {
 
     } else {
     }
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(), null);
+    builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
   }
 }
