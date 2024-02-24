@@ -162,8 +162,9 @@ public class Rollers extends SubsystemBase {
       // after 5 seconds
       case SPEAKER:
         setMagazine(0.9);
+        break;
 
-        // AMP STATE: Reverses low and high rollers when maganetic flap is pushed,
+      // AMP STATE: Reverses low and high rollers when maganetic flap is pushed,
       case AMP:
         setIntake(-0.1);
         setMagazine(-0.1);
@@ -189,6 +190,7 @@ public class Rollers extends SubsystemBase {
           if (timer.hasElapsed(7)) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
             timer.reset();
+            break;
           }
         }
 
