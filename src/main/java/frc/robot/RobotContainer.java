@@ -72,7 +72,7 @@ public class RobotContainer {
     dustpan.setDefaultCommand(dustpan.run(() -> dustpan.intakeSwitch()));
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
     shooter.setDefaultCommand(shooter.run(() -> shooter.shooterSwitch()));
-    pivot.setDefaultCommand(pivot.run(() -> pivot.pivotStateMachine(PivotAngle.Default)));
+    pivot.setDefaultCommand(pivot.run(() -> pivot.setPID("Default")));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
@@ -95,7 +95,7 @@ public class RobotContainer {
     joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
 
     joystick.rightTrigger()
-        .whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));
+        .whileTrue(elevator.runEnd(() -> elevator.setClimberMotors(), () -> elevator.stopClimberMotors()));
 
     // Test button for the manual setting of the pivot PID
     joystick.y().onTrue(pivot.runOnce(() -> pivot.setPID("Default")));
