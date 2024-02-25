@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 
 public class DustPan extends SubsystemBase {
-	// DustPan refers to the solenoids for and the smacnas on the robot's dustpan only
-  // DoubleSolenoid doublesolenoid;
 
   // Makes a New Solenoid
   Solenoid solenoid;
@@ -23,8 +21,6 @@ public class DustPan extends SubsystemBase {
 
   /** Creates a new DustPan. */
   public DustPan() {
-    // doublesolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,33, 44);
-
     // news up the solenoid and compressor
     solenoid = new Solenoid(14, PneumaticsModuleType.CTREPCM, 2);
 
@@ -34,52 +30,58 @@ public class DustPan extends SubsystemBase {
 
   }
 
-  // Turns on the solenoid, brings dustpan up
+  /** Turns on the solenoid, brings dustpan up */
   public void dustPanUp() {
     solenoid.set(true);
   }
 
-  // Turns off the solenoid, brings dustpan down
+  /** Turns off the solenoid, brings dustpan down */
   public void dustPanDown() {
     solenoid.set(false);
   }
 
-  // Returns the current state of the solenoid-Used for Sendables
+  /** Returns the current state of the solenoid-Used for Sendables */
   public boolean getDustPanState() {
     return solenoid.get();
   }
-
-  // puts the current state of the intake on the network table
-  public void initSendable(SendableBuilder builder) {
-    builder.addBooleanProperty("DustPan Dropped", this::getDustPanState, null);
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  // Note Life Cycle state machine to control the intake
+	
+	
+  /** Note Life Cycle state machine to control the intake */
   public void intakeSwitch() {
     switch (RobotContainer.noteLifecycle) {
-      case FIELD:
-        dustPanUp();
+
+			case FIELD:
+				dustPanUp();
         break;
-      case GROUNDINTAKE:
-        // Turns Solenoid On when we want to intake a note
+
+			case GROUNDINTAKE:
+        // Turns Solenoid on when we want to intake a note
         dustPanDown();
         break;
+
       case GRABBED:
         // Keeps solenoid on when note is inside robot just to be sure
         dustPanDown();
         break;
+
       case CONTROL:
         // Keeps solenoid on when note is inside robot just to be sure
         dustPanUp();
         break;
-      default:
-        // Turns Solenoid Off in all other cases
-        dustPanDown();
-    }
-  }
+
+			default:
+				// Turns Solenoid off in all other cases
+				dustPanDown();
+		}
+	}
+		
+	/** Puts the current state of the intake onto NetworkTables */
+	public void initSendable(SendableBuilder builder) {
+		builder.addBooleanProperty("DustPan Dropped", this::getDustPanState, null);
+	}
+
+	@Override
+	public void periodic() {
+		// This method will be called once per scheduler run
+	}
 }

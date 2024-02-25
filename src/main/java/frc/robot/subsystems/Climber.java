@@ -6,13 +6,13 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.extension.SparkMax;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
-  CANSparkMax climberMotorOne;
-  CANSparkMax climberMotorTwo;
+  CANSparkMax climberMotorOne, climberMotorTwo;
 
   // Sets Climber Motor Object ID's
   public Climber() {
@@ -20,34 +20,42 @@ public class Climber extends SubsystemBase {
     climberMotorTwo = SparkMax.createDefaultCANSparkMax(3);
   }
 
-  // Human control of elevator motors
+  /** Sets the left climber motor's speed */
   public void setClimberMotorOne() {
     climberMotorOne.set(0);
   }
 
+	/** Sets the right climber motor's speed */
   public void setClimberMotorTwo() {
     climberMotorTwo.set(0);
   }
 
-  // Makes the elevator motors run at the same time
+  /** Sets both climber motors */
   public void setClimberMotors() {
     climberMotorTwo.follow(climberMotorOne);
     climberMotorOne.set(0);
   }
 
-  // stops the elevator motors
+  /** Stops left climber motor */
   public void stopClimberMotorOne() {
     climberMotorOne.stopMotor();
   }
 
+	/** Stops right climber motor */
   public void stopClimberMotorTwo() {
     climberMotorTwo.stopMotor();
   }
 
+	/** Stops both climber motors */
   public void stopClimberMotors() {
     climberMotorOne.stopMotor();
     climberMotorTwo.stopMotor();
   }
+
+		// TODO: Add any sendables we want from Climber
+	public void initSendable(SendableBuilder builder) {
+		
+	}
 
   @Override
   public void periodic() {

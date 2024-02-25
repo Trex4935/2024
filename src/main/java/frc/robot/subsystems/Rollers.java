@@ -12,26 +12,15 @@ import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.Helper;
-import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 
 public class Rollers extends SubsystemBase {
-  // Intake refers to the rollers collecting into the dustpan
-  CANSparkMax intake;
-  CANSparkMax magazine;
-
-  // public FlippedDIO dustpanSmacnaLeft;
-  public FlippedDIO dustpanSmacna;
+  // Creating roller motors
+  CANSparkMax intake, magazine;
 
   // Creating Sensors; ID's shown in IDguide.md
-  public FlippedDIO intakeSmacnaLeft;
-  public FlippedDIO intakeSmacnaRight;
-  public FlippedDIO magneticFlap;
-  public FlippedDIO shooterSmacna;
+  public FlippedDIO dustpanSmacna, magneticFlap, shooterSmacna;
   public DigitalInput storageButton;
-  boolean currentIntakeSmacnaState;
-
-  boolean previousIntakeSmacnaState;
-  CommandGenericHID driverStationButtonPress;
+  boolean currentIntakeSmacnaState, previousIntakeSmacnaState;
 
   Timer timer;
 
@@ -42,60 +31,58 @@ public class Rollers extends SubsystemBase {
     magazine = SparkMax.createDefaultCANSparkMax(5);
 
     // Sensor Objects
-    // dustpanSmacnaLeft = new FlippedDIO(0);
     dustpanSmacna = new FlippedDIO(8);
     magneticFlap = new FlippedDIO(2);
     shooterSmacna = new FlippedDIO(3);
-    // Assuming that storageButton replaces magazineSmacna
     storageButton = new FlippedDIO(1);
 
     // News up a timer object
     timer = new Timer();
   }
 
-  // sets intake speed
+  /** Sets the intake motor's speed */
   public void setIntake(double speed) {
     intake.set(speed);
   }
 
-  // stops intake motor
+	/** Sets the magazine motor's speed */
+	public void setMagazine(double speed) {
+		magazine.set(speed);
+	}
+
+	/** Sets both roller motors */
+	public void setRollers(double intakeSpeed, double magSpeed) {
+		intake.set(intakeSpeed);
+		magazine.set(magSpeed);
+	}
+
+  /** Stops the intake motor */
   public void stopIntake() {
     intake.stopMotor();
   }
 
-  // sets magazine speed
-  public void setMagazine(double speed) {
-    magazine.set(speed);
-  }
-
-  // stops magazine motor
+  /** Stops the magazine motor */
   public void stopMagazine() {
     magazine.stopMotor();
   }
 
-  // sets intake speed and magazine speed.
-  public void setRollers(double intakeSpeed, double magSpeed) {
-    intake.set(intakeSpeed);
-    magazine.set(magSpeed);
-  }
-
-  // stops rollers
+  /** Stop both roller motors */
   public void stopRollers() {
     stopIntake();
     stopMagazine();
   }
 
-  // sets up Intake note state
+  /** Changes the note's life cycle to its desired state */
   public void changeNoteState(NoteState noteState) {
     RobotContainer.noteLifecycle = noteState;
   }
 
-  // sets up Field note state; default state
-  public void returnToField(NoteState noteState) {
+  /** Sets the note state to Field, its default state */
+  public void returnToField() {
     RobotContainer.noteLifecycle = NoteState.FIELD;
   }
 
-  // Switches the state that the rollers operate in
+  /** Switches the state that the rollers operate in */
   public void rollerSwitch() {
     boolean currentDustpanSmacnaState = false;
     boolean previousDustpanSmacnaState = false;
@@ -209,12 +196,12 @@ public class Rollers extends SubsystemBase {
     SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
     SmartDashboard.putBoolean("dustpanSmacnaRight", dustpanSmacna.get());
     SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
-    SmartDashboard.putBoolean("Storage Button", storageButton.get());
+    SmartDashboard.putBoolean("storageButton", storageButton.get());
     SmartDashboard.putString("currentNoteLifeCycle", RobotContainer.noteLifecycle.toString());
   }
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
   }
-
 }

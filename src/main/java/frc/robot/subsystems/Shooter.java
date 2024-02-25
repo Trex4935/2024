@@ -5,17 +5,15 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.extension.SparkMax;
 
 public class Shooter extends SubsystemBase {
-
-  // Declaring Motors
-  CANSparkMax shootingMotorLeft;
-  CANSparkMax shootingMotorRight;
-
-  // Makes a new state for the shooter
+	// Declaring Motors
+	CANSparkMax shootingMotorLeft, shootingMotorRight;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -26,44 +24,42 @@ public class Shooter extends SubsystemBase {
     shootingMotorRight.setInverted(true);
 
   }
-
-  // makes motors spin YIPPIE!!
-  public void setShooters(double motor1Speed, double motor2Speed) {
-    shootingMotorLeft.set(motor1Speed);
-    shootingMotorRight.set(motor2Speed);
-  }
-
-  // sets motor 1's speed
+	
+  /** Sets the left shooting motor's speed */
   public void setShootingMotorLeft(double speed) {
     shootingMotorLeft.set(speed);
-    System.out.println("Shooting motor 1");
-
+    System.out.println("Shooting motor left");
   }
 
-  // sets motor 2's speed
+  /** Sets the right shooting motor's speed */
   public void setShootingMotorRight(double speed) {
-    shootingMotorRight.set(speed);
-    System.out.println("Shooting motor 2");
+		shootingMotorRight.set(speed);
+    System.out.println("Shooting motor right");
+  }	
+	
+	/** makes motors spin YIPPIE!! */
+	public void setShooters(double motor1Speed, double motor2Speed) {
+		shootingMotorLeft.set(motor1Speed);
+		shootingMotorRight.set(motor2Speed);
+	}
 
-  }
-
-  // stops motor 1
+  /** Stops left shooting motor */
   public void stopShootingMotorLeft() {
     shootingMotorLeft.stopMotor();
-  }
+  }	
 
-  // stops motor 2
+  /** Stops right shooting motor */
   public void stopShootingMotorRight() {
-    shootingMotorRight.stopMotor();
-  }
-
-  // stop all motors
+		shootingMotorRight.stopMotor();
+  }	
+	
+  /** Stop both shooting motors */
   public void stopShootingMotors() {
     stopShootingMotorLeft();
     stopShootingMotorRight();
   }
 
-  // state machine for shooter motors
+  /** state machine for shooter motors */
   public void shooterSwitch() {
     switch (RobotContainer.noteLifecycle) {
 
@@ -90,6 +86,11 @@ public class Shooter extends SubsystemBase {
     }
 
   }
+
+	// TODO: Add any sendables we want from Shooter
+	public void initSendable(SendableBuilder builder) {
+
+	}
 
   @Override
   public void periodic() {
