@@ -20,10 +20,8 @@ public class LEDControl extends SubsystemBase {
   AddressableLEDBuffer ledBuffer;
   // Declares a counter and a toggle to be used in flashing the LEDs
   boolean ledToggle;
-  int counter;
-  int ledBufferLength;
+  int counter, ledBufferLength;
   private int walkStartingPosition = 0;
-  // Makes a new state for the shooter
 
   /** Creates a new LEDControl. */
   public LEDControl() {
@@ -165,54 +163,52 @@ public class LEDControl extends SubsystemBase {
   @Override
   public void periodic() {
     //implementing LEDs into LED control
-  switch (RobotContainer.noteLifecycle) {
+		switch (RobotContainer.noteLifecycle) {
 
-    // Refer to LED guide in extension to see what each state changes the LEDs to
-    case FIELD:
-      solidLEDS(5, 255, 32);
-      break;
+			// Refer to LED guide in extension to see what each state changes the LEDs to
+			case FIELD:
+				solidLEDS(5, 255, 32);
+				break;
 
-    case GROUNDINTAKE:
-      solidLEDS(0, 0, 32);
-      break;
-  
-    case HUMANINTAKE:
-      solidLEDS(15, 255, 32);
-      break;
+			case GROUNDINTAKE:
+				solidLEDS(0, 0, 32);
+				break;
+		
+			case HUMANINTAKE:
+				solidLEDS(15, 255, 32);
+				break;
 
-    case GRABBED:
-      flashLEDS(5, 255, 32, 50);
-      break;
+			case GRABBED:
+				flashLEDS(5, 255, 32, 50);
+				break;
 
-    case CONTROL:
-      flashLEDS(5, 255, 32, 50);
-      break;
+			case CONTROL:
+				flashLEDS(5, 255, 32, 50);
+				break;
 
-    case STORAGE:
-      solidLEDS(250, 255, 32);
-      break;
+			case STORAGE:
+				solidLEDS(250, 255, 32);
+				break;
 
-    case SPEAKER:
-      solidLEDS(220, 255, 32);
-      break;
+			case SPEAKER:
+				solidLEDS(220, 255, 32);
+				break;
 
-    case AMPLOADING:
-      solidLEDS(150, 255, 32);
-      break;
+			case AMPLOADING:
+				solidLEDS(150, 255, 32);
+				break;
 
-    case AMP:
-      flashLEDS(150, 255, 32, 50);
-      break;
+			case AMP:
+				flashLEDS(150, 255, 32, 50);
+				break;
 
-    case EJECT:
-      flashLEDS(1, 255, 32, 20);
-      break;
+			case EJECT:
+				flashLEDS(1, 255, 32, 20);
+				break;
 
-    default:
-      solidLEDS(5, 255, 32);
-      break;
-  }
-
-  }
-  
+			default:
+				solidLEDS(5, 255, 32);
+				break;
+  	}
+  }	
 }

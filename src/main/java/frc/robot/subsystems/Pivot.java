@@ -17,10 +17,10 @@ import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.PivotAngle;
 import frc.robot.extension.SparkMax;
 
+// TODO: Finish cleanup after pivot tuning
 public class Pivot extends SubsystemBase {
   // Creates two new limit switches
-  FlippedDIO limitSwitch;
-  FlippedDIO limitSwitch2;
+  FlippedDIO limitSwitch, limitSwitch2;
   double zeroRead;
 
   /** Creates a new Pivot. */
@@ -61,8 +61,8 @@ public class Pivot extends SubsystemBase {
 
   }
 
-  /** makes pivot motor move */
-  public void runPivotMotor(double speed) {
+  /** Sets the pivot motor's speed */
+  public void setPivotMotor(double speed) {
     pivotMotor.set(speed);
     testLimitSwitch();
 
@@ -94,26 +94,21 @@ public class Pivot extends SubsystemBase {
     testLimitSwitch();
   }
 
-  // Stop pivot motor
+  /** Stops the pivot motor */
   public void stopPivotMotor() {
     pivotMotor.stopMotor();
   }
 
-  // changes the state of the shooter
+  /** Changes the state of the shooter */
   public void changePivotAngle(PivotAngle desiredLevel) {
     pivotAngle = desiredLevel;
     // System.out.println(pivotAngle);
   }
 
   // returns the current state of the shooter
-  public String returnPivotAngle(PivotAngle wantedAngle) {
-    wantedAngle = pivotAngle;
+  public String returnPivotAngle(PivotAngle desiredAngle) {
+    desiredAngle = pivotAngle;
     return pivotAngle.toString();
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
   }
 
   // takes in a state and makes it the current one
@@ -123,8 +118,8 @@ public class Pivot extends SubsystemBase {
   }
 
   // Shooter state machine that switches between different angles
-  public void pivotStateMachine(PivotAngle wantedAngle) {
-    double targetAngle = stateAngle.get(returnPivotAngle(wantedAngle));
+  public void pivotStateMachine(PivotAngle desiredAngle) {
+    double targetAngle = stateAngle.get(returnPivotAngle(desiredAngle));
     pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kPosition);
 
     // Checks to see if the pivot angle is close to the expected angle, can be used
@@ -137,5 +132,10 @@ public class Pivot extends SubsystemBase {
     builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(), null);
     builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
     builder.addBooleanProperty("Limit Switch 2", () -> limitSwitch2.get(), null);
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
   }
 }
