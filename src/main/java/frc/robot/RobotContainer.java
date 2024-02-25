@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AlignWithPID;
@@ -56,10 +57,10 @@ public class RobotContainer {
   // Setting up the brake and pointing function
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
+	
   // Swerve Telemetry
   private final Telemetry logger = new Telemetry(MaxSpeed);
-
+	
 	// Alternate align command
 	// TODO: Tune offset values
 	private final AlignWithPID align = new AlignWithPID(drivetrain, () -> 
@@ -76,7 +77,7 @@ public class RobotContainer {
     dustpan.setDefaultCommand(dustpan.run(() -> dustpan.intakeSwitch()));
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
     shooter.setDefaultCommand(shooter.run(() -> shooter.shooterSwitch()));
-    pivot.setDefaultCommand(pivot.run(() -> pivot.pivotStateMachine(PivotAngle.Default)));
+    pivot.setDefaultCommand(pivot.run(() -> pivot.setPID("Default")));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
@@ -85,6 +86,9 @@ public class RobotContainer {
             .withVelocityY(joystick.getLeftX() * MaxSpeed) // Drive left with Joystick
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive right with Joystick
         ));
+
+		// Makes a button that slows the speed down when needed
+		joystick.leftTrigger().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
 
     // A button acts as a brake, and turns all wheels inward
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -107,7 +111,7 @@ public class RobotContainer {
 			drivetrain.getState().Pose.nearest(Constants.stageAprilTags), Constants.stageOffset).andThen(drivetrain.applyRequest(() -> brake)));
 
     joystick.rightTrigger()
-        .whileTrue(elevator.runEnd(() -> elevator.elevatorMotorsMovements(), () -> elevator.stopElevatorMotors()));
+        .whileTrue(elevator.runEnd(() -> elevator.setClimberMotors(), () -> elevator.stopClimberMotors()));
 
     // Test button for the manual setting of the pivot PID
     joystick.y().onTrue(pivot.runOnce(() -> pivot.setPID("Default")));
