@@ -37,10 +37,8 @@ public class LEDControl extends SubsystemBase {
     counter = 0;
     RobotContainer.noteLifecycle = NoteState.FIELD;
 
-
-    
   }
-    
+
   // Used to create rainbow LEDs
   public void LEDController() {
     // For every pixel
@@ -58,16 +56,17 @@ public class LEDControl extends SubsystemBase {
     ledStrip.setData(ledBuffer);
     ledStrip.start();
   }
+
   // Used to create a 'walking' LED
-  public void sectionedLEDControl(){
-    for (var i = 0; i< ledBuffer.getLength(); i++) {
-      ledBuffer.setLED(i,Color.kBlue);
-      if(i < ledBuffer.getLength()-1){
-          System.out.println("+1: "+(i+1));
-          ledBuffer.setLED(i+1,Color.kBlack);
+  public void sectionedLEDControl() {
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+      ledBuffer.setLED(i, Color.kBlue);
+      if (i < ledBuffer.getLength() - 1) {
+        // System.out.println("+1: "+(i+1));
+        ledBuffer.setLED(i + 1, Color.kBlack);
       }
       if (i >= 1) {
-        System.out.println("-1: " + (i - 1));
+        // System.out.println("-1: " + (i - 1));
         ledBuffer.setLED(i - 1, Color.kBlack);
       }
       if (i == 0) {
@@ -80,6 +79,7 @@ public class LEDControl extends SubsystemBase {
     }
 
   }
+
   // A method used to create non changing LEDs or solid LEDs
   public void solidLEDS(int hue, int saturation, int brightness) {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
@@ -93,25 +93,23 @@ public class LEDControl extends SubsystemBase {
     ledStrip.setData(ledBuffer);
     ledStrip.start();
   }
-  // A method used to create flashing LEDs taking blink rate into account 
-  public void flashLEDS(int hue, int saturation, int brightness, int blinkRate){
+
+  // A method used to create flashing LEDs taking blink rate into account
+  public void flashLEDS(int hue, int saturation, int brightness, int blinkRate) {
     counter++;
     // Checks to see how long one cycle has passed
-      if(counter%blinkRate == 0)
-      {
+    if (counter % blinkRate == 0) {
       // Checks to see if LEDs are off and turns them on
-      if(!ledToggle)
-      {
-      solidLEDS(hue, saturation, brightness);
-      ledToggle = true;
+      if (!ledToggle) {
+        solidLEDS(hue, saturation, brightness);
+        ledToggle = true;
       }
       // Turns off the LEDs if they are on
-      else
-      {
+      else {
         solidLEDS(0, 0, 0);
         ledToggle = false;
       }
-      }
+    }
   }
 
   /**
@@ -162,53 +160,53 @@ public class LEDControl extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //implementing LEDs into LED control
-		switch (RobotContainer.noteLifecycle) {
+    // implementing LEDs into LED control
+    switch (RobotContainer.noteLifecycle) {
 
-			// Refer to LED guide in extension to see what each state changes the LEDs to
-			case FIELD:
-				solidLEDS(5, 255, 32);
-				break;
+      // Refer to LED guide in extension to see what each state changes the LEDs to
+      case FIELD:
+        solidLEDS(5, 255, 32);
+        break;
 
-			case GROUNDINTAKE:
-				solidLEDS(0, 0, 32);
-				break;
-		
-			case HUMANINTAKE:
-				solidLEDS(15, 255, 32);
-				break;
+      case GROUNDINTAKE:
+        solidLEDS(0, 0, 32);
+        break;
 
-			case GRABBED:
-				flashLEDS(5, 255, 32, 50);
-				break;
+      case HUMANINTAKE:
+        solidLEDS(15, 255, 32);
+        break;
 
-			case CONTROL:
-				flashLEDS(5, 255, 32, 50);
-				break;
+      case GRABBED:
+        flashLEDS(5, 255, 32, 50);
+        break;
 
-			case STORAGE:
-				solidLEDS(250, 255, 32);
-				break;
+      case CONTROL:
+        flashLEDS(5, 255, 32, 50);
+        break;
 
-			case SPEAKER:
-				solidLEDS(220, 255, 32);
-				break;
+      case STORAGE:
+        solidLEDS(250, 255, 32);
+        break;
 
-			case AMPLOADING:
-				solidLEDS(150, 255, 32);
-				break;
+      case SPEAKER:
+        solidLEDS(220, 255, 32);
+        break;
 
-			case AMP:
-				flashLEDS(150, 255, 32, 50);
-				break;
+      case AMPLOADING:
+        solidLEDS(150, 255, 32);
+        break;
 
-			case EJECT:
-				flashLEDS(1, 255, 32, 20);
-				break;
+      case AMP:
+        flashLEDS(150, 255, 32, 50);
+        break;
 
-			default:
-				solidLEDS(5, 255, 32);
-				break;
-  	}
-  }	
+      case EJECT:
+        flashLEDS(1, 255, 32, 20);
+        break;
+
+      default:
+        solidLEDS(5, 255, 32);
+        break;
+    }
+  }
 }

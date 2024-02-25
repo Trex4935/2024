@@ -71,13 +71,13 @@ public class Pivot extends SubsystemBase {
 
   public void testLimitSwitch() {
     if (pivotMotor.get() > 0) {
-      System.out.println("Forward Pivot");
+      // System.out.println("Forward Pivot");
       if (limitSwitch.get()) {
         pivotMotor.set(0);
       }
     }
     if (pivotMotor.get() < 0) {
-      System.out.println("Reverse Pivot");
+      // System.out.println("Reverse Pivot");
       if (limitSwitch2.get()) {
         pivotMotor.set(0);
         zeroRead = relativeEncoder.getPosition();
@@ -91,7 +91,7 @@ public class Pivot extends SubsystemBase {
     double targetAngle = stateAngle.get(desiredPosition);
     double adjustedAngle = targetAngle + zeroRead;
     pivotMotor.getPIDController().setReference(adjustedAngle, CANSparkBase.ControlType.kPosition);
-    System.out.println(adjustedAngle);
+    // System.out.println(adjustedAngle);
     testLimitSwitch();
   }
 
