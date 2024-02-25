@@ -18,8 +18,8 @@ public class Rollers extends SubsystemBase {
   CANSparkMax intake, magazine;
 
   // Creating Sensors; ID's shown in IDguide.md
-  public FlippedDIO dustpanSmacna, magneticFlap, shooterSmacna;
-  public DigitalInput storageButton;
+  public FlippedDIO magneticFlap, shooterSmacna;
+  public DigitalInput dustpanSmacna, storageButton;
   boolean currentIntakeSmacnaState, previousIntakeSmacnaState;
 
   Timer timer;
@@ -31,7 +31,7 @@ public class Rollers extends SubsystemBase {
     magazine = SparkMax.createDefaultCANSparkMax(5);
 
     // Sensor Objects
-    dustpanSmacna = new FlippedDIO(6);
+    dustpanSmacna = new DigitalInput(6);
     magneticFlap = new FlippedDIO(2);
     shooterSmacna = new FlippedDIO(3);
     storageButton = new FlippedDIO(1);
