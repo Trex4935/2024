@@ -18,8 +18,8 @@ public class Rollers extends SubsystemBase {
   CANSparkMax intake, magazine;
 
   // Creating Sensors; ID's shown in IDguide.md
-  public FlippedDIO dustpanSmacna, magneticFlap, shooterSmacna;
-  public DigitalInput storageButton;
+  public FlippedDIO magneticFlap, shooterSmacna;
+  public DigitalInput dustpanSmacna, storageButton;
   boolean currentIntakeSmacnaState, previousIntakeSmacnaState;
 
   Timer timer;
@@ -31,7 +31,7 @@ public class Rollers extends SubsystemBase {
     magazine = SparkMax.createDefaultCANSparkMax(5);
 
     // Sensor Objects
-    dustpanSmacna = new FlippedDIO(8);
+    dustpanSmacna = new DigitalInput(6);
     magneticFlap = new FlippedDIO(2);
     shooterSmacna = new FlippedDIO(3);
     storageButton = new FlippedDIO(1);
@@ -45,16 +45,16 @@ public class Rollers extends SubsystemBase {
     intake.set(speed);
   }
 
-	/** Sets the magazine motor's speed */
-	public void setMagazine(double speed) {
-		magazine.set(speed);
-	}
+  /** Sets the magazine motor's speed */
+  public void setMagazine(double speed) {
+    magazine.set(speed);
+  }
 
-	/** Sets both roller motors */
-	public void setRollers(double intakeSpeed, double magSpeed) {
-		intake.set(intakeSpeed);
-		magazine.set(magSpeed);
-	}
+  /** Sets both roller motors */
+  public void setRollers(double intakeSpeed, double magSpeed) {
+    intake.set(intakeSpeed);
+    magazine.set(magSpeed);
+  }
 
   /** Stops the intake motor */
   public void stopIntake() {
@@ -187,14 +187,13 @@ public class Rollers extends SubsystemBase {
         stopIntake();
 
     }
-    System.out.println(RobotContainer.noteLifecycle.toString());
-    System.out.println(storageButton.get());
-    System.out.println(dustpanSmacna.get());
+    // System.out.println(RobotContainer.noteLifecycle.toString());
+    System.out.println("DP Smacna: " + dustpanSmacna.get());
   }
 
   public void initSendable(SendableBuilder builder) {
     SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
-    SmartDashboard.putBoolean("dustpanSmacnaRight", dustpanSmacna.get());
+    SmartDashboard.putBoolean("dustpanSmacna", dustpanSmacna.get());
     SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
     SmartDashboard.putBoolean("storageButton", storageButton.get());
     SmartDashboard.putString("currentNoteLifeCycle", RobotContainer.noteLifecycle.toString());

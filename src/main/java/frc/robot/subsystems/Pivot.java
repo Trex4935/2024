@@ -13,6 +13,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.PivotAngle;
 import frc.robot.extension.SparkMax;
@@ -70,13 +71,13 @@ public class Pivot extends SubsystemBase {
 
   public void testLimitSwitch() {
     if (pivotMotor.get() > 0) {
-      System.out.println("Forward Pivot");
+      // System.out.println("Forward Pivot");
       if (limitSwitch.get()) {
         pivotMotor.set(0);
       }
     }
     if (pivotMotor.get() < 0) {
-      System.out.println("Reverse Pivot");
+      // System.out.println("Reverse Pivot");
       if (limitSwitch2.get()) {
         pivotMotor.set(0);
         zeroRead = relativeEncoder.getPosition();
@@ -86,11 +87,11 @@ public class Pivot extends SubsystemBase {
   }
 
   // Manual movement for the PID
-  public void setPID(String wantedPosition) {
-    double targetAngle = stateAngle.get(wantedPosition);
+  public void setPivotPosition(String desiredPosition) {
+    double targetAngle = stateAngle.get(desiredPosition);
     double adjustedAngle = targetAngle + zeroRead;
     pivotMotor.getPIDController().setReference(adjustedAngle, CANSparkBase.ControlType.kPosition);
-    System.out.println(adjustedAngle);
+    // System.out.println(adjustedAngle);
     testLimitSwitch();
   }
 
@@ -118,13 +119,32 @@ public class Pivot extends SubsystemBase {
   }
 
   // Shooter state machine that switches between different angles
-  public void pivotStateMachine(PivotAngle desiredAngle) {
-    double targetAngle = stateAngle.get(returnPivotAngle(desiredAngle));
-    pivotMotor.getPIDController().setReference(targetAngle, CANSparkBase.ControlType.kPosition);
+  public void pivotSwitch(PivotAngle desiredAngle) {
+    switch (RobotContainer.noteLifecycle) {
 
-    // Checks to see if the pivot angle is close to the expected angle, can be used
-    // anywhere
-    pivotAtAngle = MathUtil.isNear(targetAngle, pivotMotor.getEncoder().getPosition(), 50.0);
+      // Note is moving to the amp drop position
+      case AMPLOADING:
+        setPivotPosition("");
+        break;
+      // Note is dropped into the amp
+      case AMP:
+        setPivotPosition("Amp");
+        ;
+        break;
+      // Note is shot out towards speaker
+      case SPEAKER:
+        setPivotPosition("Speaker");
+        ;
+        break;
+      case EJECT:
+        setPivotPosition("");
+        break;
+      // Default Position of the Shooter angled at 180 degrees approximately
+      default:
+        // turns all the motors off
+        stopPivotMotor();
+    }
+
   }
 
   @Override
