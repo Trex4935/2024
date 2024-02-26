@@ -3,6 +3,7 @@ package frc.robot;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -65,8 +66,18 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             sconfigs.withSupplyCurrentThreshold(0.2);
             sconfigs.withSupplyCurrentLimitEnable(true);
             module.getSteerMotor().getConfigurator().apply(sconfigs);
+
+            // Turn on continuous wrap -- Experimental
+            // ClosedLoopGeneralConfigs general = new ClosedLoopGeneralConfigs();
+            // general.ContinuousWrap = true;
+            // module.getSteerMotor().getConfigurator().apply(general);
         }
     }
+
+    /* Gear Ratio and Wrapping Config */
+    // swerveAngleFXConfig.Feedback.SensorToMechanismRatio =
+    // Constants.Swerve.angleGearRatio;
+    // swerveAngleFXConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
     private void configurePathPlanner() {
         double driveBaseRadius = 0;
