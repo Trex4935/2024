@@ -151,10 +151,10 @@ public class RobotContainer {
 		for (int i = 0; i < 4; ++i) {
 			SmartDashboard.putNumber("Module " + i + " Supply Current Draw Drive", drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
 			SmartDashboard.putNumber("Module " + i + " Stator Current Draw Drive", drivetrain.getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble());
-			SmartDashboard.putNumber("Module " + i + " Torque Current Draw Drive", drivetrain.getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble());
+			SmartDashboard.putNumber("Module " + i + " Torque Current Draw Drive", drivetrain.getModule(i).getDriveMotor().getTorqueCurrent().getValueAsDouble());
 			SmartDashboard.putNumber("Module " + i + " Supply Current Draw Steer", drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble());
 			SmartDashboard.putNumber("Module " + i + " Stator Current Draw Steer", drivetrain.getModule(i).getSteerMotor().getStatorCurrent().getValueAsDouble());
-			SmartDashboard.putNumber("Module " + i + " Torque Current Draw Steer", drivetrain.getModule(i).getSteerMotor().getStatorCurrent().getValueAsDouble());
+			SmartDashboard.putNumber("Module " + i + " Torque Current Draw Steer", drivetrain.getModule(i).getSteerMotor().getTorqueCurrent().getValueAsDouble());
 		}
   }
 
