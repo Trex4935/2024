@@ -57,7 +57,7 @@ public class RobotContainer {
   // Setting up the brake and pointing function
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-	
+
   // Swerve Telemetry
   private final Telemetry logger = new Telemetry(MaxSpeed);
 	
@@ -66,6 +66,8 @@ public class RobotContainer {
 	private final AlignWithPID align = new AlignWithPID(drivetrain, () -> 
 	getTargetPose(Constants.speakerAprilTag, Constants.speakerOffset), false, false);
 
+
+  // Creates the autoChooser to use in the sendables
   private final SendableChooser<Command> autoChooser;
 
   // Setting up the Button Box
@@ -77,7 +79,7 @@ public class RobotContainer {
     dustpan.setDefaultCommand(dustpan.run(() -> dustpan.intakeSwitch()));
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
     shooter.setDefaultCommand(shooter.run(() -> shooter.shooterSwitch()));
-    pivot.setDefaultCommand(pivot.run(() -> pivot.setPID("Default")));
+    pivot.setDefaultCommand(pivot.run(() -> pivot.setPivotPosition("Default")));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
@@ -87,8 +89,8 @@ public class RobotContainer {
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive right with Joystick
         ));
 
-		// Makes a button that slows the speed down when needed
-		joystick.leftTrigger().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
+    // Makes a button that slows the speed down when needed
+    joystick.leftTrigger().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
 
     // A button acts as a brake, and turns all wheels inward
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -116,32 +118,32 @@ public class RobotContainer {
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
-		// Will move the climber, joystick due to change
+    // Will move the climber, joystick due to change
     joystick.rightTrigger()
         .whileTrue(climber.runEnd(() -> climber.setClimberMotors(), () -> climber.stopClimberMotors()));
 
-		// Test button for the manual setting of the pivot PID
-		joystick.y().onTrue(pivot.runOnce(() -> pivot.setPID("Default")));
+    // Test button for the manual setting of the pivot PID
+    joystick.y().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Default")));
 
-		// Buttton 8 runs pivot in reverse
-		operatorTestButton.button(8)
-				.whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
+    // Buttton 8 runs pivot in reverse
+    operatorTestButton.button(8)
+        .whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
 
-		// Button 9 changes state to ground intake
-		operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
+    // Button 9 changes state to ground intake
+    operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
 
-		// Button 10 runs pivot
-		operatorTestButton.button(10).whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(0.2), () -> pivot.stopPivotMotor()));
-		
-		// Button 11 changes state to field
-		operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField()));
+    // Button 10 runs pivot
+    operatorTestButton.button(10).whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(0.2), () -> pivot.stopPivotMotor()));
 
-		// Button 12 runs magazine
-		operatorTestButton.button(12)
-				.whileTrue(pivot.runEnd(() -> rollers.setMagazine(0.7), () -> rollers.stopMagazine()));
+    // Button 11 changes state to field
+    operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField()));
 
-		// Button 13 changes state to ground
-		operatorTestButton.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
+    // Button 12 runs magazine
+    operatorTestButton.button(12)
+        .whileTrue(pivot.runEnd(() -> rollers.setMagazine(0.7), () -> rollers.stopMagazine()));
+
+    // Button 13 changes state to ground
+    operatorTestButton.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
 
     // Button 14 runs mag and shooter
     operatorTestButton.button(14)
@@ -156,7 +158,7 @@ public class RobotContainer {
     SmartDashboard.putData(dustpan);
     SmartDashboard.putData(rollers);
     SmartDashboard.putData(pivot);
-		// TODO: Fix sendable for note life cycle
+    // TODO: Fix sendable for note life cycle
     // SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
 
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -175,7 +177,7 @@ public class RobotContainer {
 		return targetPose;
   }
 
-  /** Returns the note state cycle */ 
+  /** Returns the note state cycle */
   public static NoteState getCycle() {
     return noteLifecycle;
   }
