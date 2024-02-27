@@ -73,4 +73,42 @@ public class SparkMax {
 
         return motorObject;
     }
+
+		/**
+		 *Configures closed-loop functionality and a PID controller
+     * 
+     * @param motorObjectPID
+     *                        A motor object's PID
+     * @param kP
+     *                        The proportional gain
+     * @param kI
+     *                        The integral gain
+     * @param kD
+     *                        The derivative gain
+     * @param kFF
+     *                        The feed forward
+		 * @param kIz
+		 * 												The integral zone
+     * @param minOutput
+     *                        The minimum motor output desired
+     * @param maxOutput
+     *                        The maximum motor output desired
+		 */
+    public static void configPIDforPositionControl(SparkPIDController motorObjectPID, double kP, double kI, double kD,
+            double kFF, double kIz, double minOutput, double maxOutput) {
+
+
+        /* Enables SmartMotion for the PID controller */
+        motorObjectPID.setReference(0, CANSparkMax.ControlType.kPosition, 0);
+
+        /* Sets motion constraints for the PID controller */
+				motorObjectPID.setOutputRange(minOutput, maxOutput, 0);
+
+        /* Gives values to PID controllers */
+        motorObjectPID.setP(kP);
+        motorObjectPID.setI(kI);
+        motorObjectPID.setIZone(kIz, 0);
+        motorObjectPID.setD(kD);
+        motorObjectPID.setFF(kFF);
+    }
 }
