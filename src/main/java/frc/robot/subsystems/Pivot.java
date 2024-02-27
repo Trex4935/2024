@@ -8,8 +8,9 @@ import java.util.HashMap;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 
-import edu.wpi.first.math.MathUtil;
+
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,6 +30,8 @@ public class Pivot extends SubsystemBase {
 
   // Initializes a duty cycle encoder
   RelativeEncoder relativeEncoder;
+	// Initializes the pivot motor's PID
+	SparkPIDController pivotPID;
   // Makes a Hash Map for the Pivot State Machine
   private HashMap<String, Double> stateAngle;
   // Creates Pivot Angle and Pivot at Angle Objects
@@ -39,14 +42,15 @@ public class Pivot extends SubsystemBase {
   public Pivot() {
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
-    pivotMotor = SparkMax.configPIDwithSmartMotion(pivotMotor, 0.0005, 0, 0, 0, 0, 0.1, 0.1, 5);
+		pivotPID = pivotMotor.getPIDController();
+		SparkMax.configPIDforPositionControl(pivotPID, 0.001, 0, 0, 0, 0, -0.1, 0.1);
 
     // Sets the pivot state machine
     pivotAngle = PivotAngle.Default;
 
     // News up the relative encoder and configs it to the PID
     relativeEncoder = pivotMotor.getEncoder();
-    pivotMotor.getPIDController().setFeedbackDevice(relativeEncoder);
+    pivotPID.setFeedbackDevice(relativeEncoder);
 
     // News up the limit switches
     limitSwitch = new FlippedDIO(4);
@@ -90,7 +94,7 @@ public class Pivot extends SubsystemBase {
   public void setPivotPosition(String desiredPosition) {
     double targetAngle = stateAngle.get(desiredPosition);
     double adjustedAngle = targetAngle + zeroRead;
-    pivotMotor.getPIDController().setReference(adjustedAngle, CANSparkBase.ControlType.kPosition);
+    pivotPID.setReference(adjustedAngle, CANSparkBase.ControlType.kPosition);
     System.out.println("TA: " + targetAngle);
     // testLimitSwitch();
   }
@@ -124,7 +128,7 @@ public class Pivot extends SubsystemBase {
 
       // Note is moving to the amp drop position
       case AMPLOADING:
-        setPivotPosition("Deafult");
+        setPivotPosition("Default");
         break;
       // Note is dropped into the amp
       case AMP:
@@ -135,9 +139,6 @@ public class Pivot extends SubsystemBase {
       case SPEAKER:
         setPivotPosition("Speaker");
         ;
-        break;
-      case EJECT:
-        setPivotPosition("");
         break;
       // Default Position of the Shooter angled at 180 degrees approximately
       default:
