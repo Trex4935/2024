@@ -43,7 +43,7 @@ public class Pivot extends SubsystemBase {
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
 		pivotPID = pivotMotor.getPIDController();
-		SparkMax.configPIDforPositionControl(pivotPID, 0.001, 0, 0, 0, 0, -0.1, 0.1);
+		SparkMax.configPIDforPositionControl(pivotPID, 0.1, 0, 0, 0, 0, -0.3, 0.3);
 
     // Sets the pivot state machine
     pivotAngle = PivotAngle.Default;
