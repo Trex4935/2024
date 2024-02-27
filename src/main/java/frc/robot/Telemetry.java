@@ -22,14 +22,16 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class Telemetry {
     private final double MaxSpeed;
+		private final CommandSwerveDrivetrain Drivetrain;
 
     /**
      * Construct a telemetry object, with the specified max speed of the robot
      * 
      * @param maxSpeed Maximum speed in meters per second
      */
-    public Telemetry(double maxSpeed) {
+    public Telemetry(double maxSpeed, CommandSwerveDrivetrain drivetrain) {
         MaxSpeed = maxSpeed;
+				Drivetrain = drivetrain;
     }
 
     /* What to publish over networktables for telemetry */
@@ -116,6 +118,19 @@ public class Telemetry {
             m_moduleSpeeds[i].setLength(state.ModuleStates[i].speedMetersPerSecond / (2 * MaxSpeed));
 
             SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
+						
+						SmartDashboard.putNumber("Module " + i + " Supply Current Draw Drive",
+						Drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
+				SmartDashboard.putNumber("Module " + i + " Stator Current Draw Drive",
+						Drivetrain.getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble());
+				SmartDashboard.putNumber("Module " + i + " Torque Current Draw Drive",
+						Drivetrain.getModule(i).getDriveMotor().getTorqueCurrent().getValueAsDouble());
+				SmartDashboard.putNumber("Module " + i + " Supply Current Draw Steer",
+						Drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble());
+				SmartDashboard.putNumber("Module " + i + " Stator Current Draw Steer",
+						Drivetrain.getModule(i).getSteerMotor().getStatorCurrent().getValueAsDouble());
+				SmartDashboard.putNumber("Module " + i + " Torque Current Draw Steer",
+						Drivetrain.getModule(i).getSteerMotor().getTorqueCurrent().getValueAsDouble());
         }
     }
 }
