@@ -22,7 +22,7 @@ import frc.robot.extension.SparkMax;
 // TODO: Finish cleanup after pivot tuning
 public class Pivot extends SubsystemBase {
   // Creates two new limit switches
-  FlippedDIO limitSwitch, limitSwitch2;
+  FlippedDIO limitSwitchBattery, limitSwitchForcefield;
   double zeroRead;
 
   /** Creates a new Pivot. */
@@ -53,8 +53,8 @@ public class Pivot extends SubsystemBase {
     pivotPID.setFeedbackDevice(relativeEncoder);
 
     // News up the limit switches
-    limitSwitch = new FlippedDIO(4);
-    limitSwitch2 = new FlippedDIO(5);
+    limitSwitchBattery = new FlippedDIO(4);
+    limitSwitchForcefield = new FlippedDIO(5);
 
     // News up the Hash Map and adds the pivot values to it
     stateAngle = new HashMap<String, Double>();
@@ -66,28 +66,30 @@ public class Pivot extends SubsystemBase {
 
   }
 
-  /** Sets the pivot motor's speed */
+  // Sets motor speed if limit switches aren't pressed
   public void setPivotMotor(double speed) {
-    pivotMotor.set(speed);
-    testLimitSwitch();
-
+    if(testLimitSwitch(speed))
+    {
+      pivotMotor.set(0);
+    }
+    else
+    {
+      pivotMotor.set(speed);
+    }
   }
 
-  public void testLimitSwitch() {
-    if (pivotMotor.get() > 0) {
+  // Checks to see if the speed is at our target speed with limit switch??
+  public boolean testLimitSwitch(double speed) {
+    if (speed < 0 && limitSwitchBattery.get()) {
       // System.out.println("Forward Pivot");
-      if (limitSwitch.get()) {
-        pivotMotor.set(0);
-      }
+      zeroRead = relativeEncoder.getPosition();
+      return true;
     }
-    if (pivotMotor.get() < 0) {
+    if (speed > 0 && limitSwitchForcefield.get()) {
       // System.out.println("Reverse Pivot");
-      if (limitSwitch2.get()) {
-        pivotMotor.set(0);
-        zeroRead = relativeEncoder.getPosition();
-      }
+      return true;
     }
-
+    return false;
   }
 
   // Manual movement for the PID
@@ -152,7 +154,7 @@ public class Pivot extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(), null);
     builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
-    builder.addBooleanProperty("Limit Switch 2", () -> limitSwitch2.get(), null);
+    builder.addBooleanProperty("Limit Switch 2", () -> limitSwitchForcefield.get(), null);
   }
 
   @Override

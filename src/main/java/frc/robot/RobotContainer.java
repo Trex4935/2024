@@ -112,14 +112,14 @@ public class RobotContainer {
     // Test button for the manual setting of the pivot PID
     joystick.y().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Default")));
 
-    // Buttton 8 runs pivot in reverse
+    // Buttton 8 runs pivot towards battery
     operatorTestButton.button(8)
         .whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
 
     // Button 9 changes state to ground intake
     operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
 
-    // Button 10 runs pivot
+    // Button 10 runs pivot towards force field
     operatorTestButton.button(10).whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(0.2), () -> pivot.stopPivotMotor()));
 
     // Button 11 changes state to field
