@@ -47,6 +47,7 @@ public class RobotContainer {
 
   // Setting up bindings for necessary control of the swerve drive platform
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
+  private final CommandXboxController pivController = new CommandXboxController(2);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   // Make sure things are field centric for swerve
@@ -135,6 +136,12 @@ public class RobotContainer {
     operatorTestButton.button(14)
         .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () -> rollers.stopIntake())
             .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors())));
+
+    // Test controller for the pivot motion
+    pivController.a().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Deafult")));
+    pivController.b().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Amp")));
+    pivController.x().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Speaker")));
+    pivController.y().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Load")));
   }
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
@@ -148,14 +155,20 @@ public class RobotContainer {
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
-		for (int i = 0; i < 4; ++i) {
-			SmartDashboard.putNumber("Module " + i + " Supply Current Draw Drive", drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
-			SmartDashboard.putNumber("Module " + i + " Stator Current Draw Drive", drivetrain.getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble());
-			SmartDashboard.putNumber("Module " + i + " Torque Current Draw Drive", drivetrain.getModule(i).getDriveMotor().getTorqueCurrent().getValueAsDouble());
-			SmartDashboard.putNumber("Module " + i + " Supply Current Draw Steer", drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble());
-			SmartDashboard.putNumber("Module " + i + " Stator Current Draw Steer", drivetrain.getModule(i).getSteerMotor().getStatorCurrent().getValueAsDouble());
-			SmartDashboard.putNumber("Module " + i + " Torque Current Draw Steer", drivetrain.getModule(i).getSteerMotor().getTorqueCurrent().getValueAsDouble());
-		}
+    for (int i = 0; i < 4; ++i) {
+      SmartDashboard.putNumber("Module " + i + " Supply Current Draw Drive",
+          drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("Module " + i + " Stator Current Draw Drive",
+          drivetrain.getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("Module " + i + " Torque Current Draw Drive",
+          drivetrain.getModule(i).getDriveMotor().getTorqueCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("Module " + i + " Supply Current Draw Steer",
+          drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("Module " + i + " Stator Current Draw Steer",
+          drivetrain.getModule(i).getSteerMotor().getStatorCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("Module " + i + " Torque Current Draw Steer",
+          drivetrain.getModule(i).getSteerMotor().getTorqueCurrent().getValueAsDouble());
+    }
   }
 
   /** Returns the note state cycle */

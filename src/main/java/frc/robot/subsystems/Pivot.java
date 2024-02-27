@@ -92,7 +92,7 @@ public class Pivot extends SubsystemBase {
     double adjustedAngle = targetAngle + zeroRead;
     pivotMotor.getPIDController().setReference(adjustedAngle, CANSparkBase.ControlType.kPosition);
     // System.out.println(adjustedAngle);
-    testLimitSwitch();
+    // testLimitSwitch();
   }
 
   /** Stops the pivot motor */
@@ -124,7 +124,7 @@ public class Pivot extends SubsystemBase {
 
       // Note is moving to the amp drop position
       case AMPLOADING:
-        setPivotPosition("");
+        setPivotPosition("Deafult");
         break;
       // Note is dropped into the amp
       case AMP:
