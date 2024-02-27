@@ -74,7 +74,7 @@ public class RobotContainer {
     dustpan.setDefaultCommand(dustpan.run(() -> dustpan.intakeSwitch()));
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
     shooter.setDefaultCommand(shooter.run(() -> shooter.shooterSwitch()));
-    pivot.setDefaultCommand(pivot.run(() -> pivot.setPivotPosition("Default")));
+    // pivot.setDefaultCommand(pivot.run(() -> pivot.setPivotPosition("Default")));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
@@ -138,10 +138,10 @@ public class RobotContainer {
             .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors())));
 
     // Test controller for the pivot motion
-    pivController.a().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Deafult")));
-    pivController.b().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Amp")));
-    pivController.x().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Speaker")));
-    pivController.y().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Load")));
+    pivController.a().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Default"), () -> pivot.stopPivotMotor()));
+    pivController.b().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Amp"), () -> pivot.stopPivotMotor()));
+    pivController.x().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Speaker"), () -> pivot.stopPivotMotor()));
+    pivController.y().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Load"), () -> pivot.stopPivotMotor()));
   }
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.

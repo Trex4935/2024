@@ -54,11 +54,11 @@ public class Pivot extends SubsystemBase {
 
     // News up the Hash Map and adds the pivot values to it
     stateAngle = new HashMap<String, Double>();
-    stateAngle.put("Default", 30.0);
-    stateAngle.put("Amp", 60.0);
-    stateAngle.put("Speaker", 90.0);
-    stateAngle.put("Feed", 120.0);
-    stateAngle.put("Load", 150.0);
+    stateAngle.put("Default", -40.0);
+    stateAngle.put("Amp", 0.0);
+    stateAngle.put("Speaker", -25.0);
+    stateAngle.put("Feed", 15.0);
+    stateAngle.put("Load", 0.0);
 
   }
 
@@ -91,7 +91,7 @@ public class Pivot extends SubsystemBase {
     double targetAngle = stateAngle.get(desiredPosition);
     double adjustedAngle = targetAngle + zeroRead;
     pivotMotor.getPIDController().setReference(adjustedAngle, CANSparkBase.ControlType.kPosition);
-    // System.out.println(adjustedAngle);
+    System.out.println("TA: " + targetAngle);
     // testLimitSwitch();
   }
 
