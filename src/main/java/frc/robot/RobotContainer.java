@@ -112,6 +112,8 @@ public class RobotContainer {
 		joystick.povRight().whileTrue(drivetrain.alignWithPathPlanner(
 			drivetrain.getState().Pose.nearest(Constants.stageAprilTags), Constants.stageOffset).andThen(drivetrain.applyRequest(() -> brake)));
 
+		joystick.start().whileTrue(align);
+
     // Helps run the simulation
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));

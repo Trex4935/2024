@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     if (UseLimelight) {
-      var lastResult = LimelightHelpers.getLatestResults("LL1").targetingResults;
+      var lastResult = LimelightHelpers.getLatestResults("limelight-forcefield").targetingResults;
 
       Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
 
@@ -138,6 +138,5 @@ public class Robot extends TimedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {
-    Constants.updateAprilTagTranslations();
   }
 }

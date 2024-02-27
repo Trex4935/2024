@@ -68,7 +68,7 @@ public class AlignWithPID extends Command {
 
 		resetPIDControllers();
 		if (useVision) {
-			int tagID = (int) LimelightHelpers.getFiducialID("LL1");
+			int tagID = (int) LimelightHelpers.getFiducialID("limelight-forcefield");
 			Supplier<Pose2d> visionGoalPoseSupplier = (() -> getOffsetTarget(tagID));
 			Pose2d pose = visionGoalPoseSupplier.get();
 
@@ -105,7 +105,7 @@ public class AlignWithPID extends Command {
 	@Override
 	public void execute() {
 		if (useVision) {
-			if (!LimelightHelpers.getTV("LL1")) {
+			if (!LimelightHelpers.getTV("limelight-forcefield")) {
 				this.cancel();
 			}
 		}
