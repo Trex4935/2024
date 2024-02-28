@@ -47,6 +47,7 @@ public class RobotContainer {
 
   // Setting up bindings for necessary control of the swerve drive platform
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
+  private final CommandXboxController pivController = new CommandXboxController(2);
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   // Make sure things are field centric for swerve
@@ -59,7 +60,7 @@ public class RobotContainer {
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
   // Swerve Telemetry
-  private final Telemetry logger = new Telemetry(MaxSpeed);
+  private final Telemetry logger = new Telemetry(MaxSpeed, drivetrain);
 	
 	// Alternate align command
 	// TODO: Tune offset values
@@ -79,7 +80,7 @@ public class RobotContainer {
     dustpan.setDefaultCommand(dustpan.run(() -> dustpan.intakeSwitch()));
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
     shooter.setDefaultCommand(shooter.run(() -> shooter.shooterSwitch()));
-    pivot.setDefaultCommand(pivot.run(() -> pivot.setPivotPosition("Default")));
+    // pivot.setDefaultCommand(pivot.run(() -> pivot.setPivotPosition("Default")));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
@@ -127,14 +128,14 @@ public class RobotContainer {
     // Test button for the manual setting of the pivot PID
     joystick.y().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Default")));
 
-    // Buttton 8 runs pivot in reverse
+    // Buttton 8 runs pivot towards battery
     operatorTestButton.button(8)
         .whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
 
     // Button 9 changes state to ground intake
     operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
 
-    // Button 10 runs pivot
+    // Button 10 runs pivot towards force field
     operatorTestButton.button(10).whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(0.2), () -> pivot.stopPivotMotor()));
 
     // Button 11 changes state to field
@@ -151,6 +152,12 @@ public class RobotContainer {
     operatorTestButton.button(14)
         .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () -> rollers.stopIntake())
             .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors())));
+
+    // Test controller for the pivot motion
+    pivController.a().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Default"), () -> pivot.stopPivotMotor()));
+    pivController.b().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Amp"), () -> pivot.stopPivotMotor()));
+    pivController.x().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Speaker"), () -> pivot.stopPivotMotor()));
+    pivController.y().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Load"), () -> pivot.stopPivotMotor()));
   }
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.

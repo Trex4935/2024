@@ -8,6 +8,8 @@ import java.util.HashMap;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
+
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,7 +22,7 @@ import frc.robot.extension.SparkMax;
 // TODO: Finish cleanup after pivot tuning
 public class Pivot extends SubsystemBase {
   // Creates two new limit switches
-  FlippedDIO limitSwitch, limitSwitch2;
+  FlippedDIO limitSwitchBattery, limitSwitchForcefield;
   double zeroRead;
 
   /** Creates a new Pivot. */
@@ -28,6 +30,8 @@ public class Pivot extends SubsystemBase {
 
   // Initializes a duty cycle encoder
   RelativeEncoder relativeEncoder;
+	// Initializes the pivot motor's PID
+	SparkPIDController pivotPID;
   // Makes a Hash Map for the Pivot State Machine
   private HashMap<String, Double> stateAngle;
   // Creates Pivot Angle and Pivot at Angle Objects
@@ -38,60 +42,63 @@ public class Pivot extends SubsystemBase {
   public Pivot() {
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
-    pivotMotor = SparkMax.configPIDwithSmartMotion(pivotMotor, 0.0005, 0, 0, 0, 0, 0.1, 0.1, 5);
+		pivotPID = pivotMotor.getPIDController();
+		SparkMax.configPIDforPositionControl(pivotPID, 0.1, 0, 0, 0, 0, -0.3, 0.3);
 
     // Sets the pivot state machine
     pivotAngle = PivotAngle.Default;
 
     // News up the relative encoder and configs it to the PID
     relativeEncoder = pivotMotor.getEncoder();
-    pivotMotor.getPIDController().setFeedbackDevice(relativeEncoder);
+    pivotPID.setFeedbackDevice(relativeEncoder);
 
     // News up the limit switches
-    limitSwitch = new FlippedDIO(4);
-    limitSwitch2 = new FlippedDIO(5);
+    limitSwitchBattery = new FlippedDIO(4);
+    limitSwitchForcefield = new FlippedDIO(5);
 
     // News up the Hash Map and adds the pivot values to it
     stateAngle = new HashMap<String, Double>();
-    stateAngle.put("Default", 30.0);
-    stateAngle.put("Amp", 60.0);
-    stateAngle.put("Speaker", 90.0);
-    stateAngle.put("Feed", 120.0);
-    stateAngle.put("Load", 150.0);
+    stateAngle.put("Default", -40.0);
+    stateAngle.put("Amp", 0.0);
+    stateAngle.put("Speaker", -25.0);
+    stateAngle.put("Feed", 15.0);
+    stateAngle.put("Load", 0.0);
 
   }
 
-  /** Sets the pivot motor's speed */
+  // Sets motor speed if limit switches aren't pressed
   public void setPivotMotor(double speed) {
-    pivotMotor.set(speed);
-    testLimitSwitch();
-
+    if(testLimitSwitch(speed))
+    {
+      pivotMotor.set(0);
+    }
+    else
+    {
+      pivotMotor.set(speed);
+    }
   }
 
-  public void testLimitSwitch() {
-    if (pivotMotor.get() > 0) {
+  // Checks to see if the speed is at our target speed with limit switch??
+  public boolean testLimitSwitch(double speed) {
+    if (speed < 0 && limitSwitchBattery.get()) {
       // System.out.println("Forward Pivot");
-      if (limitSwitch.get()) {
-        pivotMotor.set(0);
-      }
+      zeroRead = relativeEncoder.getPosition();
+      return true;
     }
-    if (pivotMotor.get() < 0) {
+    if (speed > 0 && limitSwitchForcefield.get()) {
       // System.out.println("Reverse Pivot");
-      if (limitSwitch2.get()) {
-        pivotMotor.set(0);
-        zeroRead = relativeEncoder.getPosition();
-      }
+      return true;
     }
-
+    return false;
   }
 
   // Manual movement for the PID
   public void setPivotPosition(String desiredPosition) {
     double targetAngle = stateAngle.get(desiredPosition);
     double adjustedAngle = targetAngle + zeroRead;
-    pivotMotor.getPIDController().setReference(adjustedAngle, CANSparkBase.ControlType.kPosition);
-    // System.out.println(adjustedAngle);
-    testLimitSwitch();
+    pivotPID.setReference(adjustedAngle, CANSparkBase.ControlType.kPosition);
+    System.out.println("TA: " + targetAngle);
+    // testLimitSwitch();
   }
 
   /** Stops the pivot motor */
@@ -123,7 +130,7 @@ public class Pivot extends SubsystemBase {
 
       // Note is moving to the amp drop position
       case AMPLOADING:
-        setPivotPosition("");
+        setPivotPosition("Default");
         break;
       // Note is dropped into the amp
       case AMP:
@@ -134,9 +141,6 @@ public class Pivot extends SubsystemBase {
       case SPEAKER:
         setPivotPosition("Speaker");
         ;
-        break;
-      case EJECT:
-        setPivotPosition("");
         break;
       // Default Position of the Shooter angled at 180 degrees approximately
       default:
@@ -150,7 +154,7 @@ public class Pivot extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(), null);
     builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
-    builder.addBooleanProperty("Limit Switch 2", () -> limitSwitch2.get(), null);
+    builder.addBooleanProperty("Limit Switch 2", () -> limitSwitchForcefield.get(), null);
   }
 
   @Override
