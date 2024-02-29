@@ -188,7 +188,7 @@ public class Rollers extends SubsystemBase {
 
     }
     // System.out.println(RobotContainer.noteLifecycle.toString());
-    System.out.println("DP Smacna: " + dustpanSmacna.get());
+    // System.out.println("DP Smacna: " + dustpanSmacna.get());
   }
 
   public void initSendable(SendableBuilder builder) {
