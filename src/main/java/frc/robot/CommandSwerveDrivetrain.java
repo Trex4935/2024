@@ -3,8 +3,11 @@ package frc.robot;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -20,7 +23,8 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.generated.TunerConstants;
 
 /**
- * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
+ * Class that extends the Phoenix SwerveDrivetrain class and implements
+ * subsystem
  * so it can be used in command-based projects easily.
  */
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
@@ -30,20 +34,51 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
+    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
+            SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
         }
     }
+
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        // Configure supply current limits on the swerve modules
+        for (int modIndex = 0; modIndex < 4; modIndex++) {
+            SwerveModule module = getModule(modIndex);
+            // Drive motor limits
+            CurrentLimitsConfigs dconfigs = new CurrentLimitsConfigs();
+            module.getDriveMotor().getConfigurator().refresh(dconfigs);
+            dconfigs.withSupplyCurrentLimit(20);
+            dconfigs.withSupplyCurrentThreshold(2);
+            dconfigs.withSupplyTimeThreshold(0);
+            dconfigs.withSupplyCurrentLimitEnable(true);
+            module.getDriveMotor().getConfigurator().apply(dconfigs);
+            // rotation motor limits
+            CurrentLimitsConfigs sconfigs = new CurrentLimitsConfigs();
+            module.getSteerMotor().getConfigurator().refresh(sconfigs);
+            sconfigs.withSupplyCurrentLimit(20);
+            sconfigs.withSupplyCurrentThreshold(2);
+            sconfigs.withSupplyCurrentLimitEnable(true);
+            module.getSteerMotor().getConfigurator().apply(sconfigs);
+
+            // Turn on continuous wrap -- Experimental
+            // ClosedLoopGeneralConfigs general = new ClosedLoopGeneralConfigs();
+            // general.ContinuousWrap = true;
+            // module.getSteerMotor().getConfigurator().apply(general);
+        }
     }
+
+    /* Gear Ratio and Wrapping Config */
+    // swerveAngleFXConfig.Feedback.SensorToMechanismRatio =
+    // Constants.Swerve.angleGearRatio;
+    // swerveAngleFXConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
     private void configurePathPlanner() {
         double driveBaseRadius = 0;
@@ -52,29 +87,32 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         }
 
         AutoBuilder.configureHolonomic(
-            ()->this.getState().Pose, // Supplier of current robot pose
-            this::seedFieldRelative,  // Consumer for seeding pose against auto
-            this::getCurrentRobotChassisSpeeds,
-            (speeds)->this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
-            new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                                            new PIDConstants(10, 0, 0),
-                                            TunerConstants.kSpeedAt12VoltsMps,
-                                            driveBaseRadius,
-                                            new ReplanningConfig()),
-            ()->true, // Change this if the path needs to be flipped on red vs blue
-            this); // Subsystem for requirements
-           /*  {
-                // Boolean supplier that controls when the path will be mirrored for the red alliance
-                // This will flip the path being followed to the red side of the field.
-                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-                var alliance = DriverStation.getAlliance();
-                if (alliance.isPresent()) {
-                    return alliance.get() == DriverStation.Alliance.Red;
-                }
-                return false;
-            },
-          */  //this // Reference to this subsystem to set requirements
+                () -> this.getState().Pose, // Supplier of current robot pose
+                this::seedFieldRelative, // Consumer for seeding pose against auto
+                this::getCurrentRobotChassisSpeeds,
+                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
+                                                                             // robot
+                new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
+                        new PIDConstants(10, 0, 0),
+                        TunerConstants.kSpeedAt12VoltsMps,
+                        driveBaseRadius,
+                        new ReplanningConfig()),
+                () -> true, // Change this if the path needs to be flipped on red vs blue
+                this); // Subsystem for requirements
+        /*
+         * {
+         * // Boolean supplier that controls when the path will be mirrored for the red
+         * alliance
+         * // This will flip the path being followed to the red side of the field.
+         * // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+         * 
+         * var alliance = DriverStation.getAlliance();
+         * if (alliance.isPresent()) {
+         * return alliance.get() == DriverStation.Alliance.Red;
+         * }
+         * return false;
+         * },
+         */ // this // Reference to this subsystem to set requirements
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
