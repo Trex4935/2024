@@ -55,15 +55,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             // Drive motor limits
             CurrentLimitsConfigs dconfigs = new CurrentLimitsConfigs();
             module.getDriveMotor().getConfigurator().refresh(dconfigs);
-            dconfigs.withSupplyCurrentLimit(40);
-            dconfigs.withSupplyCurrentThreshold(0.2);
+            dconfigs.withSupplyCurrentLimit(20);
+            dconfigs.withSupplyCurrentThreshold(2);
+            dconfigs.withSupplyTimeThreshold(0);
             dconfigs.withSupplyCurrentLimitEnable(true);
             module.getDriveMotor().getConfigurator().apply(dconfigs);
             // rotation motor limits
             CurrentLimitsConfigs sconfigs = new CurrentLimitsConfigs();
             module.getSteerMotor().getConfigurator().refresh(sconfigs);
             sconfigs.withSupplyCurrentLimit(20);
-            sconfigs.withSupplyCurrentThreshold(0.2);
+            sconfigs.withSupplyCurrentThreshold(2);
             sconfigs.withSupplyCurrentLimitEnable(true);
             module.getSteerMotor().getConfigurator().apply(sconfigs);
 
