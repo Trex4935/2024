@@ -21,19 +21,19 @@ public class Climber extends SubsystemBase {
   }
 
   /** Sets the left climber motor's speed */
-  public void setClimberMotorOne() {
-    climberMotorOne.set(0);
+  public void setClimberMotorOne(double speed) {
+    climberMotorOne.set(speed);
   }
 
 	/** Sets the right climber motor's speed */
-  public void setClimberMotorTwo() {
-    climberMotorTwo.set(0);
+  public void setClimberMotorTwo(double speed) {
+    climberMotorTwo.set(speed);
   }
 
   /** Sets both climber motors */
-  public void setClimberMotors() {
+  public void setClimberMotors(double speed) {
     climberMotorTwo.follow(climberMotorOne);
-    climberMotorOne.set(0);
+    climberMotorOne.set(speed);
   }
 
   /** Stops left climber motor */

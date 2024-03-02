@@ -107,7 +107,7 @@ public class RobotContainer {
 
     // Will move the climber, joystick due to change
     joystick.rightTrigger()
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(), () -> climber.stopClimberMotors()));
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(.1), () -> climber.stopClimberMotors()));
 
     // Test button for the manual setting of the pivot PID
     joystick.y().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Default")));
@@ -143,6 +143,11 @@ public class RobotContainer {
     pivController.b().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Amp"), () -> pivot.stopPivotMotor()));
     pivController.x().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Speaker"), () -> pivot.stopPivotMotor()));
     pivController.y().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Load"), () -> pivot.stopPivotMotor()));
+    pivController.rightBumper().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(.1), () -> climber.stopClimberMotorOne()));
+    pivController.leftBumper().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(.1), () -> climber.stopClimberMotorTwo()));
+    //pivController.rightBumper().whileTrue(climber.runEnd(() -> climber.setClimberMotors(.1), () -> climber.stopClimberMotors()));
+
+
   }
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
