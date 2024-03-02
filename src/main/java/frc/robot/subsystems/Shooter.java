@@ -79,7 +79,7 @@ public class Shooter extends SubsystemBase {
         setShooters(0.2, 0.2);
         break;
       case SOURCE:
-        setShooters(-.1,-.1);
+        setShooters(-0.25, -0.25);
         break;
       // Default Position of the Shooter angled at 180 degrees approximately
       default:
