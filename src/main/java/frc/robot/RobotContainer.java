@@ -48,7 +48,7 @@ public class RobotContainer {
   // Setting up bindings for necessary control of the swerve drive platform
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
   private final CommandXboxController pivController = new CommandXboxController(2);
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+  public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   // Make sure things are field centric for swerve
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -114,13 +114,13 @@ public class RobotContainer {
 
     // Buttton 8 runs pivot towards battery
     operatorTestButton.button(8)
-        .whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(-0.2), () -> climber.stopClimberMotors()));
 
     // Button 9 changes state to ground intake
     operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
 
     // Button 10 runs pivot towards force field
-    operatorTestButton.button(10).whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(0.2), () -> pivot.stopPivotMotor()));
+    operatorTestButton.button(10).whileTrue(climber.runEnd(() -> climber.setClimberMotors(0.2), () -> climber.stopClimberMotors()));
 
     // Button 11 changes state to field
     operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField()));

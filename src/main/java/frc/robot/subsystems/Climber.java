@@ -12,44 +12,47 @@ import frc.robot.extension.SparkMax;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
-  CANSparkMax climberMotorOne, climberMotorTwo;
+  CANSparkMax climberMotorRight, climberMotorLeft;
 
   // Sets Climber Motor Object ID's
   public Climber() {
-    climberMotorOne = SparkMax.createDefaultCANSparkMax(2);
-    climberMotorTwo = SparkMax.createDefaultCANSparkMax(3);
+    climberMotorRight = SparkMax.createDefaultCANSparkMax(2);
+    climberMotorLeft = SparkMax.createDefaultCANSparkMax(3);
+
+    // climberMotorRight.setInverted(true);
+    climberMotorLeft.setInverted(true);
   }
 
   /** Sets the left climber motor's speed */
   public void setClimberMotorOne(double speed) {
-    climberMotorOne.set(speed);
+    climberMotorRight.set(speed);
   }
 
 	/** Sets the right climber motor's speed */
   public void setClimberMotorTwo(double speed) {
-    climberMotorTwo.set(speed);
+    climberMotorLeft.set(speed);
   }
 
   /** Sets both climber motors */
   public void setClimberMotors(double speed) {
-    climberMotorTwo.follow(climberMotorOne);
-    climberMotorOne.set(speed);
+    climberMotorLeft.follow(climberMotorRight);
+    climberMotorRight.set(speed);
   }
 
   /** Stops left climber motor */
   public void stopClimberMotorOne() {
-    climberMotorOne.stopMotor();
+    climberMotorRight.stopMotor();
   }
 
 	/** Stops right climber motor */
   public void stopClimberMotorTwo() {
-    climberMotorTwo.stopMotor();
+    climberMotorLeft.stopMotor();
   }
 
 	/** Stops both climber motors */
   public void stopClimberMotors() {
-    climberMotorOne.stopMotor();
-    climberMotorTwo.stopMotor();
+    climberMotorRight.stopMotor();
+    climberMotorLeft.stopMotor();
   }
 
 		// TODO: Add any sendables we want from Climber
