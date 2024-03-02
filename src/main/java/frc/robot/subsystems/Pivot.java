@@ -58,10 +58,10 @@ public class Pivot extends SubsystemBase {
 
     // News up the Hash Map and adds the pivot values to it
     stateAngle = new HashMap<String, Double>();
-    stateAngle.put("Default", -40.0);
+    stateAngle.put("Default", -55.0);
     stateAngle.put("Amp", 0.0);
     stateAngle.put("Speaker", -25.0);
-    stateAngle.put("Feed", 15.0);
+    stateAngle.put("Source", -15.0);
     stateAngle.put("Load", 0.0);
 
   }
@@ -95,8 +95,7 @@ public class Pivot extends SubsystemBase {
   // Manual movement for the PID
   public void setPivotPosition(String desiredPosition) {
     double targetAngle = stateAngle.get(desiredPosition);
-    double adjustedAngle = targetAngle + zeroRead;
-    pivotPID.setReference(adjustedAngle, CANSparkBase.ControlType.kPosition);
+    pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
     System.out.println("TA: " + targetAngle);
     // testLimitSwitch();
   }
@@ -125,7 +124,7 @@ public class Pivot extends SubsystemBase {
   }
 
   // Shooter state machine that switches between different angles
-  public void pivotSwitch(PivotAngle desiredAngle) {
+  public void pivotSwitch() {
     switch (RobotContainer.noteLifecycle) {
 
       // Note is moving to the amp drop position
@@ -135,17 +134,18 @@ public class Pivot extends SubsystemBase {
       // Note is dropped into the amp
       case AMP:
         setPivotPosition("Amp");
-        ;
         break;
       // Note is shot out towards speaker
       case SPEAKER:
         setPivotPosition("Speaker");
-        ;
+        break;
+      case SOURCE:
+        setPivotPosition("Source");
         break;
       // Default Position of the Shooter angled at 180 degrees approximately
       default:
         // turns all the motors off
-        stopPivotMotor();
+        setPivotPosition("Default");
     }
 
   }

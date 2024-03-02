@@ -107,6 +107,13 @@ public class Rollers extends SubsystemBase {
         }
         previousDustpanSmacnaState = currentDustpanSmacnaState;
         break;
+      //HUMAN INTAKE STATE: Run magazine backwards
+      case SOURCE:
+        setMagazine(-0.2);
+        if (storageButton.get()){
+          RobotContainer.noteLifecycle = NoteState.FIELD;
+        }
+        break;
 
       // GRABBED STATE: Keeps low roller on
       case GRABBED:
