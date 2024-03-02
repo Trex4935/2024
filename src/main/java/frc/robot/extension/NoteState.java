@@ -15,5 +15,6 @@ public enum NoteState {
     SPEAKER, // Note is shot out towards speaker
     AMPLOADING, // Note is moving to the amp drop position
     AMP, // Note is dropped into the amp
-    EJECT
+    EJECT,
+    SOURCE
 }
