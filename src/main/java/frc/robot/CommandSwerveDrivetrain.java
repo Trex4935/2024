@@ -12,9 +12,13 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -122,6 +126,26 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
     }
+
+		/**
+		 * A method of auto-alignment that uses the PathPlanner automatic path generation to align
+		 * @param aprilTagPose The desired AprilTag Pose
+		 * @param offsetArray The offset values for the desired pose
+		 * @return An auto-generated command that goes to a desired pose
+		 */
+		public Command alignWithPathPlanner(Pose2d aprilTagPose, double[] offsetArray) {
+			// Creates an offset pose from the offset array
+			 Pose2d pose2dOffset = new Pose2d(offsetArray[0], offsetArray[1], Rotation2d.fromDegrees(offsetArray[2]));
+			// Gets target values from the tag poses and the offset
+			double targetX = aprilTagPose.getX() + pose2dOffset.getX();
+			double targetY = aprilTagPose.getY() + pose2dOffset.getY();
+			Rotation2d targetTheta = pose2dOffset.getRotation();
+			// Makes a target pose
+			Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
+			// Creates and returns an auto-generated pathfinding command
+			Command autoCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(1, 1, 1, 1), 0);
+			return autoCommand;
+		}
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
