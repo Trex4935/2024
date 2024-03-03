@@ -12,10 +12,8 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkLimitSwitch;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.extension.PivotAngle;
 import frc.robot.extension.SparkMax;
 import frc.robot.extension.Helper;
 
@@ -32,22 +30,20 @@ public class Pivot extends SubsystemBase {
 
   // Initializes a duty cycle encoder
   RelativeEncoder relativeEncoder;
-  // Initializes the pivot motor's PID
-  SparkPIDController pivotPID;
+
+	// Initializes the pivot motor's PID
+	SparkPIDController pivotPID;
+
   // Makes a Hash Map for the Pivot State Machine
   private HashMap<String, Double> stateAngle;
-  // Creates Pivot Angle and Pivot at Angle Objects
-  public static PivotAngle pivotAngle;
+  // Creates Pivot at Angle Object
   public static boolean pivotAtAngle;
 
   public Pivot() {
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
-    pivotPID = pivotMotor.getPIDController();
-    SparkMax.configPIDforPositionControl(pivotPID, 0.1, 0, 0, 0, 0, -0.3, 0.3);
-
-    // Sets the pivot state machine
-    pivotAngle = PivotAngle.Default;
+		pivotPID = pivotMotor.getPIDController();
+		SparkMax.configPIDforPositionControl(pivotPID, 0.1, 0, 0, 0, 0, -0.3, 0.3);
 
     // News up the relative encoder and configs it to the PID
     relativeEncoder = pivotMotor.getEncoder();
@@ -106,24 +102,6 @@ public class Pivot extends SubsystemBase {
   /** Stops the pivot motor */
   public void stopPivotMotor() {
     pivotMotor.stopMotor();
-  }
-
-  /** Changes the state of the shooter */
-  public void changePivotAngle(PivotAngle desiredLevel) {
-    pivotAngle = desiredLevel;
-    // System.out.println(pivotAngle);
-  }
-
-  // returns the current state of the shooter
-  public String returnPivotAngle(PivotAngle desiredAngle) {
-    desiredAngle = pivotAngle;
-    return pivotAngle.toString();
-  }
-
-  // takes in a state and makes it the current one
-  public Command stateSwitcher(PivotAngle desiredLevel) {
-    return runOnce(
-        () -> changePivotAngle(desiredLevel));
   }
 
   // Shooter state machine that switches between different angles

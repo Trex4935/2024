@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AlignWithPID;
 import frc.robot.extension.NoteState;
-import frc.robot.extension.PivotAngle;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DustPan;
@@ -47,7 +46,7 @@ public class RobotContainer {
 
   // Setting up bindings for necessary control of the swerve drive platform
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
-  private final CommandXboxController pivController = new CommandXboxController(2);
+	
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   // Make sure things are field centric for swerve
@@ -102,8 +101,6 @@ public class RobotContainer {
 
 		// reset the field-centric heading on left bumper press
 		joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-		joystick.rightBumper().onTrue(pivot.stateSwitcher(PivotAngle.Load));
-		// joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
 
 
 		joystick.povUp().whileTrue(drivetrain.alignWithPathPlanner(Constants.speakerAprilTag, Constants.speakerOffset).andThen(drivetrain.applyRequest(() -> brake)));
@@ -151,26 +148,8 @@ public class RobotContainer {
     // Button 13 changes state to speaker
     operatorTestButton.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
 
+		// Button 14 changes state to source
     operatorTestButton.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
-
-    // Button 14 runs mag and shooter
-    // operatorTestButton.button(14)
-    // .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () ->
-    // rollers.stopIntake())
-    // .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () ->
-    // shooter.stopShootingMotors())));
-
-    // Test controller for the pivot motion
-    pivController.a().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Default"), () -> pivot.stopPivotMotor()));
-    pivController.b().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Amp"), () -> pivot.stopPivotMotor()));
-    pivController.x().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Speaker"), () -> pivot.stopPivotMotor()));
-    pivController.y().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Load"), () -> pivot.stopPivotMotor()));
-    pivController.rightBumper()
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(.1), () -> climber.stopClimberMotorOne()));
-    pivController.leftBumper()
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(.1), () -> climber.stopClimberMotorTwo()));
-    // pivController.rightBumper().whileTrue(climber.runEnd(() ->
-    // climber.setClimberMotors(.1), () -> climber.stopClimberMotors()));
 
   }
 
