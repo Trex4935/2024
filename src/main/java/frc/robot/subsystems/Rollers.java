@@ -198,6 +198,7 @@ public class Rollers extends SubsystemBase {
     // System.out.println("DP Smacna: " + dustpanSmacna.get());
   }
 
+  @Override
   public void initSendable(SendableBuilder builder) {
     SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
     SmartDashboard.putBoolean("dustpanSmacna", dustpanSmacna.get());

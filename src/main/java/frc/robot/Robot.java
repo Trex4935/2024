@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private final boolean UseLimelight = false;
+  private final boolean UseLimelight = true;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -64,6 +64,7 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
     if (UseLimelight) {
       var lastResult = LimelightHelpers.getLatestResults("limelight-battery").targetingResults;
 

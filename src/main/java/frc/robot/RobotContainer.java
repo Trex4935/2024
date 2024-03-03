@@ -42,7 +42,7 @@ public class RobotContainer {
   public static NoteState noteLifecycle;
 
   // Swerve settings
-  private double MaxSpeed = 6; // 6 meters per second desired top speed
+  private double MaxSpeed = 3; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   // Setting up bindings for necessary control of the swerve drive platform
@@ -123,26 +123,30 @@ public class RobotContainer {
 
     // Will move the climber, joystick due to change
     joystick.rightTrigger()
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(.1), () -> climber.stopClimberMotors()));
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(0.1), () -> climber.stopClimberMotors()));
+    joystick.leftTrigger()
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(-0.1), () -> climber.stopClimberMotors()));
 
     // Test button for the manual setting of the pivot PID
     joystick.y().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Default")));
 
     // Buttton 8 runs pivot towards battery
     operatorTestButton.button(8)
-        .whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(-0.5), () -> climber.stopClimberMotors()));
 
     // Button 9 changes state to ground intake
     operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
 
     // Button 10 runs pivot towards force field
-    operatorTestButton.button(10).whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(0.2), () -> pivot.stopPivotMotor()));
+    operatorTestButton.button(10)
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(0.5), () -> climber.stopClimberMotors()));
 
     // Button 11 changes state to field
     operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField()));
 
-    // Button 12 changes state to amp
-    operatorTestButton.button(12).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
+    // Button 12 runs magazine
+    operatorTestButton.button(12)
+        .whileTrue(pivot.runEnd(() -> rollers.setMagazine(0.1), () -> rollers.stopMagazine()));
 
     // Button 13 changes state to speaker
     operatorTestButton.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
@@ -150,19 +154,23 @@ public class RobotContainer {
     operatorTestButton.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
 
     // Button 14 runs mag and shooter
-    //operatorTestButton.button(14)
-    //    .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () -> rollers.stopIntake())
-    //        .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors())));
+    // operatorTestButton.button(14)
+    // .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () ->
+    // rollers.stopIntake())
+    // .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () ->
+    // shooter.stopShootingMotors())));
 
     // Test controller for the pivot motion
     pivController.a().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Default"), () -> pivot.stopPivotMotor()));
     pivController.b().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Amp"), () -> pivot.stopPivotMotor()));
     pivController.x().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Speaker"), () -> pivot.stopPivotMotor()));
     pivController.y().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Load"), () -> pivot.stopPivotMotor()));
-    pivController.rightBumper().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(.1), () -> climber.stopClimberMotorOne()));
-    pivController.leftBumper().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(.1), () -> climber.stopClimberMotorTwo()));
-    //pivController.rightBumper().whileTrue(climber.runEnd(() -> climber.setClimberMotors(.1), () -> climber.stopClimberMotors()));
-
+    pivController.rightBumper()
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(.1), () -> climber.stopClimberMotorOne()));
+    pivController.leftBumper()
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(.1), () -> climber.stopClimberMotorTwo()));
+    // pivController.rightBumper().whileTrue(climber.runEnd(() ->
+    // climber.setClimberMotors(.1), () -> climber.stopClimberMotors()));
 
   }
 
