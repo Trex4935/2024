@@ -107,10 +107,10 @@ public class Rollers extends SubsystemBase {
         }
         previousDustpanSmacnaState = currentDustpanSmacnaState;
         break;
-      //HUMAN INTAKE STATE: Run magazine backwards
+      // HUMAN INTAKE STATE: Run magazine backwards
       case SOURCE:
         setMagazine(-0.2);
-        if (storageButton.get()){
+        if (storageButton.get()) {
           RobotContainer.noteLifecycle = NoteState.FIELD;
         }
         break;
@@ -200,11 +200,11 @@ public class Rollers extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
-    SmartDashboard.putBoolean("dustpanSmacna", dustpanSmacna.get());
-    SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
-    SmartDashboard.putBoolean("storageButton", storageButton.get());
-    SmartDashboard.putString("currentNoteLifeCycle", RobotContainer.noteLifecycle.toString());
+    builder.addBooleanProperty("magazineSmacna", () -> magneticFlap.get(), null);
+    builder.addBooleanProperty("dustpanSmacna", () -> dustpanSmacna.get(), null);
+    builder.addBooleanProperty("shooterSmacna", () -> shooterSmacna.get(), null);
+    builder.addBooleanProperty("storageButton", () -> storageButton.get(), null);
+    builder.addStringProperty("currentNoteLifeCycle", () -> RobotContainer.noteLifecycle.toString(), null);
   }
 
   @Override

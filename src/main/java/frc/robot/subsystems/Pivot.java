@@ -62,7 +62,7 @@ public class Pivot extends SubsystemBase {
     stateAngle.put("Default", -55.0);
     stateAngle.put("Amp", 0.0);
     stateAngle.put("Speaker", -15.0); // -25
-    stateAngle.put("Source", -33.0);
+    stateAngle.put("Source", -34.0);
     stateAngle.put("Load", 0.0);
 
   }
@@ -89,7 +89,7 @@ public class Pivot extends SubsystemBase {
     }
     currentLimitSwitch = batteryLimitSwitch.isPressed();
     if (Helper.detectFallingRisingEdge(previousLimitSwitch, currentLimitSwitch, true)) {
-      relativeEncoder.setPosition(-40);
+      relativeEncoder.setPosition(-55);
     }
     previousLimitSwitch = currentLimitSwitch;
     return false;
@@ -157,7 +157,8 @@ public class Pivot extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(), null);
     builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
-    builder.addBooleanProperty("Limit Switch 2", () -> forceFieldLimitSwitch.isPressed(), null);
+    builder.addBooleanProperty("Force Field Limit Switch", () -> forceFieldLimitSwitch.isPressed(), null);
+    builder.addBooleanProperty("Battery Limit Switch", () -> batteryLimitSwitch.isPressed(), null);
   }
 
   @Override
