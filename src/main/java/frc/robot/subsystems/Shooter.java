@@ -73,7 +73,9 @@ public class Shooter extends SubsystemBase {
         break;
       // Note is shot out towards speaker
       case SPEAKER:
+			if (Pivot.pivotAtAngle) {
         setShooters(0.7, 0.9);
+			}
         break;
       case EJECT:
         setShooters(0.2, 0.2);

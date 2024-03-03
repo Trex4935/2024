@@ -11,6 +11,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkLimitSwitch;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,7 +32,7 @@ public class Pivot extends SubsystemBase {
   CANSparkMax pivotMotor;
 
   // Initializes a duty cycle encoder
-  RelativeEncoder relativeEncoder;
+   public RelativeEncoder relativeEncoder;
   // Initializes the pivot motor's PID
   SparkPIDController pivotPID;
   // Makes a Hash Map for the Pivot State Machine
@@ -99,6 +100,8 @@ public class Pivot extends SubsystemBase {
   public void setPivotPosition(String desiredPosition) {
     double targetAngle = stateAngle.get(desiredPosition);
     pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
+		pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.1);
+
     System.out.println("TA: " + targetAngle);
     // testLimitSwitch();
   }

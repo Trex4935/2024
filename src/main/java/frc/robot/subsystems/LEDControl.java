@@ -158,9 +158,8 @@ public class LEDControl extends SubsystemBase {
     walkStartingPosition = walkStartingPosition % ledBufferLength;
   }
 
-  @Override
-  public void periodic() {
-    // implementing LEDs into LED control
+	public void LEDswitch() {
+		// implementing LEDs into LED control
     switch (RobotContainer.noteLifecycle) {
 
       // Refer to LED guide in extension to see what each state changes the LEDs to
@@ -208,5 +207,9 @@ public class LEDControl extends SubsystemBase {
         solidLEDS(5, 255, 32);
         break;
     }
+	}
+
+  @Override
+  public void periodic() {
   }
 }
