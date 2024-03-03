@@ -12,8 +12,8 @@ import frc.robot.RobotContainer;
 import frc.robot.extension.SparkMax;
 
 public class Shooter extends SubsystemBase {
-	// Declaring Motors
-	CANSparkMax shootingMotorLeft, shootingMotorRight;
+  // Declaring Motors
+  CANSparkMax shootingMotorLeft, shootingMotorRight;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -24,7 +24,7 @@ public class Shooter extends SubsystemBase {
     shootingMotorRight.setInverted(true);
 
   }
-	
+
   /** Sets the left shooting motor's speed */
   public void setShootingMotorLeft(double speed) {
     shootingMotorLeft.set(speed);
@@ -33,26 +33,26 @@ public class Shooter extends SubsystemBase {
 
   /** Sets the right shooting motor's speed */
   public void setShootingMotorRight(double speed) {
-		shootingMotorRight.set(speed);
+    shootingMotorRight.set(speed);
     System.out.println("Shooting motor right");
-  }	
-	
-	/** makes motors spin YIPPIE!! */
-	public void setShooters(double motor1Speed, double motor2Speed) {
-		shootingMotorLeft.set(motor1Speed);
-		shootingMotorRight.set(motor2Speed);
-	}
+  }
+
+  /** makes motors spin YIPPIE!! */
+  public void setShooters(double motor1Speed, double motor2Speed) {
+    shootingMotorLeft.set(motor1Speed);
+    shootingMotorRight.set(motor2Speed);
+  }
 
   /** Stops left shooting motor */
   public void stopShootingMotorLeft() {
     shootingMotorLeft.stopMotor();
-  }	
+  }
 
   /** Stops right shooting motor */
   public void stopShootingMotorRight() {
-		shootingMotorRight.stopMotor();
-  }	
-	
+    shootingMotorRight.stopMotor();
+  }
+
   /** Stop both shooting motors */
   public void stopShootingMotors() {
     stopShootingMotorLeft();
@@ -69,13 +69,13 @@ public class Shooter extends SubsystemBase {
         break;
       // Note is dropped into the amp
       case AMP:
-        setShooters(0, 0);
+        setShooters(0.25, 0.25);
         break;
       // Note is shot out towards speaker
       case SPEAKER:
-			if (Pivot.pivotAtAngle) {
-        setShooters(0.7, 0.9);
-			}
+        if (Pivot.pivotAtAngle) {
+          setShooters(0.25, 0.25);
+        }
         break;
       case EJECT:
         setShooters(0.2, 0.2);
@@ -92,10 +92,10 @@ public class Shooter extends SubsystemBase {
 
   }
 
-	// TODO: Add any sendables we want from Shooter
-	public void initSendable(SendableBuilder builder) {
+  // TODO: Add any sendables we want from Shooter
+  public void initSendable(SendableBuilder builder) {
 
-	}
+  }
 
   @Override
   public void periodic() {
