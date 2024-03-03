@@ -9,20 +9,23 @@ import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.SparkLimitSwitch;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.extension.FlippedDIO;
 import frc.robot.extension.PivotAngle;
 import frc.robot.extension.SparkMax;
+import frc.robot.extension.Helper;
 
 // TODO: Finish cleanup after pivot tuning
 public class Pivot extends SubsystemBase {
   // Creates two new limit switches
-  FlippedDIO limitSwitchBattery, limitSwitchForcefield;
   double zeroRead;
+  SparkLimitSwitch batteryLimitSwitch, forceFieldLimitSwitch;
+  boolean currentLimitSwitch = false;
+  boolean previousLimitSwitch = true;
 
   /** Creates a new Pivot. */
   CANSparkMax pivotMotor;
@@ -35,7 +38,6 @@ public class Pivot extends SubsystemBase {
   private HashMap<String, Double> stateAngle;
   // Creates Pivot Angle and Pivot at Angle Objects
   public static PivotAngle pivotAngle;
-
   public static boolean pivotAtAngle;
 
   public Pivot() {
@@ -52,8 +54,8 @@ public class Pivot extends SubsystemBase {
     pivotPID.setFeedbackDevice(relativeEncoder);
 
     // News up the limit switches
-    limitSwitchBattery = new FlippedDIO(4);
-    limitSwitchForcefield = new FlippedDIO(5);
+    batteryLimitSwitch = pivotMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+    forceFieldLimitSwitch = pivotMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
 
     // News up the Hash Map and adds the pivot values to it
     stateAngle = new HashMap<String, Double>();
@@ -76,15 +78,20 @@ public class Pivot extends SubsystemBase {
 
   // Checks to see if the speed is at our target speed with limit switch??
   public boolean testLimitSwitch(double speed) {
-    if (speed < 0 && limitSwitchBattery.get()) {
+    if (speed < 0 && batteryLimitSwitch.isPressed()) {
       // System.out.println("Forward Pivot");
       zeroRead = relativeEncoder.getPosition();
       return true;
     }
-    if (speed > 0 && limitSwitchForcefield.get()) {
+    if (speed > 0 && forceFieldLimitSwitch.isPressed()) {
       // System.out.println("Reverse Pivot");
       return true;
     }
+    currentLimitSwitch = batteryLimitSwitch.isPressed();
+    if (Helper.detectFallingRisingEdge(previousLimitSwitch, currentLimitSwitch, true)) {
+      relativeEncoder.setPosition(-40);
+    }
+    previousLimitSwitch = currentLimitSwitch;
     return false;
   }
 
@@ -150,7 +157,7 @@ public class Pivot extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(), null);
     builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
-    builder.addBooleanProperty("Limit Switch 2", () -> limitSwitchForcefield.get(), null);
+    builder.addBooleanProperty("Limit Switch 2", () -> forceFieldLimitSwitch.isPressed(), null);
   }
 
   @Override
