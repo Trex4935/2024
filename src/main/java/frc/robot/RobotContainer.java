@@ -107,21 +107,23 @@ public class RobotContainer {
 
     // Will move the climber, joystick due to change
     joystick.rightTrigger()
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(.1), () -> climber.stopClimberMotors()));
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(0.1), () -> climber.stopClimberMotors()));
+    joystick.leftTrigger()
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(-0.1), () -> climber.stopClimberMotors()));
 
     // Test button for the manual setting of the pivot PID
     joystick.y().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Default")));
 
     // Buttton 8 runs pivot towards battery
     operatorTestButton.button(8)
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(-0.2), () -> climber.stopClimberMotors()));
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(-0.5), () -> climber.stopClimberMotors()));
 
     // Button 9 changes state to ground intake
     operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
 
     // Button 10 runs pivot towards force field
     operatorTestButton.button(10)
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(0.2), () -> climber.stopClimberMotors()));
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(0.5), () -> climber.stopClimberMotors()));
 
     // Button 11 changes state to field
     operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField()));

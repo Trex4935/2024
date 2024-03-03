@@ -18,9 +18,9 @@ public class Climber extends SubsystemBase {
   public Climber() {
     climberMotorRight = SparkMax.createDefaultCANSparkMax(2);
     climberMotorLeft = SparkMax.createDefaultCANSparkMax(3);
+    climberMotorLeft.setInverted(false);
+    climberMotorRight.setInverted(true);
 
-    // climberMotorRight.setInverted(true);
-    climberMotorLeft.setInverted(true);
   }
 
   /** Sets the left climber motor's speed */
@@ -35,7 +35,7 @@ public class Climber extends SubsystemBase {
 
   /** Sets both climber motors */
   public void setClimberMotors(double speed) {
-    climberMotorLeft.follow(climberMotorRight);
+    climberMotorLeft.set(speed);
     climberMotorRight.set(speed);
   }
 

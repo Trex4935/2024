@@ -10,7 +10,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
-
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,8 +29,8 @@ public class Pivot extends SubsystemBase {
 
   // Initializes a duty cycle encoder
   RelativeEncoder relativeEncoder;
-	// Initializes the pivot motor's PID
-	SparkPIDController pivotPID;
+  // Initializes the pivot motor's PID
+  SparkPIDController pivotPID;
   // Makes a Hash Map for the Pivot State Machine
   private HashMap<String, Double> stateAngle;
   // Creates Pivot Angle and Pivot at Angle Objects
@@ -42,8 +41,8 @@ public class Pivot extends SubsystemBase {
   public Pivot() {
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
-		pivotPID = pivotMotor.getPIDController();
-		SparkMax.configPIDforPositionControl(pivotPID, 0.1, 0, 0, 0, 0, -0.3, 0.3);
+    pivotPID = pivotMotor.getPIDController();
+    SparkMax.configPIDforPositionControl(pivotPID, 0.1, 0, 0, 0, 0, -0.3, 0.3);
 
     // Sets the pivot state machine
     pivotAngle = PivotAngle.Default;
@@ -60,7 +59,7 @@ public class Pivot extends SubsystemBase {
     stateAngle = new HashMap<String, Double>();
     stateAngle.put("Default", -55.0);
     stateAngle.put("Amp", 0.0);
-    stateAngle.put("Speaker", -25.0);
+    stateAngle.put("Speaker", -15.0); // -25
     stateAngle.put("Source", -33.0);
     stateAngle.put("Load", 0.0);
 
@@ -68,12 +67,9 @@ public class Pivot extends SubsystemBase {
 
   // Sets motor speed if limit switches aren't pressed
   public void setPivotMotor(double speed) {
-    if(testLimitSwitch(speed))
-    {
+    if (testLimitSwitch(speed)) {
       pivotMotor.set(0);
-    }
-    else
-    {
+    } else {
       pivotMotor.set(speed);
     }
   }
