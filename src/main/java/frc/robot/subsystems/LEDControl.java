@@ -171,7 +171,7 @@ public class LEDControl extends SubsystemBase {
         solidLEDS(0, 0, 32);
         break;
 
-      case HUMANINTAKE:
+      case SOURCE:
         solidLEDS(15, 255, 32);
         break;
 

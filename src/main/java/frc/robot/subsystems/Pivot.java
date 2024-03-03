@@ -32,7 +32,7 @@ public class Pivot extends SubsystemBase {
   CANSparkMax pivotMotor;
 
   // Initializes a duty cycle encoder
-   public RelativeEncoder relativeEncoder;
+  public RelativeEncoder relativeEncoder;
   // Initializes the pivot motor's PID
   SparkPIDController pivotPID;
   // Makes a Hash Map for the Pivot State Machine
@@ -63,7 +63,7 @@ public class Pivot extends SubsystemBase {
     stateAngle.put("Default", -55.0);
     stateAngle.put("Amp", 0.0);
     stateAngle.put("Speaker", -15.0); // -25
-    stateAngle.put("Source", -34.0);
+    stateAngle.put("Source", -36.0);
     stateAngle.put("Load", 0.0);
 
   }
@@ -100,9 +100,9 @@ public class Pivot extends SubsystemBase {
   public void setPivotPosition(String desiredPosition) {
     double targetAngle = stateAngle.get(desiredPosition);
     pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
-		pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.1);
+    pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.1);
 
-    System.out.println("TA: " + targetAngle);
+    // System.out.println("TA: " + targetAngle);
     // testLimitSwitch();
   }
 
