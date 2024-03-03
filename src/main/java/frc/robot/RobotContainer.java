@@ -120,13 +120,15 @@ public class RobotContainer {
     operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
 
     // Button 10 runs pivot towards force field
-    operatorTestButton.button(10).whileTrue(climber.runEnd(() -> climber.setClimberMotors(0.2), () -> climber.stopClimberMotors()));
+    operatorTestButton.button(10)
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(0.2), () -> climber.stopClimberMotors()));
 
     // Button 11 changes state to field
     operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField()));
 
-    // Button 12 changes state to amp
-    operatorTestButton.button(12).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
+    // Button 12 runs magazine
+    operatorTestButton.button(12)
+        .whileTrue(pivot.runEnd(() -> rollers.setMagazine(0.1), () -> rollers.stopMagazine()));
 
     // Button 13 changes state to speaker
     operatorTestButton.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
@@ -134,19 +136,23 @@ public class RobotContainer {
     operatorTestButton.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
 
     // Button 14 runs mag and shooter
-    //operatorTestButton.button(14)
-    //    .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () -> rollers.stopIntake())
-    //        .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors())));
+    // operatorTestButton.button(14)
+    // .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () ->
+    // rollers.stopIntake())
+    // .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () ->
+    // shooter.stopShootingMotors())));
 
     // Test controller for the pivot motion
     pivController.a().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Default"), () -> pivot.stopPivotMotor()));
     pivController.b().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Amp"), () -> pivot.stopPivotMotor()));
     pivController.x().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Speaker"), () -> pivot.stopPivotMotor()));
     pivController.y().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Load"), () -> pivot.stopPivotMotor()));
-    pivController.rightBumper().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(.1), () -> climber.stopClimberMotorOne()));
-    pivController.leftBumper().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(.1), () -> climber.stopClimberMotorTwo()));
-    //pivController.rightBumper().whileTrue(climber.runEnd(() -> climber.setClimberMotors(.1), () -> climber.stopClimberMotors()));
-
+    pivController.rightBumper()
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(.1), () -> climber.stopClimberMotorOne()));
+    pivController.leftBumper()
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(.1), () -> climber.stopClimberMotorTwo()));
+    // pivController.rightBumper().whileTrue(climber.runEnd(() ->
+    // climber.setClimberMotors(.1), () -> climber.stopClimberMotors()));
 
   }
 

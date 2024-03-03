@@ -28,7 +28,7 @@ public class Climber extends SubsystemBase {
     climberMotorRight.set(speed);
   }
 
-	/** Sets the right climber motor's speed */
+  /** Sets the right climber motor's speed */
   public void setClimberMotorTwo(double speed) {
     climberMotorLeft.set(speed);
   }
@@ -44,21 +44,21 @@ public class Climber extends SubsystemBase {
     climberMotorRight.stopMotor();
   }
 
-	/** Stops right climber motor */
+  /** Stops right climber motor */
   public void stopClimberMotorTwo() {
     climberMotorLeft.stopMotor();
   }
 
-	/** Stops both climber motors */
+  /** Stops both climber motors */
   public void stopClimberMotors() {
     climberMotorRight.stopMotor();
     climberMotorLeft.stopMotor();
   }
 
-		// TODO: Add any sendables we want from Climber
-	public void initSendable(SendableBuilder builder) {
-		
-	}
+  // TODO: Add any sendables we want from Climber
+  public void initSendable(SendableBuilder builder) {
+
+  }
 
   @Override
   public void periodic() {
