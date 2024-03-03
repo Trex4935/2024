@@ -54,10 +54,10 @@ public class Pivot extends SubsystemBase {
     pivotPID.setFeedbackDevice(relativeEncoder);
 
     // News up the limit switches
-    batteryLimitSwitch = pivotMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-    forceFieldLimitSwitch = pivotMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+    batteryLimitSwitch = pivotMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+    forceFieldLimitSwitch = pivotMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
-    // News up the Hash Map and adds the pivot values to it
+    // News up the Hash Map and adds the pivot values to
     stateAngle = new HashMap<String, Double>();
     stateAngle.put("Default", -55.0);
     stateAngle.put("Amp", 0.0);
