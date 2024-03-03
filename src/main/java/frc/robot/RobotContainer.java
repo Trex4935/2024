@@ -80,7 +80,7 @@ public class RobotContainer {
     dustpan.setDefaultCommand(dustpan.run(() -> dustpan.intakeSwitch()));
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
     shooter.setDefaultCommand(shooter.run(() -> shooter.shooterSwitch()));
-    // pivot.setDefaultCommand(pivot.run(() -> pivot.setPivotPosition("Default")));
+    pivot.setDefaultCommand(pivot.run(() -> pivot.pivotSwitch()));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
@@ -123,7 +123,7 @@ public class RobotContainer {
 
     // Will move the climber, joystick due to change
     joystick.rightTrigger()
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(), () -> climber.stopClimberMotors()));
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(.1), () -> climber.stopClimberMotors()));
 
     // Test button for the manual setting of the pivot PID
     joystick.y().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Default")));
@@ -141,23 +141,29 @@ public class RobotContainer {
     // Button 11 changes state to field
     operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField()));
 
-    // Button 12 runs magazine
-    operatorTestButton.button(12)
-        .whileTrue(pivot.runEnd(() -> rollers.setMagazine(0.7), () -> rollers.stopMagazine()));
+    // Button 12 changes state to amp
+    operatorTestButton.button(12).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
 
-    // Button 13 changes state to ground
+    // Button 13 changes state to speaker
     operatorTestButton.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
 
+    operatorTestButton.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
+
     // Button 14 runs mag and shooter
-    operatorTestButton.button(14)
-        .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () -> rollers.stopIntake())
-            .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors())));
+    //operatorTestButton.button(14)
+    //    .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () -> rollers.stopIntake())
+    //        .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () -> shooter.stopShootingMotors())));
 
     // Test controller for the pivot motion
     pivController.a().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Default"), () -> pivot.stopPivotMotor()));
     pivController.b().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Amp"), () -> pivot.stopPivotMotor()));
     pivController.x().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Speaker"), () -> pivot.stopPivotMotor()));
     pivController.y().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Load"), () -> pivot.stopPivotMotor()));
+    pivController.rightBumper().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(.1), () -> climber.stopClimberMotorOne()));
+    pivController.leftBumper().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(.1), () -> climber.stopClimberMotorTwo()));
+    //pivController.rightBumper().whileTrue(climber.runEnd(() -> climber.setClimberMotors(.1), () -> climber.stopClimberMotors()));
+
+
   }
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
