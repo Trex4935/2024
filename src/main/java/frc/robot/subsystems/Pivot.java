@@ -11,6 +11,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkLimitSwitch;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -50,15 +51,15 @@ public class Pivot extends SubsystemBase {
     pivotPID.setFeedbackDevice(relativeEncoder);
 
     // News up the limit switches
-    batteryLimitSwitch = pivotMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-    forceFieldLimitSwitch = pivotMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+    batteryLimitSwitch = pivotMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+    forceFieldLimitSwitch = pivotMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
-    // News up the Hash Map and adds the pivot values to it
+    // News up the Hash Map and adds the pivot values to
     stateAngle = new HashMap<String, Double>();
     stateAngle.put("Default", -55.0);
-    stateAngle.put("Amp", 0.0);
-    stateAngle.put("Speaker", -15.0); // -25
-    stateAngle.put("Source", -33.0);
+    stateAngle.put("Amp", -36.0);
+    stateAngle.put("Speaker", -40.0); // -25
+    stateAngle.put("Source", -36.0);
     stateAngle.put("Load", 0.0);
 
   }
@@ -85,7 +86,7 @@ public class Pivot extends SubsystemBase {
     }
     currentLimitSwitch = batteryLimitSwitch.isPressed();
     if (Helper.detectFallingRisingEdge(previousLimitSwitch, currentLimitSwitch, true)) {
-      relativeEncoder.setPosition(-40);
+      relativeEncoder.setPosition(-55);
     }
     previousLimitSwitch = currentLimitSwitch;
     return false;
@@ -95,7 +96,9 @@ public class Pivot extends SubsystemBase {
   public void setPivotPosition(String desiredPosition) {
     double targetAngle = stateAngle.get(desiredPosition);
     pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
-    System.out.println("TA: " + targetAngle);
+    pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.2);
+
+    // System.out.println("TA: " + targetAngle);
     // testLimitSwitch();
   }
 
@@ -135,7 +138,8 @@ public class Pivot extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(), null);
     builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
-    builder.addBooleanProperty("Limit Switch 2", () -> forceFieldLimitSwitch.isPressed(), null);
+    builder.addBooleanProperty("Force Field Limit Switch", () -> forceFieldLimitSwitch.isPressed(), null);
+    builder.addBooleanProperty("Battery Limit Switch", () -> batteryLimitSwitch.isPressed(), null);
   }
 
   @Override
