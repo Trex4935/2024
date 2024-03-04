@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.extension.SparkMax;
 import frc.robot.RobotContainer;
 import frc.robot.extension.FlippedDIO;
@@ -107,10 +106,10 @@ public class Rollers extends SubsystemBase {
         }
         previousDustpanSmacnaState = currentDustpanSmacnaState;
         break;
-      //HUMAN INTAKE STATE: Run magazine backwards
+      // HUMAN INTAKE STATE: Run magazine backwards
       case SOURCE:
         setMagazine(-0.2);
-        if (storageButton.get()){
+        if (storageButton.get()) {
           RobotContainer.noteLifecycle = NoteState.FIELD;
         }
         break;
@@ -155,7 +154,9 @@ public class Rollers extends SubsystemBase {
       // SPEAKER STATE: Turns on both high and low rollers and returns to Field state
       // after 5 seconds
       case SPEAKER:
-        setMagazine(0.9);
+        if (Pivot.pivotAtAngle) {
+					setMagazine(0.9);
+				}
         break;
 
       // AMP STATE: Reverses low and high rollers when maganetic flap is pushed,
@@ -200,11 +201,11 @@ public class Rollers extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    SmartDashboard.putBoolean("magazineSmacna", magneticFlap.get());
-    SmartDashboard.putBoolean("dustpanSmacna", dustpanSmacna.get());
-    SmartDashboard.putBoolean("shooterSmacna", shooterSmacna.get());
-    SmartDashboard.putBoolean("storageButton", storageButton.get());
-    SmartDashboard.putString("currentNoteLifeCycle", RobotContainer.noteLifecycle.toString());
+    builder.addBooleanProperty("magazineSmacna", () -> magneticFlap.get(), null);
+    builder.addBooleanProperty("dustpanSmacna", () -> dustpanSmacna.get(), null);
+    builder.addBooleanProperty("shooterSmacna", () -> shooterSmacna.get(), null);
+    builder.addBooleanProperty("storageButton", () -> storageButton.get(), null);
+    builder.addStringProperty("currentNoteLifeCycle", () -> RobotContainer.noteLifecycle.toString(), null);
   }
 
   @Override

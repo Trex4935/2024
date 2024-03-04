@@ -81,6 +81,7 @@ public class RobotContainer {
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
     shooter.setDefaultCommand(shooter.run(() -> shooter.shooterSwitch()));
     pivot.setDefaultCommand(pivot.run(() -> pivot.pivotSwitch()));
+		ledControl.setDefaultCommand(ledControl.run(() -> ledControl.LEDswitch()));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
