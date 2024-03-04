@@ -29,7 +29,7 @@ public class LEDControl extends SubsystemBase {
     // Creating addressable led Objects
     m_rainbowFirstPixelHue = 0;
     ledStrip = new AddressableLED(7);
-    ledBuffer = new AddressableLEDBuffer(60);
+    ledBuffer = new AddressableLEDBuffer(180);
     ledBufferLength = ledBuffer.getLength();
     ledStrip.setLength(ledBuffer.getLength());
     // Makes the counter and toggle
@@ -158,8 +158,8 @@ public class LEDControl extends SubsystemBase {
     walkStartingPosition = walkStartingPosition % ledBufferLength;
   }
 
-	public void ledSwitch() {
-		// implementing LEDs into LED control
+  public void ledSwitch() {
+    // implementing LEDs into LED control
     switch (RobotContainer.noteLifecycle) {
 
       // Refer to LED guide in extension to see what each state changes the LEDs to
@@ -172,7 +172,7 @@ public class LEDControl extends SubsystemBase {
         break;
 
       case SOURCE:
-        solidLEDS(15, 255, 32);
+        flashLEDS(202, 95, 36, 50);
         break;
 
       case GRABBED:
@@ -207,7 +207,7 @@ public class LEDControl extends SubsystemBase {
         solidLEDS(5, 255, 32);
         break;
     }
-	}
+  }
 
   @Override
   public void periodic() {

@@ -94,10 +94,6 @@ public class Pivot extends SubsystemBase {
     previousLimitSwitch = currentLimitSwitch;
     return false;
   }
-  // 1. Increase Offset by 0.5
-  // 2. Decrease Offset by 0.5
-  // 3. Modify Target Angle with Offset Value
-  // 4. Reset when done
 
   // Manual movement for the PID
   public void setPivotPosition(String desiredPosition) {

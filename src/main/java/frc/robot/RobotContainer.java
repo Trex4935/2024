@@ -86,7 +86,8 @@ public class RobotContainer {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
         // Driving with joysticks
-        drivetrain.applyRequest(() -> drive.withVelocityX(joystick.getLeftY() * MaxSpeed) // Drive forward with Joystick
+        drivetrain.applyRequest(() -> drive.withVelocityX(joystick.getLeftY() * MaxSpeed) // Drive forward with
+                                                                                          // Joystick
             .withVelocityY(joystick.getLeftX() * MaxSpeed) // Drive left with Joystick
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive right with Joystick
         ));
@@ -99,7 +100,8 @@ public class RobotContainer {
     // B button saves the current state of the wheels, and when you let go, it
     // reverts back to them.
     joystick.b().whileTrue(drivetrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+        .applyRequest(
+            () -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
