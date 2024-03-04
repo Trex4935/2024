@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AlignWithPID;
+import frc.robot.extension.Alignment;
 import frc.robot.extension.NoteState;
-import frc.robot.extension.PivotAngle;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DustPan;
@@ -47,7 +47,7 @@ public class RobotContainer {
 
   // Setting up bindings for necessary control of the swerve drive platform
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
-  private final CommandXboxController pivController = new CommandXboxController(2);
+	
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   // Make sure things are field centric for swerve
@@ -65,7 +65,7 @@ public class RobotContainer {
 	// Alternate align command
 	// TODO: Tune offset values
 	private final AlignWithPID align = new AlignWithPID(drivetrain, () -> 
-	getTargetPose(Constants.speakerAprilTag, Constants.speakerOffset), false, false);
+	getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset), false, false);
 
 
   // Creates the autoChooser to use in the sendables
@@ -81,7 +81,7 @@ public class RobotContainer {
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
     shooter.setDefaultCommand(shooter.run(() -> shooter.shooterSwitch()));
     pivot.setDefaultCommand(pivot.run(() -> pivot.pivotSwitch()));
-		ledControl.setDefaultCommand(ledControl.run(() -> ledControl.LEDswitch()));
+		ledControl.setDefaultCommand(ledControl.run(() -> ledControl.ledSwitch()));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
@@ -103,17 +103,20 @@ public class RobotContainer {
 
 		// reset the field-centric heading on left bumper press
 		joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-		joystick.rightBumper().onTrue(pivot.stateSwitcher(PivotAngle.Load));
-		// joystick.povUp().onTrue(pivot.stateSwitcher(PivotAngle.Amp));
 
 
-		joystick.povUp().whileTrue(drivetrain.alignWithPathPlanner(Constants.speakerAprilTag, Constants.speakerOffset).andThen(drivetrain.applyRequest(() -> brake)));
+		// Up on the D-pad automatically aligns to the speaker
+		joystick.povUp().whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset).andThen(drivetrain.applyRequest(() -> brake)));
+		// Down on the D-pad automatically aligns to the source
 		joystick.povDown().whileTrue(drivetrain.alignWithPathPlanner(
-			Constants.sourceAprilTag, Constants.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
-		joystick.povLeft().whileTrue(drivetrain.alignWithPathPlanner(Constants.ampAprilTag, Constants.ampOffset).andThen(drivetrain.applyRequest(() -> brake)));
+			Alignment.sourceAprilTag, Alignment.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
+		// Left on the D-pad automatically aligns to the amp
+		joystick.povLeft().whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset).andThen(drivetrain.applyRequest(() -> brake)));
+		// Right on the D-pad automatically aligns to the stage
 		joystick.povRight().whileTrue(drivetrain.alignWithPathPlanner(
-			drivetrain.getState().Pose.nearest(Constants.stageAprilTags), Constants.stageOffset).andThen(drivetrain.applyRequest(() -> brake)));
+			drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset).andThen(drivetrain.applyRequest(() -> brake)));
 
+		// The menu button aligns using a PID
 		joystick.start().whileTrue(align);
 
     // Helps run the simulation
@@ -121,15 +124,6 @@ public class RobotContainer {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
-
-    // Will move the climber, joystick due to change
-    joystick.rightTrigger()
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(0.1), () -> climber.stopClimberMotors()));
-    joystick.leftTrigger()
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(-0.1), () -> climber.stopClimberMotors()));
-
-    // Test button for the manual setting of the pivot PID
-    joystick.y().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Default")));
 
     // Buttton 8 runs pivot towards battery
     operatorTestButton.button(8)
@@ -152,32 +146,14 @@ public class RobotContainer {
     // Button 13 changes state to speaker
     operatorTestButton.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
 
+		// Button 14 changes state to source
     operatorTestButton.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
-
-    // Button 14 runs mag and shooter
-    // operatorTestButton.button(14)
-    // .whileTrue(rollers.runEnd(() -> rollers.setRollers(0.7, 0.7), () ->
-    // rollers.stopIntake())
-    // .alongWith(shooter.runEnd(() -> shooter.setShooters(0.9, 0.7), () ->
-    // shooter.stopShootingMotors())));
-
-    // Test controller for the pivot motion
-    pivController.a().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Default"), () -> pivot.stopPivotMotor()));
-    pivController.b().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Amp"), () -> pivot.stopPivotMotor()));
-    pivController.x().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Speaker"), () -> pivot.stopPivotMotor()));
-    pivController.y().whileTrue(pivot.runEnd(() -> pivot.setPivotPosition("Load"), () -> pivot.stopPivotMotor()));
-    pivController.rightBumper()
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(.1), () -> climber.stopClimberMotorOne()));
-    pivController.leftBumper()
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(.1), () -> climber.stopClimberMotorTwo()));
-    // pivController.rightBumper().whileTrue(climber.runEnd(() ->
-    // climber.setClimberMotors(.1), () -> climber.stopClimberMotors()));
 
   }
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
-		Constants.updateAprilTagTranslations();
+		Alignment.updateAprilTagTranslations();
     configureBindings();
     SmartDashboard.putData(dustpan);
     SmartDashboard.putData(rollers);
