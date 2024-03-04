@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AlignWithPID;
+import frc.robot.extension.Alignment;
 import frc.robot.extension.NoteState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
@@ -64,7 +65,7 @@ public class RobotContainer {
 	// Alternate align command
 	// TODO: Tune offset values
 	private final AlignWithPID align = new AlignWithPID(drivetrain, () -> 
-	getTargetPose(Constants.speakerAprilTag, Constants.speakerOffset), false, false);
+	getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset), false, false);
 
 
   // Creates the autoChooser to use in the sendables
@@ -80,7 +81,7 @@ public class RobotContainer {
     rollers.setDefaultCommand(rollers.run(() -> rollers.rollerSwitch()));
     shooter.setDefaultCommand(shooter.run(() -> shooter.shooterSwitch()));
     pivot.setDefaultCommand(pivot.run(() -> pivot.pivotSwitch()));
-		ledControl.setDefaultCommand(ledControl.run(() -> ledControl.LEDSwitch()));
+		ledControl.setDefaultCommand(ledControl.run(() -> ledControl.ledSwitch()));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
@@ -104,13 +105,18 @@ public class RobotContainer {
 		joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
 
-		joystick.povUp().whileTrue(drivetrain.alignWithPathPlanner(Constants.speakerAprilTag, Constants.speakerOffset).andThen(drivetrain.applyRequest(() -> brake)));
+		// Up on the D-pad automatically aligns to the speaker
+		joystick.povUp().whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset).andThen(drivetrain.applyRequest(() -> brake)));
+		// Down on the D-pad automatically aligns to the source
 		joystick.povDown().whileTrue(drivetrain.alignWithPathPlanner(
-			Constants.sourceAprilTag, Constants.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
-		joystick.povLeft().whileTrue(drivetrain.alignWithPathPlanner(Constants.ampAprilTag, Constants.ampOffset).andThen(drivetrain.applyRequest(() -> brake)));
+			Alignment.sourceAprilTag, Alignment.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
+		// Left on the D-pad automatically aligns to the amp
+		joystick.povLeft().whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset).andThen(drivetrain.applyRequest(() -> brake)));
+		// Right on the D-pad automatically aligns to the stage
 		joystick.povRight().whileTrue(drivetrain.alignWithPathPlanner(
-			drivetrain.getState().Pose.nearest(Constants.stageAprilTags), Constants.stageOffset).andThen(drivetrain.applyRequest(() -> brake)));
+			drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset).andThen(drivetrain.applyRequest(() -> brake)));
 
+		// The menu button aligns using a PID
 		joystick.start().whileTrue(align);
 
     // Helps run the simulation
@@ -118,15 +124,6 @@ public class RobotContainer {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
-
-    // Will move the climber, joystick due to change
-    joystick.rightTrigger()
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(0.1), () -> climber.stopClimberMotors()));
-    joystick.leftTrigger()
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(-0.1), () -> climber.stopClimberMotors()));
-
-    // Test button for the manual setting of the pivot PID
-    joystick.y().onTrue(pivot.runOnce(() -> pivot.setPivotPosition("Default")));
 
     // Buttton 8 runs pivot towards battery
     operatorTestButton.button(8)
@@ -156,7 +153,7 @@ public class RobotContainer {
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
-		Constants.updateAprilTagTranslations();
+		Alignment.updateAprilTagTranslations();
     configureBindings();
     SmartDashboard.putData(dustpan);
     SmartDashboard.putData(rollers);

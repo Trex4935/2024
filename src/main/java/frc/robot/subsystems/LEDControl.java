@@ -158,7 +158,7 @@ public class LEDControl extends SubsystemBase {
     walkStartingPosition = walkStartingPosition % ledBufferLength;
   }
 
-	public void LEDSwitch() {
+	public void ledSwitch() {
 		// implementing LEDs into LED control
     switch (RobotContainer.noteLifecycle) {
 

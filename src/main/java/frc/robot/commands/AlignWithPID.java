@@ -19,7 +19,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.CommandSwerveDrivetrain;
-import frc.robot.Constants;
+import frc.robot.extension.Alignment;
 import frc.robot.extension.LimelightHelpers;
 
 public class AlignWithPID extends Command {
@@ -68,7 +68,7 @@ public class AlignWithPID extends Command {
 
 		resetPIDControllers();
 		if (useVision) {
-			int tagID = (int) LimelightHelpers.getFiducialID("limelight-forcefield");
+			int tagID = (int) LimelightHelpers.getFiducialID("limelight-battery");
 			Supplier<Pose2d> visionGoalPoseSupplier = (() -> getOffsetTarget(tagID));
 			Pose2d pose = visionGoalPoseSupplier.get();
 
@@ -78,7 +78,7 @@ public class AlignWithPID extends Command {
 		} else {
 			Pose2d pose = goalPoseSupplier.get();
 			if (useAllianceColor && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-				Translation2d transformedTranslation = new Translation2d(pose.getX(), Constants.fieldWidth - pose.getY());
+				Translation2d transformedTranslation = new Translation2d(pose.getX(), Alignment.fieldWidth - pose.getY());
 				Rotation2d transformedHeading = pose.getRotation();
 				pose = new Pose2d(transformedTranslation, transformedHeading);
 			}
@@ -159,7 +159,7 @@ public class AlignWithPID extends Command {
 	}
 
 	private Pose2d getOffsetTarget(int id) {
-		Pose2d tagPose = Constants.aprilTagLayout.getTagPose(id).get().toPose2d();
+		Pose2d tagPose = Alignment.aprilTagLayout.getTagPose(id).get().toPose2d();
 		// TODO: Find all offsets
 		switch (id) {
 			case 1:

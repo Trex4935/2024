@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.extension.Alignment;
 import frc.robot.extension.LimelightHelpers;
 
 /**
@@ -41,7 +42,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
-    Constants.updateAprilTagTranslations();
+    Alignment.updateAprilTagTranslations();
   }
 
   /**
