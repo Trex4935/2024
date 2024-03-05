@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
+import frc.robot.extension.NoteState;
 import frc.robot.extension.SparkMax;
 
 public class Climber extends SubsystemBase {
@@ -25,12 +27,26 @@ public class Climber extends SubsystemBase {
 
   /** Sets the left climber motor's speed */
   public void setClimberMotorOne(double speed) {
-    climberMotorRight.set(speed);
+    if (RobotContainer.noteLifecycle == NoteState.READYCLIMB)
+    {
+      climberMotorRight.set(speed);
+    }
+    if (RobotContainer.noteLifecycle == NoteState.CLIMB)
+    {
+      climberMotorRight.set(-speed);
+    }
   }
 
   /** Sets the right climber motor's speed */
   public void setClimberMotorTwo(double speed) {
-    climberMotorLeft.set(speed);
+    if (RobotContainer.noteLifecycle == NoteState.READYCLIMB)
+    {
+      climberMotorLeft.set(speed);
+    }
+    if (RobotContainer.noteLifecycle == NoteState.CLIMB)
+    {
+      climberMotorLeft.set(-speed);
+    }
   }
 
   /** Sets both climber motors */

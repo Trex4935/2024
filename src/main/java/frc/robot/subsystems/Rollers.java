@@ -188,7 +188,11 @@ public class Rollers extends SubsystemBase {
             break;
           }
         }
-
+        case TRAP:
+         if (Pivot.pivotAtAngle) {
+					setMagazine(0.9);
+				}
+        break;
         // Keeps rollers off for magazine and intake
       default:
         stopMagazine();

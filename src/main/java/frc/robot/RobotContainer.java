@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.AlignWithPID;
+// import frc.robot.commands.AlignWithPID;
 import frc.robot.extension.Alignment;
 import frc.robot.extension.NoteState;
 import frc.robot.generated.TunerConstants;
@@ -64,8 +64,8 @@ public class RobotContainer {
 
   // Alternate align command
   // TODO: Tune offset values
-  private final AlignWithPID align = new AlignWithPID(drivetrain,
-      () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset), false, false);
+  // private final AlignWithPID align = new AlignWithPID(drivetrain,
+  //    () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset), false, false);
 
   // Creates the autoChooser to use in the sendables
   private final SendableChooser<Command> autoChooser;
@@ -118,9 +118,12 @@ public class RobotContainer {
     joystick.povRight().whileTrue(drivetrain.alignWithPathPlanner(
         drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
+      
+    joystick.rightTrigger().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(0.5), () -> climber.stopClimberMotorOne()));
+    joystick.leftTrigger().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(0.5), () -> climber.stopClimberMotorTwo()));
 
     // The menu button aligns using a PID
-    joystick.start().whileTrue(align);
+    // joystick.start().whileTrue(align);
 
     // Helps run the simulation
     if (Utils.isSimulation()) {
@@ -135,9 +138,9 @@ public class RobotContainer {
     // Button 9 changes state to ground intake
     operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
 
-    // Button 10 runs pivot towards force field
+    // Button 10 changes state to trap
     operatorTestButton.button(10)
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(0.5), () -> climber.stopClimberMotors()));
+        .whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
 
     // Button 11 changes state to field
     operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField()));

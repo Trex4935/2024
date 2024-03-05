@@ -60,7 +60,8 @@ public class Pivot extends SubsystemBase {
     stateAngle.put("Amp", -36.0);
     stateAngle.put("Speaker", -40.0); // -25
     stateAngle.put("Source", -36.0);
-    stateAngle.put("Load", 0.0);
+    stateAngle.put("Climb", 0.0);
+    stateAngle.put("Trap", 0.0);
 
   }
 
@@ -127,6 +128,15 @@ public class Pivot extends SubsystemBase {
         setPivotPosition("Source");
         break;
       // Default Position of the Shooter angled at 180 degrees approximately
+      case TRAP:
+        setPivotPosition("Trap");
+        break;
+      case READYCLIMB:
+        setPivotPosition("Default");
+        break;
+      case CLIMB:
+        setPivotPosition("Climb");
+        break;
       default:
         // turns all the motors off
         setPivotPosition("Default");
