@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-// import frc.robot.commands.AlignWithPID;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.AlignWithPID;
 import frc.robot.extension.Alignment;
 import frc.robot.extension.NoteState;
 import frc.robot.generated.TunerConstants;
@@ -133,7 +134,7 @@ public class RobotContainer {
 
     // Buttton 8 runs pivot towards battery
     operatorTestButton.button(8)
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(-0.5), () -> climber.stopClimberMotors()));
+        .whileTrue(pivot.run(() -> pivot.manualPivotForward()));
 
     // Button 9 changes state to ground intake
     operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));

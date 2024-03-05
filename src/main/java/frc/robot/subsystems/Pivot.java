@@ -32,8 +32,11 @@ public class Pivot extends SubsystemBase {
   // Initializes a duty cycle encoder
   RelativeEncoder relativeEncoder;
 
-	// Initializes the pivot motor's PID
-	SparkPIDController pivotPID;
+  // Initializes the pivot motor's PID
+  SparkPIDController pivotPID;
+
+  // offset
+  double offsetAngle = 0.0;
 
   // Makes a Hash Map for the Pivot State Machine
   private HashMap<String, Double> stateAngle;
@@ -43,8 +46,8 @@ public class Pivot extends SubsystemBase {
   public Pivot() {
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
-		pivotPID = pivotMotor.getPIDController();
-		SparkMax.configPIDforPositionControl(pivotPID, 0.1, 0, 0, 0, 0, -0.3, 0.3);
+    pivotPID = pivotMotor.getPIDController();
+    SparkMax.configPIDforPositionControl(pivotPID, 0.1, 0, 0, 0, 0, -0.3, 0.3);
 
     // News up the relative encoder and configs it to the PID
     relativeEncoder = pivotMotor.getEncoder();
@@ -95,12 +98,25 @@ public class Pivot extends SubsystemBase {
 
   // Manual movement for the PID
   public void setPivotPosition(String desiredPosition) {
-    double targetAngle = stateAngle.get(desiredPosition);
+    double targetAngle = stateAngle.get(desiredPosition) + offsetAngle;
     pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
     pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.2);
 
     // System.out.println("TA: " + targetAngle);
     // testLimitSwitch();
+  }
+
+  public void manualPivotForward() {
+    offsetAngle = offsetAngle + 0.5;
+  }
+
+  public void manualPivotBackward() {
+    offsetAngle = offsetAngle - 0.5;
+  }
+
+  public void resetPivotOffset() {
+    offsetAngle = 0;
+
   }
 
   /** Stops the pivot motor */
