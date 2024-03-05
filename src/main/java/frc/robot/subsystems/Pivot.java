@@ -21,7 +21,6 @@ import frc.robot.extension.Helper;
 // TODO: Finish cleanup after pivot tuning
 public class Pivot extends SubsystemBase {
   // Creates two new limit switches
-  double zeroRead;
   SparkLimitSwitch batteryLimitSwitch, forceFieldLimitSwitch;
   boolean currentLimitSwitch = false;
   boolean previousLimitSwitch = true;
@@ -79,15 +78,10 @@ public class Pivot extends SubsystemBase {
 
   // Checks to see if the speed is at our target speed with limit switch??
   public boolean testLimitSwitch(double speed) {
-    if (speed < 0 && batteryLimitSwitch.isPressed()) {
-      // System.out.println("Forward Pivot");
-      zeroRead = relativeEncoder.getPosition();
-      return true;
+    if ((speed < 0 && batteryLimitSwitch.isPressed()) || (speed > 0 && forceFieldLimitSwitch.isPressed())) {
+    	return true;
     }
-    if (speed > 0 && forceFieldLimitSwitch.isPressed()) {
-      // System.out.println("Reverse Pivot");
-      return true;
-    }
+
     currentLimitSwitch = batteryLimitSwitch.isPressed();
     if (Helper.detectFallingRisingEdge(previousLimitSwitch, currentLimitSwitch, true)) {
       relativeEncoder.setPosition(-55);
@@ -101,12 +95,10 @@ public class Pivot extends SubsystemBase {
     double targetAngle = stateAngle.get(desiredPosition) + offsetAngle;
     pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
     pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.2);
-
-    // System.out.println("TA: " + targetAngle);
-    // testLimitSwitch();
   }
 
-  public void manualPivotForward() {
+	// None of the code below was being used
+ /*  public void manualPivotForward() {
     offsetAngle = offsetAngle + 0.5;
   }
 
@@ -117,7 +109,7 @@ public class Pivot extends SubsystemBase {
   public void resetPivotOffset() {
     offsetAngle = 0;
 
-  }
+  } */
 
   /** Stops the pivot motor */
   public void stopPivotMotor() {
@@ -166,6 +158,7 @@ public class Pivot extends SubsystemBase {
     builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
     builder.addBooleanProperty("Force Field Limit Switch", () -> forceFieldLimitSwitch.isPressed(), null);
     builder.addBooleanProperty("Battery Limit Switch", () -> batteryLimitSwitch.isPressed(), null);
+    builder.addBooleanProperty("Pivot At Angle", () -> pivotAtAngle, null);
   }
 
   @Override
