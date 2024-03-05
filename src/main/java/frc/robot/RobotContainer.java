@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.AlignWithPID;
 import frc.robot.extension.Alignment;
 import frc.robot.extension.NoteState;
 import frc.robot.generated.TunerConstants;
@@ -28,6 +27,7 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Rollers;
 import frc.robot.subsystems.LEDControl;
+// import frc.robot.commands.AlignWithPID;
 
 public class RobotContainer {
 
@@ -66,7 +66,7 @@ public class RobotContainer {
   // Alternate align command
   // TODO: Tune offset values
   // private final AlignWithPID align = new AlignWithPID(drivetrain,
-  //    () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset), false, false);
+ //    () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset), false, false);
 
   // Creates the autoChooser to use in the sendables
   private final SendableChooser<Command> autoChooser;

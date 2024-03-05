@@ -84,8 +84,10 @@ public class Shooter extends SubsystemBase {
         setShooters(-0.25, -0.25);
         break;
       case TRAP:
+      if(Pivot.pivotAtAngle){
         setShooters(.25, 0.25);
-         break;
+        break;
+      }
       // Default Position of the Shooter angled at 180 degrees approximately
       default:
         // turns all the motors off
