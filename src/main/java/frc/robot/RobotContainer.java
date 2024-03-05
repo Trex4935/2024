@@ -134,10 +134,10 @@ public class RobotContainer {
 
     // Buttton 8 runs pivot towards battery
     operatorTestButton.button(8)
-        .whileTrue(pivot.run(() -> pivot.manualPivotForward()));
+        .whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
 
     // Button 9 changes state to ground intake
-    operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
+    operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.READYCLIMB)));
 
     // Button 10 changes state to trap
     operatorTestButton.button(10)
