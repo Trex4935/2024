@@ -19,6 +19,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -84,38 +85,27 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     // swerveAngleFXConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
     private void configurePathPlanner() {
-        double driveBaseRadius = 0;
-        for (var moduleLocation : m_moduleLocations) {
-            driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
-        }
+			double driveBaseRadius = 0;
+			for (var moduleLocation : m_moduleLocations) {
+				driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
+			}
 
-        AutoBuilder.configureHolonomic(
-                () -> this.getState().Pose, // Supplier of current robot pose
-                this::seedFieldRelative, // Consumer for seeding pose against auto
-                this::getCurrentRobotChassisSpeeds,
-                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
-                                                                             // robot
-                new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                        new PIDConstants(10, 0, 0),
-                        TunerConstants.kSpeedAt12VoltsMps,
-                        driveBaseRadius,
-                        new ReplanningConfig()),
-                () -> true, // Change this if the path needs to be flipped on red vs blue
-                this); // Subsystem for requirements
-        /*
-         * {
-         * // Boolean supplier that controls when the path will be mirrored for the red
-         * alliance
-         * // This will flip the path being followed to the red side of the field.
-         * // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-         * 
-         * var alliance = DriverStation.getAlliance();
-         * if (alliance.isPresent()) {
-         * return alliance.get() == DriverStation.Alliance.Red;
-         * }
-         * return false;
-         * },
-         */ // this // Reference to this subsystem to set requirements
+			AutoBuilder.configureHolonomic(
+					() -> this.getState().Pose, // Supplier of current robot pose
+					this::seedFieldRelative, // Consumer for seeding pose against auto
+					this::getCurrentRobotChassisSpeeds,
+					(speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
+																																				// robot
+					new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
+							new PIDConstants(10, 0, 0),
+							TunerConstants.kSpeedAt12VoltsMps,
+							driveBaseRadius,
+							new ReplanningConfig()),
+					() -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red, // Assume the path needs to be
+																																										// flipped for Red vs Blue, this is
+																																										// normally the case
+					this); // Subsystem for requirements
+        
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {

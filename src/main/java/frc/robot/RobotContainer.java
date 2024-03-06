@@ -106,16 +106,16 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     // Up on the D-pad automatically aligns to the speaker
-    joystick.povUp().whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
+    joystick.povUp().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
     // Down on the D-pad automatically aligns to the source
-    joystick.povDown().whileTrue(drivetrain.alignWithPathPlanner(
+    joystick.povDown().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
         Alignment.sourceAprilTag, Alignment.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
     // Left on the D-pad automatically aligns to the amp
-    joystick.povLeft().whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
+    joystick.povLeft().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
     // Right on the D-pad automatically aligns to the stage
-    joystick.povRight().whileTrue(drivetrain.alignWithPathPlanner(
+    joystick.povRight().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
         drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
       
