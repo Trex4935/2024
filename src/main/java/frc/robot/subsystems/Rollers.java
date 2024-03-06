@@ -19,7 +19,6 @@ public class Rollers extends SubsystemBase {
   // Creating Sensors; ID's shown in IDguide.md
   public FlippedDIO magneticFlap, shooterSmacna;
   public DigitalInput dustpanSmacna, storageButton;
-  boolean currentIntakeSmacnaState, previousIntakeSmacnaState;
 
   Timer timer;
 
@@ -185,9 +184,9 @@ public class Rollers extends SubsystemBase {
           if (timer.hasElapsed(7)) {
             RobotContainer.noteLifecycle = NoteState.FIELD;
             timer.reset();
-            break;
           }
         }
+				break;
         case TRAP:
          if (Pivot.pivotAtAngle) {
 					setMagazine(0.9);
@@ -199,17 +198,17 @@ public class Rollers extends SubsystemBase {
         stopIntake();
 
     }
-    // System.out.println(RobotContainer.noteLifecycle.toString());
-    // System.out.println("DP Smacna: " + dustpanSmacna.get());
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
+    builder.addStringProperty("currentNoteLifeCycle", () -> RobotContainer.noteLifecycle.toString(), null);
     builder.addBooleanProperty("magazineSmacna", () -> magneticFlap.get(), null);
     builder.addBooleanProperty("dustpanSmacna", () -> dustpanSmacna.get(), null);
     builder.addBooleanProperty("shooterSmacna", () -> shooterSmacna.get(), null);
     builder.addBooleanProperty("storageButton", () -> storageButton.get(), null);
-    builder.addStringProperty("currentNoteLifeCycle", () -> RobotContainer.noteLifecycle.toString(), null);
+		builder.addDoubleProperty("Intake Motor Speed", () -> intake.get(), null);
+		builder.addDoubleProperty("Magazine Motor Speed", () -> magazine.get(), null);
   }
 
   @Override

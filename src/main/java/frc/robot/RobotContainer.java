@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.extension.Alignment;
 import frc.robot.extension.NoteState;
 import frc.robot.generated.TunerConstants;
@@ -107,23 +106,24 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     // Up on the D-pad automatically aligns to the speaker
-    joystick.povUp().whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
+    joystick.povUp().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
     // Down on the D-pad automatically aligns to the source
-    joystick.povDown().whileTrue(drivetrain.alignWithPathPlanner(
+    joystick.povDown().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
         Alignment.sourceAprilTag, Alignment.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
     // Left on the D-pad automatically aligns to the amp
-    joystick.povLeft().whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
+    joystick.povLeft().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
     // Right on the D-pad automatically aligns to the stage
-    joystick.povRight().whileTrue(drivetrain.alignWithPathPlanner(
+    joystick.povRight().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
         drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
       
-    joystick.rightTrigger().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(0.5), () -> climber.stopClimberMotorOne()));
-    joystick.leftTrigger().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(0.5), () -> climber.stopClimberMotorTwo()));
+		// Do not double-map buttons :)
+    joystick.start().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(0.5), () -> climber.stopClimberMotorOne()));
+    joystick.back().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(0.5), () -> climber.stopClimberMotorTwo()));
 
-    // The menu button aligns using a PID
+    // The menu button will align using a PID
     // joystick.start().whileTrue(align);
 
     // Helps run the simulation
@@ -140,8 +140,7 @@ public class RobotContainer {
     operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.READYCLIMB)));
 
     // Button 10 changes state to trap
-    operatorTestButton.button(10)
-        .whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
+    operatorTestButton.button(10).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
 
     // Button 11 changes state to field
     operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField()));
@@ -165,8 +164,6 @@ public class RobotContainer {
     SmartDashboard.putData(dustpan);
     SmartDashboard.putData(rollers);
     SmartDashboard.putData(pivot);
-    // TODO: Fix sendable for note life cycle
-    // SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);

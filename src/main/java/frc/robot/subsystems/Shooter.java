@@ -28,13 +28,11 @@ public class Shooter extends SubsystemBase {
   /** Sets the left shooting motor's speed */
   public void setShootingMotorLeft(double speed) {
     shootingMotorLeft.set(speed);
-    System.out.println("Shooting motor left");
   }
 
   /** Sets the right shooting motor's speed */
   public void setShootingMotorRight(double speed) {
     shootingMotorRight.set(speed);
-    System.out.println("Shooting motor right");
   }
 
   /** makes motors spin YIPPIE!! */
@@ -63,10 +61,6 @@ public class Shooter extends SubsystemBase {
   public void shooterSwitch() {
     switch (RobotContainer.noteLifecycle) {
 
-      // Note is moving to the amp drop position
-      case AMPLOADING:
-        setShooters(0, 0);
-        break;
       // Note is dropped into the amp
       case AMP:
         setShooters(0.25, 0.25);
@@ -85,10 +79,9 @@ public class Shooter extends SubsystemBase {
         break;
       case TRAP:
       if(Pivot.pivotAtAngle){
-        setShooters(.25, 0.25);
+        setShooters(0.25, 0.25);
         break;
       }
-      // Default Position of the Shooter angled at 180 degrees approximately
       default:
         // turns all the motors off
         stopShootingMotors();
@@ -97,9 +90,9 @@ public class Shooter extends SubsystemBase {
 
   }
 
-  // TODO: Add any sendables we want from Shooter
   public void initSendable(SendableBuilder builder) {
-
+		builder.addDoubleProperty("Left Shooter Motor Speed", () -> shootingMotorLeft.get(), null);
+		builder.addDoubleProperty("Right Shooter Motor Speed", () -> shootingMotorRight.get(), null);
   }
 
   @Override
