@@ -18,7 +18,7 @@ import frc.robot.RobotContainer;
 import frc.robot.extension.SparkMax;
 import frc.robot.extension.Helper;
 
-// TODO: Finish cleanup after pivot tuning
+
 public class Pivot extends SubsystemBase {
   // Creates two new limit switches
   SparkLimitSwitch batteryLimitSwitch, forceFieldLimitSwitch;

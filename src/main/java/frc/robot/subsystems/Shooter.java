@@ -90,9 +90,9 @@ public class Shooter extends SubsystemBase {
 
   }
 
-  // TODO: Add any sendables we want from Shooter
   public void initSendable(SendableBuilder builder) {
-
+		builder.addDoubleProperty("Left Shooter Motor Speed", () -> shootingMotorLeft.get(), null);
+		builder.addDoubleProperty("Right Shooter Motor Speed", () -> shootingMotorRight.get(), null);
   }
 
   @Override

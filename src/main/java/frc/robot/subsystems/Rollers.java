@@ -202,11 +202,13 @@ public class Rollers extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
+    builder.addStringProperty("currentNoteLifeCycle", () -> RobotContainer.noteLifecycle.toString(), null);
     builder.addBooleanProperty("magazineSmacna", () -> magneticFlap.get(), null);
     builder.addBooleanProperty("dustpanSmacna", () -> dustpanSmacna.get(), null);
     builder.addBooleanProperty("shooterSmacna", () -> shooterSmacna.get(), null);
     builder.addBooleanProperty("storageButton", () -> storageButton.get(), null);
-    builder.addStringProperty("currentNoteLifeCycle", () -> RobotContainer.noteLifecycle.toString(), null);
+		builder.addDoubleProperty("Intake Motor Speed", () -> intake.get(), null);
+		builder.addDoubleProperty("Magazine Motor Speed", () -> magazine.get(), null);
   }
 
   @Override

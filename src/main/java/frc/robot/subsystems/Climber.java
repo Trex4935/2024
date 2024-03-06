@@ -71,9 +71,9 @@ public class Climber extends SubsystemBase {
     climberMotorLeft.stopMotor();
   }
 
-  // TODO: Add any sendables we want from Climber
   public void initSendable(SendableBuilder builder) {
-
+		builder.addDoubleProperty("Left Climber Encoder Position", () -> climberMotorLeft.getEncoder().getPosition(), null);
+		builder.addDoubleProperty("Right Climber Encoder Position", () -> climberMotorRight.getEncoder().getPosition(), null);
   }
 
   @Override
