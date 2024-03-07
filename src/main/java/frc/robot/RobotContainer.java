@@ -134,34 +134,43 @@ public class RobotContainer {
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    // changes state to Eject
-    operatorTestButton.button(6).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
+		// TODO: Change button numberings and reorder as necessary
+		// Button 1 manually moves the pivot backwards
+    buttonBox.button(1).onTrue(rollers.runOnce(() -> pivot.manualPivotBackward()));
 
-    // changes state to Amp
-    operatorTestButton.button(7).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
+		// Button 3 manually moves the pivot forward
+    buttonBox.button(3).onTrue(rollers.runOnce(() -> pivot.manualPivotForward()));
 
-		//TODO: Change button numberings and reorder as necessary
-    // Buttton # changes state to climb
-    buttonBox.button(8).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
+    // Button 5 changes state to ready-to-climb
+    buttonBox.button(5).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
 
-    // Button # changes state to ready-to-climb
-    buttonBox.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.READYCLIMB)));
+    // Button 6 changes state to climb
+    buttonBox.button(6).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
+
+    // Button 7 changes state to ready-to-climb
+    buttonBox.button(7).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.READYCLIMB)));
+
+    // Button 8 changes state to eject
+    buttonBox.button(8).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
+
+    // Button 9 changes state to intake
+    buttonBox.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
 
     // Button # changes state to trap
-    buttonBox.button(10).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
+    buttonBox.button(10).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
 
     // Button # changes state to field
     buttonBox.button(11).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
 
-    // Button # changes state to speaker
+    // Button 12 changes state to field
+    buttonBox.button(12).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
+
+    // Button 13 changes state to speaker
     buttonBox.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
 
-		
-    // Button # changes state to source
-    buttonBox.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
+    // Button 14 changes state to source
+    buttonBox.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
 
-    // Button # changes state to eject
-    buttonBox.button(15).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
 
     // Button # manually moves the pivot forward
     // buttonBox.button(15).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
