@@ -75,11 +75,6 @@ public class Rollers extends SubsystemBase {
     RobotContainer.noteLifecycle = noteState;
   }
 
-  /** Sets the note state to Field, its default state */
-  public void returnToField() {
-    RobotContainer.noteLifecycle = NoteState.FIELD;
-  }
-
   /** Switches the state that the rollers operate in */
   public void rollerSwitch() {
     boolean currentDustpanSmacnaState = false;

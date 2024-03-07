@@ -135,7 +135,6 @@ public class Pivot extends SubsystemBase {
       case SOURCE:
         setPivotPosition("Source");
         break;
-      // Default Position of the Shooter angled at 180 degrees approximately
       case TRAP:
         setPivotPosition("Trap");
         break;
@@ -146,7 +145,6 @@ public class Pivot extends SubsystemBase {
         setPivotPosition("Climb");
         break;
       default:
-        // turns all the motors off
         setPivotPosition("Default");
     }
 
