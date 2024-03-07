@@ -93,7 +93,7 @@ public class RobotContainer {
         ));
 
     // Makes a button that slows the speed down when needed
-    joystick.leftTrigger().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
+    joystick.leftBumper().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
 
     // A button acts as a brake, and turns all wheels inward
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -104,7 +104,7 @@ public class RobotContainer {
             () -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
     // reset the field-centric heading on left bumper press
-    joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    joystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     // Up on the D-pad automatically aligns to the speaker
     joystick.povUp().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
@@ -132,22 +132,26 @@ public class RobotContainer {
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
+    // changes state to Eject
+    operatorTestButton.button(6).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
+
+    // changes state to Amp
+    operatorTestButton.button(7).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
+
     // Buttton 8 runs pivot towards battery
-    operatorTestButton.button(8)
-        .whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
+    operatorTestButton.button(8).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
 
     // Button 9 changes state to ground intake
     operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.READYCLIMB)));
 
     // Button 10 changes state to trap
-    operatorTestButton.button(10).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
+    operatorTestButton.button(10).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
 
     // Button 11 changes state to field
-    operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField()));
+    operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
 
     // Button 12 runs magazine
-    operatorTestButton.button(12)
-        .whileTrue(pivot.runEnd(() -> rollers.setMagazine(0.1), () -> rollers.stopMagazine()));
+    operatorTestButton.button(12).onTrue(pivot.runEnd(() -> rollers.setMagazine(0.1), () -> rollers.stopMagazine()));
 
     // Button 13 changes state to speaker
     operatorTestButton.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
