@@ -47,8 +47,7 @@ public class RobotContainer {
 
   // Setting up bindings for necessary control of the swerve drive platform
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
-  private final CommandXboxController joystickTest = new CommandXboxController(2); // My joystick
-
+  private final CommandXboxController altJoystick = new CommandXboxController(2);
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
@@ -121,9 +120,8 @@ public class RobotContainer {
         drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
       
-		// Do not double-map buttons :)
-    joystick.start().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(0.5), () -> climber.stopClimberMotorOne()));
-    joystick.back().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(0.5), () -> climber.stopClimberMotorTwo()));
+    joystick.back().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(0.1), () -> climber.stopClimberMotorOne()));
+    joystick.start().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(-0.1), () -> climber.stopClimberMotorTwo()));
 
     // The menu button will align using a PID
     // joystick.start().whileTrue(align);
@@ -161,7 +159,11 @@ public class RobotContainer {
     // Button 14 changes state to source
     operatorTestButton.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
 
-    joystickTest.a().onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
+    altJoystick.a().onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
+    altJoystick.b().onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
+    altJoystick.y().onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
+    altJoystick.x().onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
+    altJoystick.rightTrigger().onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
 
   }
 
