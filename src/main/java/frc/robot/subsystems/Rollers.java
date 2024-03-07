@@ -75,11 +75,6 @@ public class Rollers extends SubsystemBase {
     RobotContainer.noteLifecycle = noteState;
   }
 
-  /** Sets the note state to Field, its default state */
-  public void returnToField() {
-    RobotContainer.noteLifecycle = NoteState.FIELD;
-  }
-
   /** Switches the state that the rollers operate in */
   public void rollerSwitch() {
     boolean currentDustpanSmacnaState = false;
@@ -138,16 +133,6 @@ public class Rollers extends SubsystemBase {
       case STORAGE:
         stopIntake();
         stopMagazine();
-        break;
-
-      // AMPLOADING STATE: Turns on both low and high rollers
-      case AMPLOADING:
-        // Turns low roller on
-        setMagazine(0.1);
-        setIntake(0.1);
-        // If the magnetic flap moves away from magnet -> Amp state
-        currentDustpanSmacnaState = magneticFlap.get();
-        previousDustpanSmacnaState = currentDustpanSmacnaState;
         break;
 
       // SPEAKER STATE: Turns on both high and low rollers and returns to Field state
