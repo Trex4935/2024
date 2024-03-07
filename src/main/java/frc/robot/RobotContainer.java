@@ -46,7 +46,7 @@ public class RobotContainer {
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   // Setting up bindings for necessary control of the swerve drive platform
-  private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
+  private final CommandXboxController driverJoystick = new CommandXboxController(0); // My joystick
   private final CommandXboxController altJoystick = new CommandXboxController(2);
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
@@ -72,7 +72,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   // Setting up the Button Box
-  private final CommandGenericHID operatorTestButton = new CommandGenericHID(1);
+  private final CommandGenericHID buttonBox = new CommandGenericHID(1);
 
   private void configureBindings() {
 
@@ -86,42 +86,44 @@ public class RobotContainer {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
         // Driving with joysticks
-        drivetrain.applyRequest(() -> drive.withVelocityX(joystick.getLeftY() * MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX(driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
                                                                                           // Joystick
-            .withVelocityY(joystick.getLeftX() * MaxSpeed) // Drive left with Joystick
-            .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive right with Joystick
+            .withVelocityY(driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
+            .withRotationalRate(-driverJoystick.getRightX() * MaxAngularRate) // Drive right with Joystick
         ));
 
     // Makes a button that slows the speed down when needed
-    joystick.leftBumper().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
+    driverJoystick.leftTrigger().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
 
     // A button acts as a brake, and turns all wheels inward
-    joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    driverJoystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
     // B button saves the current state of the wheels, and when you let go, it
     // reverts back to them.
-    joystick.b().whileTrue(drivetrain
+    driverJoystick.b().whileTrue(drivetrain
         .applyRequest(
-            () -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+            () -> point.withModuleDirection(new Rotation2d(-driverJoystick.getLeftY(), -driverJoystick.getLeftX()))));
 
     // reset the field-centric heading on left bumper press
-    joystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    driverJoystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
+		// All alignment commands require the right trigger to function
     // Up on the D-pad automatically aligns to the speaker
-    joystick.povUp().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
+    driverJoystick.povUp().and(driverJoystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
+
     // Down on the D-pad automatically aligns to the source
-    joystick.povDown().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
+    driverJoystick.povDown().and(driverJoystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
         Alignment.sourceAprilTag, Alignment.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
+				
     // Left on the D-pad automatically aligns to the amp
-    joystick.povLeft().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
+    driverJoystick.povLeft().and(driverJoystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
+				
     // Right on the D-pad automatically aligns to the stage
-    joystick.povRight().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
+    driverJoystick.povRight().and(driverJoystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
         drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
       
-    joystick.back().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(0.1), () -> climber.stopClimberMotorOne()));
-    joystick.start().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(-0.1), () -> climber.stopClimberMotorTwo()));
 
     // The menu button will align using a PID
     // joystick.start().whileTrue(align);
@@ -132,38 +134,49 @@ public class RobotContainer {
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    // changes state to Eject
-    operatorTestButton.button(6).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
+		// TODO: Change button numberings and reorder as necessary
+		// Button 1 manually moves the pivot backwards
+    buttonBox.button(1).onTrue(rollers.runOnce(() -> pivot.manualPivotBackward()));
 
-    // changes state to Amp
-    operatorTestButton.button(7).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
+		// Button 3 manually moves the pivot forward
+    buttonBox.button(3).onTrue(rollers.runOnce(() -> pivot.manualPivotForward()));
 
-    // Buttton 8 runs pivot towards battery
-    operatorTestButton.button(8).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
+    // Button 5 changes state to ready-to-climb
+    buttonBox.button(5).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
 
-    // Button 9 changes state to ground intake
-    operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.READYCLIMB)));
+    // Button 6 changes state to climb
+    buttonBox.button(6).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
 
-    // Button 10 changes state to trap
-    operatorTestButton.button(10).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
+    // Button 7 changes state to ready-to-climb
+    buttonBox.button(7).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.READYCLIMB)));
 
-    // Button 11 changes state to field
-    operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
+    // Button 8 changes state to eject
+    buttonBox.button(8).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
 
-    // Button 12 runs magazine
-    operatorTestButton.button(12).onTrue(pivot.runEnd(() -> rollers.setMagazine(0.1), () -> rollers.stopMagazine()));
+    // Button 9 changes state to intake
+    buttonBox.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
+
+    // Button # changes state to trap
+    buttonBox.button(10).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
+
+    // Button # changes state to field
+    buttonBox.button(11).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
+
+    // Button 12 changes state to field
+    buttonBox.button(12).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
 
     // Button 13 changes state to speaker
-    operatorTestButton.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
+    buttonBox.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
 
     // Button 14 changes state to source
-    operatorTestButton.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
+    buttonBox.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
 
-    altJoystick.a().onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
-    altJoystick.b().onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
-    altJoystick.y().onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
-    altJoystick.x().onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
-    altJoystick.rightTrigger().onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
+
+    // Button # manually moves the pivot forward
+    // buttonBox.button(15).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
+
+    // Button # manually moves the pivot backward
+    // buttonBox.button(15).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
 
   }
 
@@ -174,6 +187,8 @@ public class RobotContainer {
     SmartDashboard.putData(dustpan);
     SmartDashboard.putData(rollers);
     SmartDashboard.putData(pivot);
+		SmartDashboard.putData(shooter);
+		SmartDashboard.putData(climber);
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
@@ -189,11 +204,6 @@ public class RobotContainer {
     // Makes a target pose
     Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
     return targetPose;
-  }
-
-  /** Returns the note state cycle */
-  public static NoteState getCycle() {
-    return noteLifecycle;
   }
 
   /** Runs autoChooser :) */

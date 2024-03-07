@@ -97,8 +97,7 @@ public class Pivot extends SubsystemBase {
     pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.4);
   }
 
-	// None of the code below was being used
- /*  public void manualPivotForward() {
+  public void manualPivotForward() {
     offsetAngle = offsetAngle + 0.5;
   }
 
@@ -109,7 +108,7 @@ public class Pivot extends SubsystemBase {
   public void resetPivotOffset() {
     offsetAngle = 0;
 
-  } */
+  }
 
   /** Stops the pivot motor */
   public void stopPivotMotor() {
@@ -131,7 +130,6 @@ public class Pivot extends SubsystemBase {
       case SOURCE:
         setPivotPosition("Source");
         break;
-      // Default Position of the Shooter angled at 180 degrees approximately
       case TRAP:
         setPivotPosition("Trap");
         break;
@@ -142,7 +140,6 @@ public class Pivot extends SubsystemBase {
         setPivotPosition("Climb");
         break;
       default:
-        // turns all the motors off
         setPivotPosition("Default");
     }
 
