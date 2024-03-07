@@ -163,47 +163,55 @@ public class LEDControl extends SubsystemBase {
     switch (RobotContainer.noteLifecycle) {
 
       // Refer to LED guide in extension to see what each state changes the LEDs to
-      case FIELD:
+      case FIELD: // Solid Orange
         solidLEDS(5, 255, 32);
         break;
 
-      case GROUNDINTAKE:
-        solidLEDS(0, 0, 32);
+      case GROUNDINTAKE: // Black for now
+        solidLEDS(0, 0, 0);
         break;
 
-      case SOURCE:
+      case SOURCE: // Flashing White
         flashLEDS(202, 95, 36, 50);
         break;
 
-      case GRABBED:
+      case GRABBED: // Flashing Orange
         flashLEDS(5, 255, 32, 50);
         break;
 
-      case CONTROL:
+      case CONTROL: // Flashing Orange
         flashLEDS(5, 255, 32, 50);
         break;
 
-      case STORAGE:
+      case STORAGE: // Solid Blue
         solidLEDS(250, 255, 32);
         break;
 
-      case SPEAKER:
+      case SPEAKER: // Solid Green
         solidLEDS(220, 255, 32);
         break;
 
-      case AMPLOADING:
-        solidLEDS(150, 255, 32);
-        break;
-
-      case AMP:
+      case AMP: // Flash Purple
         flashLEDS(150, 255, 32, 50);
         break;
 
-      case EJECT:
-        flashLEDS(1, 255, 32, 20);
+      case EJECT: // Flashing Red
+        flashLEDS(1, 255, 32, 25);
         break;
 
-      default:
+      case READYCLIMB: // Solid Pink
+        solidLEDS(175, 255, 32);
+        break;
+
+      case CLIMB: // Flash Pink
+        flashLEDS(175, 255, 32, 50);
+        break;
+
+      case TRAP: // Flash Green
+        flashLEDS(220, 255, 32, 50);
+        break;
+
+      default: // Solid Orange
         solidLEDS(5, 255, 32);
         break;
     }

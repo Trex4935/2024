@@ -120,10 +120,6 @@ public class Pivot extends SubsystemBase {
   public void pivotSwitch() {
     switch (RobotContainer.noteLifecycle) {
 
-      // Note is moving to the amp drop position
-      case AMPLOADING:
-        setPivotPosition("Default");
-        break;
       // Note is dropped into the amp
       case AMP:
         setPivotPosition("Amp");

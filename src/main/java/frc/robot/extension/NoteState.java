@@ -12,8 +12,7 @@ public enum NoteState {
     GRABBED, // Note has been intaked, Intake sensor sees note
     CONTROL, // Note is inside robot, intake sensor no longer sees note
     STORAGE, // Note is stationary inside robot, magazine sensor sees note
-    SPEAKER, // Note is shot out towards speaker
-    AMPLOADING, // Note is moving to the amp drop position
+    SPEAKER, // Note is shot out towards speaker 
     AMP, // Note is dropped into the amp
     EJECT,
     TRAP,
