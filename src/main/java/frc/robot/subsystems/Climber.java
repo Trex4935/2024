@@ -35,6 +35,7 @@ public class Climber extends SubsystemBase {
     {
       climberMotorRight.set(-speed);
     }
+    climberMotorRight.set(speed);
   }
 
   /** Sets the right climber motor's speed */
@@ -47,6 +48,7 @@ public class Climber extends SubsystemBase {
     {
       climberMotorLeft.set(-speed);
     }
+    climberMotorRight.set(speed);
   }
 
   /** Sets both climber motors */

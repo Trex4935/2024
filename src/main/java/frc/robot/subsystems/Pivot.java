@@ -60,7 +60,7 @@ public class Pivot extends SubsystemBase {
     stateAngle = new HashMap<String, Double>();
     stateAngle.put("Default", -55.0);
     stateAngle.put("Amp", -36.0);
-    stateAngle.put("Speaker", -40.0); // -25
+    stateAngle.put("Speaker", -20.0); // -25
     stateAngle.put("Source", -36.0);
     stateAngle.put("Climb", 0.0);
     stateAngle.put("Trap", 0.0);
@@ -94,7 +94,7 @@ public class Pivot extends SubsystemBase {
   public void setPivotPosition(String desiredPosition) {
     double targetAngle = stateAngle.get(desiredPosition) + offsetAngle;
     pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
-    pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.2);
+    pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.4);
   }
 
 	// None of the code below was being used
