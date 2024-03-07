@@ -135,16 +135,6 @@ public class Rollers extends SubsystemBase {
         stopMagazine();
         break;
 
-      // AMPLOADING STATE: Turns on both low and high rollers
-      case AMPLOADING:
-        // Turns low roller on
-        setMagazine(0.1);
-        setIntake(0.1);
-        // If the magnetic flap moves away from magnet -> Amp state
-        currentDustpanSmacnaState = magneticFlap.get();
-        previousDustpanSmacnaState = currentDustpanSmacnaState;
-        break;
-
       // SPEAKER STATE: Turns on both high and low rollers and returns to Field state
       // after 5 seconds
       case SPEAKER:

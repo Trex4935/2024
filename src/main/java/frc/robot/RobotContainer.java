@@ -47,6 +47,7 @@ public class RobotContainer {
 
   // Setting up bindings for necessary control of the swerve drive platform
   private final CommandXboxController driverJoystick = new CommandXboxController(0); // My joystick
+  private final CommandXboxController altJoystick = new CommandXboxController(2);
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
@@ -133,6 +134,12 @@ public class RobotContainer {
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
+    // changes state to Eject
+    operatorTestButton.button(6).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
+
+    // changes state to Amp
+    operatorTestButton.button(7).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
+
 		//TODO: Change button numberings and reorder as necessary
     // Buttton # changes state to climb
     buttonBox.button(8).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
@@ -149,6 +156,7 @@ public class RobotContainer {
     // Button # changes state to speaker
     buttonBox.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
 
+		
     // Button # changes state to source
     buttonBox.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
 

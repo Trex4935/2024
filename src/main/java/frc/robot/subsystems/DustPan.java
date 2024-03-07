@@ -71,7 +71,7 @@ public class DustPan extends SubsystemBase {
 
 			default:
 				// Turns Solenoid off in all other cases
-				dustPanDown();
+				dustPanUp();
 		}
 	}
 		
