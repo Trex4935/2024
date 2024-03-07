@@ -68,7 +68,7 @@ public class Shooter extends SubsystemBase {
       // Note is shot out towards speaker
       case SPEAKER:
         if (Pivot.pivotAtAngle) {
-          setShooters(0.25, 0.25);
+          setShooters(0.7, 0.7);
         }
         break;
       case EJECT:
@@ -78,10 +78,10 @@ public class Shooter extends SubsystemBase {
         setShooters(-0.25, -0.25);
         break;
       case TRAP:
-      if(Pivot.pivotAtAngle){
-        setShooters(0.25, 0.25);
-        break;
-      }
+        if (Pivot.pivotAtAngle) {
+          setShooters(0.25, 0.25);
+          break;
+        }
       default:
         // turns all the motors off
         stopShootingMotors();
@@ -91,8 +91,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public void initSendable(SendableBuilder builder) {
-		builder.addDoubleProperty("Left Shooter Motor Speed", () -> shootingMotorLeft.get(), null);
-		builder.addDoubleProperty("Right Shooter Motor Speed", () -> shootingMotorRight.get(), null);
+    builder.addDoubleProperty("Left Shooter Motor Speed", () -> shootingMotorLeft.get(), null);
+    builder.addDoubleProperty("Right Shooter Motor Speed", () -> shootingMotorRight.get(), null);
   }
 
   @Override

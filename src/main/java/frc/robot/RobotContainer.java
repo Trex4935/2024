@@ -8,6 +8,8 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.Autos;
 import frc.robot.extension.Alignment;
 import frc.robot.extension.NoteState;
 import frc.robot.generated.TunerConstants;
@@ -65,7 +68,8 @@ public class RobotContainer {
   // Alternate align command
   // TODO: Tune offset values
   // private final AlignWithPID align = new AlignWithPID(drivetrain,
- //    () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset), false, false);
+  // () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset),
+  // false, false);
 
   // Creates the autoChooser to use in the sendables
   private final SendableChooser<Command> autoChooser;
@@ -106,22 +110,26 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     // Up on the D-pad automatically aligns to the speaker
-    joystick.povUp().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
-        .andThen(drivetrain.applyRequest(() -> brake)));
+    joystick.povUp().and(joystick.rightTrigger())
+        .whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
+            .andThen(drivetrain.applyRequest(() -> brake)));
     // Down on the D-pad automatically aligns to the source
     joystick.povDown().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
         Alignment.sourceAprilTag, Alignment.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
     // Left on the D-pad automatically aligns to the amp
-    joystick.povLeft().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
-        .andThen(drivetrain.applyRequest(() -> brake)));
+    joystick.povLeft().and(joystick.rightTrigger())
+        .whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
+            .andThen(drivetrain.applyRequest(() -> brake)));
     // Right on the D-pad automatically aligns to the stage
     joystick.povRight().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
         drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
-      
-		// Do not double-map buttons :)
-    joystick.start().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(0.5), () -> climber.stopClimberMotorOne()));
-    joystick.back().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(0.5), () -> climber.stopClimberMotorTwo()));
+
+    // Do not double-map buttons :)
+    joystick.start()
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(0.5), () -> climber.stopClimberMotorOne()));
+    joystick.back()
+        .whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(0.5), () -> climber.stopClimberMotorTwo()));
 
     // The menu button will align using a PID
     // joystick.start().whileTrue(align);
@@ -159,6 +167,10 @@ public class RobotContainer {
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
+
+    NamedCommands.registerCommand("Speaker", Autos.speakerCommand);
+    NamedCommands.registerCommand("Field", Autos.fieldCommand);
+
     Alignment.updateAprilTagTranslations();
     configureBindings();
     SmartDashboard.putData(dustpan);

@@ -14,13 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "shootNote"
+            "name": "Speaker"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 2.0
+            "name": "Field"
           }
         },
         {
@@ -32,6 +32,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "1 Piece Autos",
   "choreoAuto": false
 }
