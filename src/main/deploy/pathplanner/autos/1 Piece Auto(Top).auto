@@ -2,25 +2,31 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4525663045660369,
-      "y": 5.54159552134024
+      "x": 0.6,
+      "y": 7.2
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "shootNote"
+            "pathName": "1 Piece Auto(Top-1)"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "One Piece Auto"
+            "pathName": "1 Piece Auto(Top-2)"
           }
         }
       ]
