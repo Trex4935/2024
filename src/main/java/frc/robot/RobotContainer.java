@@ -119,9 +119,8 @@ public class RobotContainer {
         drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
       
-		// Do not double-map buttons :)
-    joystick.start().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(0.5), () -> climber.stopClimberMotorOne()));
-    joystick.back().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(0.5), () -> climber.stopClimberMotorTwo()));
+    joystick.back().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(0.1), () -> climber.stopClimberMotorOne()));
+    joystick.start().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(-0.1), () -> climber.stopClimberMotorTwo()));
 
     // The menu button will align using a PID
     // joystick.start().whileTrue(align);
