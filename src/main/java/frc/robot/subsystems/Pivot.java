@@ -18,10 +18,9 @@ import frc.robot.RobotContainer;
 import frc.robot.extension.SparkMax;
 import frc.robot.extension.Helper;
 
-// TODO: Finish cleanup after pivot tuning
+
 public class Pivot extends SubsystemBase {
   // Creates two new limit switches
-  double zeroRead;
   SparkLimitSwitch batteryLimitSwitch, forceFieldLimitSwitch;
   boolean currentLimitSwitch = false;
   boolean previousLimitSwitch = true;
@@ -32,8 +31,11 @@ public class Pivot extends SubsystemBase {
   // Initializes a duty cycle encoder
   RelativeEncoder relativeEncoder;
 
-	// Initializes the pivot motor's PID
-	SparkPIDController pivotPID;
+  // Initializes the pivot motor's PID
+  SparkPIDController pivotPID;
+
+  // offset
+  double offsetAngle = 0.0;
 
   // Makes a Hash Map for the Pivot State Machine
   private HashMap<String, Double> stateAngle;
@@ -43,8 +45,8 @@ public class Pivot extends SubsystemBase {
   public Pivot() {
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
-		pivotPID = pivotMotor.getPIDController();
-		SparkMax.configPIDforPositionControl(pivotPID, 0.1, 0, 0, 0, 0, -0.3, 0.3);
+    pivotPID = pivotMotor.getPIDController();
+    SparkMax.configPIDforPositionControl(pivotPID, 0.1, 0, 0, 0, 0, -0.3, 0.3);
 
     // News up the relative encoder and configs it to the PID
     relativeEncoder = pivotMotor.getEncoder();
@@ -60,7 +62,8 @@ public class Pivot extends SubsystemBase {
     stateAngle.put("Amp", -36.0);
     stateAngle.put("Speaker", -40.0); // -25
     stateAngle.put("Source", -36.0);
-    stateAngle.put("Load", 0.0);
+    stateAngle.put("Climb", 0.0);
+    stateAngle.put("Trap", 0.0);
 
   }
 
@@ -75,15 +78,10 @@ public class Pivot extends SubsystemBase {
 
   // Checks to see if the speed is at our target speed with limit switch??
   public boolean testLimitSwitch(double speed) {
-    if (speed < 0 && batteryLimitSwitch.isPressed()) {
-      // System.out.println("Forward Pivot");
-      zeroRead = relativeEncoder.getPosition();
-      return true;
+    if ((speed < 0 && batteryLimitSwitch.isPressed()) || (speed > 0 && forceFieldLimitSwitch.isPressed())) {
+    	return true;
     }
-    if (speed > 0 && forceFieldLimitSwitch.isPressed()) {
-      // System.out.println("Reverse Pivot");
-      return true;
-    }
+
     currentLimitSwitch = batteryLimitSwitch.isPressed();
     if (Helper.detectFallingRisingEdge(previousLimitSwitch, currentLimitSwitch, true)) {
       relativeEncoder.setPosition(-55);
@@ -94,13 +92,24 @@ public class Pivot extends SubsystemBase {
 
   // Manual movement for the PID
   public void setPivotPosition(String desiredPosition) {
-    double targetAngle = stateAngle.get(desiredPosition);
+    double targetAngle = stateAngle.get(desiredPosition) + offsetAngle;
     pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
     pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.2);
-
-    // System.out.println("TA: " + targetAngle);
-    // testLimitSwitch();
   }
+
+	// None of the code below was being used
+ /*  public void manualPivotForward() {
+    offsetAngle = offsetAngle + 0.5;
+  }
+
+  public void manualPivotBackward() {
+    offsetAngle = offsetAngle - 0.5;
+  }
+
+  public void resetPivotOffset() {
+    offsetAngle = 0;
+
+  } */
 
   /** Stops the pivot motor */
   public void stopPivotMotor() {
@@ -127,6 +136,15 @@ public class Pivot extends SubsystemBase {
         setPivotPosition("Source");
         break;
       // Default Position of the Shooter angled at 180 degrees approximately
+      case TRAP:
+        setPivotPosition("Trap");
+        break;
+      case READYCLIMB:
+        setPivotPosition("Default");
+        break;
+      case CLIMB:
+        setPivotPosition("Climb");
+        break;
       default:
         // turns all the motors off
         setPivotPosition("Default");
@@ -140,6 +158,7 @@ public class Pivot extends SubsystemBase {
     builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
     builder.addBooleanProperty("Force Field Limit Switch", () -> forceFieldLimitSwitch.isPressed(), null);
     builder.addBooleanProperty("Battery Limit Switch", () -> batteryLimitSwitch.isPressed(), null);
+    builder.addBooleanProperty("Pivot At Angle", () -> pivotAtAngle, null);
   }
 
   @Override

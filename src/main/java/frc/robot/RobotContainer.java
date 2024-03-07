@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.AlignWithPID;
 import frc.robot.extension.Alignment;
 import frc.robot.extension.NoteState;
 import frc.robot.generated.TunerConstants;
@@ -27,6 +26,7 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Rollers;
 import frc.robot.subsystems.LEDControl;
+// import frc.robot.commands.AlignWithPID;
 
 public class RobotContainer {
 
@@ -64,8 +64,8 @@ public class RobotContainer {
 
   // Alternate align command
   // TODO: Tune offset values
-  private final AlignWithPID align = new AlignWithPID(drivetrain,
-      () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset), false, false);
+  // private final AlignWithPID align = new AlignWithPID(drivetrain,
+ //    () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset), false, false);
 
   // Creates the autoChooser to use in the sendables
   private final SendableChooser<Command> autoChooser;
@@ -106,21 +106,25 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     // Up on the D-pad automatically aligns to the speaker
-    joystick.povUp().whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
+    joystick.povUp().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
     // Down on the D-pad automatically aligns to the source
-    joystick.povDown().whileTrue(drivetrain.alignWithPathPlanner(
+    joystick.povDown().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
         Alignment.sourceAprilTag, Alignment.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
     // Left on the D-pad automatically aligns to the amp
-    joystick.povLeft().whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
+    joystick.povLeft().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
     // Right on the D-pad automatically aligns to the stage
-    joystick.povRight().whileTrue(drivetrain.alignWithPathPlanner(
+    joystick.povRight().and(joystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
         drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
+      
+		// Do not double-map buttons :)
+    joystick.start().whileTrue(climber.runEnd(() -> climber.setClimberMotorOne(0.5), () -> climber.stopClimberMotorOne()));
+    joystick.back().whileTrue(climber.runEnd(() -> climber.setClimberMotorTwo(0.5), () -> climber.stopClimberMotorTwo()));
 
-    // The menu button aligns using a PID
-    joystick.start().whileTrue(align);
+    // The menu button will align using a PID
+    // joystick.start().whileTrue(align);
 
     // Helps run the simulation
     if (Utils.isSimulation()) {
@@ -130,14 +134,13 @@ public class RobotContainer {
 
     // Buttton 8 runs pivot towards battery
     operatorTestButton.button(8)
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(-0.5), () -> climber.stopClimberMotors()));
+        .whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
 
     // Button 9 changes state to ground intake
-    operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
+    operatorTestButton.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.READYCLIMB)));
 
-    // Button 10 runs pivot towards force field
-    operatorTestButton.button(10)
-        .whileTrue(climber.runEnd(() -> climber.setClimberMotors(0.5), () -> climber.stopClimberMotors()));
+    // Button 10 changes state to trap
+    operatorTestButton.button(10).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
 
     // Button 11 changes state to field
     operatorTestButton.button(11).onTrue(rollers.runOnce(() -> rollers.returnToField()));
@@ -161,8 +164,6 @@ public class RobotContainer {
     SmartDashboard.putData(dustpan);
     SmartDashboard.putData(rollers);
     SmartDashboard.putData(pivot);
-    // TODO: Fix sendable for note life cycle
-    // SmartDashboard.putString("currentNoteLifeCycle", getCycle().toString());
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);

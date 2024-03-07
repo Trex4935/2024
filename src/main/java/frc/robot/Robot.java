@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -69,10 +71,12 @@ public class Robot extends TimedRobot {
     if (UseLimelight) {
       var lastResult = LimelightHelpers.getLatestResults("limelight-battery").targetingResults;
 
-      Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
+      Pose2d llPose = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red ? lastResult.getBotPose2d_wpiRed() : lastResult.getBotPose2d_wpiBlue();
 
       if (lastResult.valid) {
         m_robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
+				// Add standard deviations for more accuracy
+        // m_robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp(),  VecBuilder.fill(0, 0, 0));
       }
     }
   }
