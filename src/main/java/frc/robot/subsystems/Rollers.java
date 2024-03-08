@@ -73,13 +73,17 @@ public class Rollers extends SubsystemBase {
   /** Changes the note's life cycle to its desired state */
   public void changeNoteState(NoteState noteState) {
     RobotContainer.noteLifecycle = noteState;
+    // System.out.println(noteState);
   }
 
   /** Switches the state that the rollers operate in */
   public void rollerSwitch() {
     boolean currentDustpanSmacnaState = false;
     boolean previousDustpanSmacnaState = false;
+          // System.out.println(RobotContainer.noteLifecycle);
+
     switch (RobotContainer.noteLifecycle) {
+
 
       // Explanation for rising and falling edge code
 
