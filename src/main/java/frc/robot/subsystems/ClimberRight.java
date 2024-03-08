@@ -12,15 +12,13 @@ import frc.robot.RobotContainer;
 import frc.robot.extension.NoteState;
 import frc.robot.extension.SparkMax;
 
-public class Climber extends SubsystemBase {
+public class ClimberRight extends SubsystemBase {
   /** Creates a new Climber. */
-  CANSparkMax climberMotorRight, climberMotorLeft;
+  CANSparkMax climberMotorRight;
 
   // Sets Climber Motor Object ID's
-  public Climber() {
+  public ClimberRight() {
     climberMotorRight = SparkMax.createDefaultCANSparkMax(2);
-    climberMotorLeft = SparkMax.createDefaultCANSparkMax(3);
-    climberMotorLeft.setInverted(false);
     climberMotorRight.setInverted(true);
 
   }
@@ -29,31 +27,16 @@ public class Climber extends SubsystemBase {
   public void setClimberMotorOne(double speed) {
     if (RobotContainer.noteLifecycle == NoteState.READYCLIMB)
     {
-      climberMotorRight.set(speed);
+      climberMotorRight.set(speed *.5);
     }
     if (RobotContainer.noteLifecycle == NoteState.CLIMB)
     {
       climberMotorRight.set(-speed);
     }
-    climberMotorRight.set(speed);
-  }
-
-  /** Sets the right climber motor's speed */
-  public void setClimberMotorTwo(double speed) {
-    if (RobotContainer.noteLifecycle == NoteState.READYCLIMB)
-    {
-      climberMotorLeft.set(speed);
-    }
-    if (RobotContainer.noteLifecycle == NoteState.CLIMB)
-    {
-      climberMotorLeft.set(-speed);
-    }
-    climberMotorRight.set(speed);
   }
 
   /** Sets both climber motors */
   public void setClimberMotors(double speed) {
-    climberMotorLeft.set(speed);
     climberMotorRight.set(speed);
   }
 
@@ -62,19 +45,13 @@ public class Climber extends SubsystemBase {
     climberMotorRight.stopMotor();
   }
 
-  /** Stops right climber motor */
-  public void stopClimberMotorTwo() {
-    climberMotorLeft.stopMotor();
-  }
 
   /** Stops both climber motors */
   public void stopClimberMotors() {
     climberMotorRight.stopMotor();
-    climberMotorLeft.stopMotor();
   }
 
   public void initSendable(SendableBuilder builder) {
-		builder.addDoubleProperty("Left Climber Encoder Position", () -> climberMotorLeft.getEncoder().getPosition(), null);
 		builder.addDoubleProperty("Right Climber Encoder Position", () -> climberMotorRight.getEncoder().getPosition(), null);
   }
 
