@@ -20,7 +20,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.extension.Alignment;
 import frc.robot.extension.NoteState;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ClimberLeft;
+import frc.robot.subsystems.ClimberRight;
 import frc.robot.subsystems.DustPan;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
@@ -35,7 +36,8 @@ public class RobotContainer {
   private final Pivot pivot = new Pivot();
   private final Rollers rollers = new Rollers();
   private final Shooter shooter = new Shooter();
-  private final Climber climber = new Climber();
+  private final ClimberRight climberRight = new ClimberRight();
+  private final ClimberLeft climberLeft = new ClimberLeft();
   private final LEDControl ledControl = new LEDControl();
 
   // Sets the default state in the Note Life Cycle
@@ -47,7 +49,11 @@ public class RobotContainer {
 
   // Setting up bindings for necessary control of the swerve drive platform
   private final CommandXboxController driverJoystick = new CommandXboxController(0); // My joystick
-  private final CommandXboxController altJoystick = new CommandXboxController(2);
+  // private final CommandXboxController altJoystick = new
+  // CommandXboxController(2);
+
+  // Setting up the Button Box
+  private final CommandGenericHID buttonBox = new CommandGenericHID(1);
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
@@ -66,13 +72,11 @@ public class RobotContainer {
   // Alternate align command
   // TODO: Tune offset values
   // private final AlignWithPID align = new AlignWithPID(drivetrain,
- //    () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset), false, false);
+  // () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset),
+  // false, false);
 
   // Creates the autoChooser to use in the sendables
   private final SendableChooser<Command> autoChooser;
-
-  // Setting up the Button Box
-  private final CommandGenericHID buttonBox = new CommandGenericHID(1);
 
   private void configureBindings() {
 
@@ -87,13 +91,18 @@ public class RobotContainer {
 
         // Driving with joysticks
         drivetrain.applyRequest(() -> drive.withVelocityX(driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
-                                                                                          // Joystick
+            // Joystick
             .withVelocityY(driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
             .withRotationalRate(-driverJoystick.getRightX() * MaxAngularRate) // Drive right with Joystick
         ));
 
+    // Control climber motors
+    driverJoystick.rightTrigger()
+        .whileTrue(climberRight.runEnd(() -> climberRight.setClimberMotorOne(0.8), () -> climberRight.stopClimberMotorOne()));
+    driverJoystick.leftTrigger()
+        .whileTrue(climberLeft.runEnd(() -> climberLeft.setClimberMotorTwo(0.8), () -> climberLeft.stopClimberMotorTwo()));
     // Makes a button that slows the speed down when needed
-    driverJoystick.leftTrigger().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
+    driverJoystick.leftBumper().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
 
     // A button acts as a brake, and turns all wheels inward
     driverJoystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -104,26 +113,27 @@ public class RobotContainer {
             () -> point.withModuleDirection(new Rotation2d(-driverJoystick.getLeftY(), -driverJoystick.getLeftX()))));
 
     // reset the field-centric heading on left bumper press
-    driverJoystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    driverJoystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-		// All alignment commands require the right trigger to function
+    // All alignment commands require the right trigger to function
     // Up on the D-pad automatically aligns to the speaker
-    driverJoystick.povUp().and(driverJoystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
-        .andThen(drivetrain.applyRequest(() -> brake)));
+    driverJoystick.povUp().and(driverJoystick.rightTrigger())
+        .whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
+            .andThen(drivetrain.applyRequest(() -> brake)));
 
     // Down on the D-pad automatically aligns to the source
     driverJoystick.povDown().and(driverJoystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
         Alignment.sourceAprilTag, Alignment.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
-				
+
     // Left on the D-pad automatically aligns to the amp
-    driverJoystick.povLeft().and(driverJoystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
-        .andThen(drivetrain.applyRequest(() -> brake)));
-				
+    driverJoystick.povLeft().and(driverJoystick.rightTrigger())
+        .whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
+            .andThen(drivetrain.applyRequest(() -> brake)));
+
     // Right on the D-pad automatically aligns to the stage
     driverJoystick.povRight().and(driverJoystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
         drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
-      
 
     // The menu button will align using a PID
     // joystick.start().whileTrue(align);
@@ -134,14 +144,14 @@ public class RobotContainer {
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
-		// TODO: Change button numberings and reorder as necessary
-		// Button 1 manually moves the pivot backwards
+    // TODO: Change button numberings and reorder as necessary
+    // Button 1 manually moves the pivot backwards
     buttonBox.button(1).onTrue(rollers.runOnce(() -> pivot.manualPivotBackward()));
 
-		// Button 3 manually moves the pivot forward
+    // Button 3 manually moves the pivot forward
     buttonBox.button(3).onTrue(rollers.runOnce(() -> pivot.manualPivotForward()));
 
-    // Button 5 changes state to ready-to-climb
+    // Button 5 changes state to trap
     buttonBox.button(5).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
 
     // Button 6 changes state to climb
@@ -171,12 +181,13 @@ public class RobotContainer {
     // Button 14 changes state to source
     buttonBox.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
 
-
     // Button # manually moves the pivot forward
-    // buttonBox.button(15).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
+    // buttonBox.button(15).onTrue(rollers.runOnce(() ->
+    // rollers.changeNoteState(NoteState.EJECT)));
 
     // Button # manually moves the pivot backward
-    // buttonBox.button(15).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
+    // buttonBox.button(15).onTrue(rollers.runOnce(() ->
+    // rollers.changeNoteState(NoteState.EJECT)));
 
   }
 
@@ -187,8 +198,8 @@ public class RobotContainer {
     SmartDashboard.putData(dustpan);
     SmartDashboard.putData(rollers);
     SmartDashboard.putData(pivot);
-		SmartDashboard.putData(shooter);
-		SmartDashboard.putData(climber);
+    SmartDashboard.putData(shooter);
+    SmartDashboard.putData(climberRight);
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode", autoChooser);
