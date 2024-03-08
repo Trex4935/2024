@@ -117,26 +117,26 @@ public class RobotContainer {
 
     // All alignment commands require the right trigger to function
     // Up on the D-pad automatically aligns to the speaker
-    driverJoystick.povUp().and(driverJoystick.rightTrigger())
+    driverJoystick.povUp().and(driverJoystick.start())
         .whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
             .andThen(drivetrain.applyRequest(() -> brake)));
 
     // Down on the D-pad automatically aligns to the source
-    driverJoystick.povDown().and(driverJoystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
+    driverJoystick.povDown().and(driverJoystick.start()).whileTrue(drivetrain.alignWithPathPlanner(
         Alignment.sourceAprilTag, Alignment.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
 
     // Left on the D-pad automatically aligns to the amp
-    driverJoystick.povLeft().and(driverJoystick.rightTrigger())
+    driverJoystick.povLeft().and(driverJoystick.start())
         .whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
             .andThen(drivetrain.applyRequest(() -> brake)));
 
     // Right on the D-pad automatically aligns to the stage
-    driverJoystick.povRight().and(driverJoystick.rightTrigger()).whileTrue(drivetrain.alignWithPathPlanner(
+    driverJoystick.povRight().and(driverJoystick.start()).whileTrue(drivetrain.alignWithPathPlanner(
         drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset)
         .andThen(drivetrain.applyRequest(() -> brake)));
 
     // The menu button will align using a PID
-    // joystick.start().whileTrue(align);
+    // driverJoystick.back().and(driverJoystick.start()).whileTrue(align);
 
     // Helps run the simulation
     if (Utils.isSimulation()) {
@@ -146,49 +146,40 @@ public class RobotContainer {
 
     // TODO: Change button numberings and reorder as necessary
     // Button 1 manually moves the pivot backwards
-    buttonBox.button(1).onTrue(rollers.runOnce(() -> pivot.manualPivotBackward()));
+    buttonBox.button(1).whileTrue(rollers.runOnce(() -> pivot.manualPivotBackward()));
 
     // Button 3 manually moves the pivot forward
-    buttonBox.button(3).onTrue(rollers.runOnce(() -> pivot.manualPivotForward()));
+    buttonBox.button(3).whileTrue(rollers.runOnce(() -> pivot.manualPivotForward()));
 
     // Button 5 changes state to trap
-    buttonBox.button(5).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
+    buttonBox.button(5).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
 
     // Button 6 changes state to climb
-    buttonBox.button(6).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
+    buttonBox.button(6).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
 
     // Button 7 changes state to ready-to-climb
-    buttonBox.button(7).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.READYCLIMB)));
+    buttonBox.button(7).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.READYCLIMB)));
 
     // Button 8 changes state to eject
-    buttonBox.button(8).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
+    buttonBox.button(8).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
 
     // Button 9 changes state to intake
     buttonBox.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
 
-    // Button # changes state to trap
-    buttonBox.button(10).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
+    // Button 10 changes state to source
+    buttonBox.button(10).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
 
-    // Button # changes state to field
+    // Button 11 changes state to field
     buttonBox.button(11).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
 
-    // Button 12 changes state to field
+    // Button 12 changes state to amp
     buttonBox.button(12).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
 
     // Button 13 changes state to speaker
     buttonBox.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
 
-    // Button 14 changes state to source
+    // TODO: Fix this: Button 14 changes state to source
     buttonBox.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
-
-    // Button # manually moves the pivot forward
-    // buttonBox.button(15).onTrue(rollers.runOnce(() ->
-    // rollers.changeNoteState(NoteState.EJECT)));
-
-    // Button # manually moves the pivot backward
-    // buttonBox.button(15).onTrue(rollers.runOnce(() ->
-    // rollers.changeNoteState(NoteState.EJECT)));
-
   }
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
