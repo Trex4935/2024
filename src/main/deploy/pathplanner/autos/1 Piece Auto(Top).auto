@@ -5,16 +5,28 @@
       "x": 0.6,
       "y": 7.2
     },
-    "rotation": 180.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Field"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "1 Piece Auto(Top-1)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Speaker"
           }
         },
         {
@@ -32,6 +44,6 @@
       ]
     }
   },
-  "folder": "1 Piece Autos",
+  "folder": null,
   "choreoAuto": false
 }

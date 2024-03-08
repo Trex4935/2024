@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4,
-      "y": 5.5
+      "x": 2,
+      "y": 2
     },
     "rotation": 0
   },
@@ -15,18 +15,6 @@
           "type": "named",
           "data": {
             "name": "Speaker"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "1 Piece Auto(Mid-1)"
           }
         }
       ]
