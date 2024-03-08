@@ -47,7 +47,10 @@ public class RobotContainer {
 
   // Setting up bindings for necessary control of the swerve drive platform
   private final CommandXboxController driverJoystick = new CommandXboxController(0); // My joystick
-  private final CommandXboxController altJoystick = new CommandXboxController(2);
+  //private final CommandXboxController altJoystick = new CommandXboxController(2);
+
+  // Setting up the Button Box
+  private final CommandGenericHID buttonBox = new CommandGenericHID(1);
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
@@ -71,8 +74,6 @@ public class RobotContainer {
   // Creates the autoChooser to use in the sendables
   private final SendableChooser<Command> autoChooser;
 
-  // Setting up the Button Box
-  private final CommandGenericHID buttonBox = new CommandGenericHID(1);
 
   private void configureBindings() {
 
@@ -141,7 +142,7 @@ public class RobotContainer {
 		// Button 3 manually moves the pivot forward
     buttonBox.button(3).onTrue(rollers.runOnce(() -> pivot.manualPivotForward()));
 
-    // Button 5 changes state to ready-to-climb
+    // Button 5 changes state to trap
     buttonBox.button(5).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
 
     // Button 6 changes state to climb
