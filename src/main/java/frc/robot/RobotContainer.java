@@ -8,6 +8,8 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.Autos;
 import frc.robot.extension.Alignment;
 import frc.robot.extension.NoteState;
 import frc.robot.generated.TunerConstants;
@@ -193,6 +196,10 @@ public class RobotContainer {
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
+
+    NamedCommands.registerCommand("Speaker", Autos.speakerCommand);
+    NamedCommands.registerCommand("Field", Autos.fieldCommand);
+
     Alignment.updateAprilTagTranslations();
     configureBindings();
     SmartDashboard.putData(dustpan);

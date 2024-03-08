@@ -11,8 +11,14 @@ import frc.robot.extension.NoteState;
 
 public final class Autos {
 
-	public static Command speakerCommand = Commands.run((() -> RobotContainer.noteLifecycle = NoteState.SPEAKER));
-	public static Command fieldCommand = Commands.run((() -> RobotContainer.noteLifecycle = NoteState.FIELD));
+  public static Command speakerCommand = Commands.runOnce((() -> {
+    RobotContainer.noteLifecycle = NoteState.SPEAKER;
+    System.out.println("SPEAKER");
+  }));
+  public static Command fieldCommand = Commands.runOnce((() -> {
+    RobotContainer.noteLifecycle = NoteState.FIELD;
+    System.out.println("FIELD");
+  }));
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
