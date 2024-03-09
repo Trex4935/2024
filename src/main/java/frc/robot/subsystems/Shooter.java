@@ -79,7 +79,7 @@ public class Shooter extends SubsystemBase {
         break;
       case TRAP:
         if (Pivot.pivotAtAngle) {
-          setShooters(0.35, 0.35);
+          setShooters(0.3, 0.3);
           break;
         }
       default:
