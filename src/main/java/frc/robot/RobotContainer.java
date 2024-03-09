@@ -202,7 +202,7 @@ public class RobotContainer {
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
 
-    autoChooser = AutoBuilder.buildAutoChooser("1 Piece Auto(Mid)");
+    autoChooser = AutoBuilder.buildAutoChooser("1");
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     NamedCommands.registerCommand("Speaker", Autos.speakerCommand);
