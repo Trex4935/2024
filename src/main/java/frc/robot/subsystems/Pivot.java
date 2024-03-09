@@ -60,29 +60,24 @@ public class Pivot extends SubsystemBase {
     stateAngle = new HashMap<String, Double>();
     stateAngle.put("Default", -55.0);
     stateAngle.put("Amp", -38.0);
-    stateAngle.put("Speaker", -20.0); // -25
+    stateAngle.put("Speaker", -25.0); // -25
     stateAngle.put("Source", -36.0);
     stateAngle.put("Climb", 0.0);
     stateAngle.put("Trap", -10.0);
 
   }
 
-  // Sets motor speed if limit switches aren't pressed
-  /* public void setPivotMotor(double speed) {
-    if (testLimitSwitch()) {
-      pivotMotor.set(0);
-    } else {
+  //  motor speed if limit switches aren't pressed
+  public void setPivotMotor(double speed) {
       pivotMotor.set(speed);
-    }
   }
- */
   // Checks to see if the speed is at our target speed with limit switch??
   public void testLimitSwitch() {
     currentLimitSwitch = batteryLimitSwitch.isPressed();
     for (int index = 0; index % 10 == 0; index++) {
       if (currentLimitSwitch) {
-      relativeEncoder.setPosition(-50);
-    }
+        relativeEncoder.setPosition(-50);
+      }
     }
   }
 

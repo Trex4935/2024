@@ -9,6 +9,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,6 +34,8 @@ import frc.robot.subsystems.LEDControl;
 // import frc.robot.commands.AlignWithPID;
 
 public class RobotContainer {
+
+private final SendableChooser<Command> autoChooser;
 
   // News up our subsystems that we use throughout RobotContainer
   private final DustPan dustpan = new DustPan();
@@ -79,7 +82,7 @@ public class RobotContainer {
   // false, false);
 
   // Creates the autoChooser to use in the sendables
-  private final SendableChooser<Command> autoChooser;
+
 
   private void configureBindings() {
 
@@ -161,7 +164,7 @@ public class RobotContainer {
     buttonBox.button(6).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
 
     // Button 7 changes state to ready-to-climb
-    buttonBox.button(7).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.READYCLIMB)));
+    buttonBox.button(7).whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
 
     // Button 8 changes state to eject
     buttonBox.button(8).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
@@ -197,6 +200,9 @@ public class RobotContainer {
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
 
+    autoChooser = AutoBuilder.buildAutoChooser("1 Piece Auto(Mid)");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
     NamedCommands.registerCommand("Speaker", Autos.speakerCommand);
     NamedCommands.registerCommand("Field", Autos.fieldCommand);
 
@@ -208,8 +214,8 @@ public class RobotContainer {
     SmartDashboard.putData(shooter);
     SmartDashboard.putData(climberRight);
 
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Mode", autoChooser);
+  /*   autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Mode", autoChooser); */
   }
 
   public Pose2d getTargetPose(Pose2d aprilTagPose, double[] offsetArray) {
@@ -226,6 +232,7 @@ public class RobotContainer {
 
   /** Runs autoChooser :) */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+  return autoChooser.getSelected();
+   //return new PathPlannerAuto("1 Piece Auto(Mid)");
   }
 }
