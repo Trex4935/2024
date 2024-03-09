@@ -141,6 +141,7 @@ public class Pivot extends SubsystemBase {
         break;
       default:
         setPivotPosition("Default");
+        resetPivotOffset();
     }
 
   }
