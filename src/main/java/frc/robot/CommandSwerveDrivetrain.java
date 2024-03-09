@@ -59,7 +59,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             // Drive motor limits
             CurrentLimitsConfigs dconfigs = new CurrentLimitsConfigs();
             module.getDriveMotor().getConfigurator().refresh(dconfigs);
-            dconfigs.withSupplyCurrentLimit(20);
+            dconfigs.withSupplyCurrentLimit(40);
             dconfigs.withSupplyCurrentThreshold(2);
             dconfigs.withSupplyTimeThreshold(0);
             dconfigs.withSupplyCurrentLimitEnable(true);

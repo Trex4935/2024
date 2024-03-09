@@ -35,6 +35,8 @@ import frc.robot.subsystems.LEDControl;
 
 public class RobotContainer {
 
+  private final SendableChooser<Command> autoChooser;
+
   // News up our subsystems that we use throughout RobotContainer
   private final DustPan dustpan = new DustPan();
   private final Pivot pivot = new Pivot();
@@ -48,7 +50,7 @@ public class RobotContainer {
   public static NoteState noteLifecycle;
 
   // Swerve settings
-  private double MaxSpeed = 3; // 6 meters per second desired top speed
+  private double MaxSpeed = 6; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   // Setting up bindings for necessary control of the swerve drive platform
@@ -164,7 +166,7 @@ public class RobotContainer {
     buttonBox.button(6).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
 
     // Button 7 changes state to ready-to-climb
-    buttonBox.button(7).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.READYCLIMB)));
+    buttonBox.button(7).whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
 
     // Button 8 changes state to eject
     buttonBox.button(8).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
@@ -200,6 +202,9 @@ public class RobotContainer {
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
 
+    autoChooser = AutoBuilder.buildAutoChooser("1 Piece Auto(Mid)");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
     NamedCommands.registerCommand("Speaker", Autos.speakerCommand);
     NamedCommands.registerCommand("Field", Autos.fieldCommand);
 
@@ -211,9 +216,11 @@ public class RobotContainer {
     SmartDashboard.putData(shooter);
     SmartDashboard.putData(climberRight);
 
-    /* autoChooser = AutoBuilder.buildAutoChooser();
-    autoChooser.setDefaultOption("1 Piece Auto(Mid)", getAutonomousCommand());
-    SmartDashboard.putData("Auto Mode", autoChooser); */
+    /*
+     * autoChooser = AutoBuilder.buildAutoChooser();
+     * autoChooser.setDefaultOption("1 Piece Auto(Mid)", getAutonomousCommand());
+     * SmartDashboard.putData("Auto Mode", autoChooser);
+     */
   }
 
   public Pose2d getTargetPose(Pose2d aprilTagPose, double[] offsetArray) {
