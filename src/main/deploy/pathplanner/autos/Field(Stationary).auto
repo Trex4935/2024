@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4525663045660369,
-      "y": 5.54159552134024
+      "x": 2,
+      "y": 2
     },
     "rotation": 0
   },
@@ -14,13 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shootNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "One Piece Auto"
+            "name": "Field"
           }
         }
       ]
