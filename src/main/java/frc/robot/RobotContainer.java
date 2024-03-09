@@ -35,7 +35,7 @@ import frc.robot.subsystems.LEDControl;
 
 public class RobotContainer {
 
-private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser;
 
   // News up our subsystems that we use throughout RobotContainer
   private final DustPan dustpan = new DustPan();
@@ -82,7 +82,7 @@ private final SendableChooser<Command> autoChooser;
   // false, false);
 
   // Creates the autoChooser to use in the sendables
-
+  // private final SendableChooser<Command> autoChooser;
 
   private void configureBindings() {
 
@@ -104,9 +104,11 @@ private final SendableChooser<Command> autoChooser;
 
     // Control climber motors
     driverJoystick.rightTrigger()
-        .whileTrue(climberRight.runEnd(() -> climberRight.setClimberMotorOne(0.8), () -> climberRight.stopClimberMotorOne()));
+        .whileTrue(
+            climberRight.runEnd(() -> climberRight.setClimberMotorOne(0.8), () -> climberRight.stopClimberMotorOne()));
     driverJoystick.leftTrigger()
-        .whileTrue(climberLeft.runEnd(() -> climberLeft.setClimberMotorTwo(0.8), () -> climberLeft.stopClimberMotorTwo()));
+        .whileTrue(
+            climberLeft.runEnd(() -> climberLeft.setClimberMotorTwo(0.8), () -> climberLeft.stopClimberMotorTwo()));
     // Makes a button that slows the speed down when needed
     driverJoystick.leftBumper().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
 
@@ -214,8 +216,11 @@ private final SendableChooser<Command> autoChooser;
     SmartDashboard.putData(shooter);
     SmartDashboard.putData(climberRight);
 
-  /*   autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Mode", autoChooser); */
+    /*
+     * autoChooser = AutoBuilder.buildAutoChooser();
+     * autoChooser.setDefaultOption("1 Piece Auto(Mid)", getAutonomousCommand());
+     * SmartDashboard.putData("Auto Mode", autoChooser);
+     */
   }
 
   public Pose2d getTargetPose(Pose2d aprilTagPose, double[] offsetArray) {
@@ -232,7 +237,7 @@ private final SendableChooser<Command> autoChooser;
 
   /** Runs autoChooser :) */
   public Command getAutonomousCommand() {
-  return autoChooser.getSelected();
-   //return new PathPlannerAuto("1 Piece Auto(Mid)");
+    // return autoChooser.getSelected();
+    return new PathPlannerAuto("1 Piece Auto(Mid)");
   }
 }
