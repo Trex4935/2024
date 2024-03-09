@@ -63,7 +63,7 @@ public class Shooter extends SubsystemBase {
 
       // Note is dropped into the amp
       case AMP:
-        setShooters(0.25, 0.25);
+        setShooters(0.2, 0.2);
         break;
       // Note is shot out towards speaker
       case SPEAKER:

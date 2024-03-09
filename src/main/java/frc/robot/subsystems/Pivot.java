@@ -59,11 +59,11 @@ public class Pivot extends SubsystemBase {
     // News up the Hash Map and adds the pivot values to
     stateAngle = new HashMap<String, Double>();
     stateAngle.put("Default", -55.0);
-    stateAngle.put("Amp", -36.0);
+    stateAngle.put("Amp", -40.0);
     stateAngle.put("Speaker", -20.0); // -25
     stateAngle.put("Source", -36.0);
     stateAngle.put("Climb", 0.0);
-    stateAngle.put("Trap", 0.0);
+    stateAngle.put("Trap", -12.0);
 
   }
 
@@ -84,7 +84,7 @@ public class Pivot extends SubsystemBase {
 
     currentLimitSwitch = batteryLimitSwitch.isPressed();
     if (Helper.detectFallingRisingEdge(previousLimitSwitch, currentLimitSwitch, true)) {
-      relativeEncoder.setPosition(-55);
+      relativeEncoder.setPosition(-50);
     }
     previousLimitSwitch = currentLimitSwitch;
     return false;
