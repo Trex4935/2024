@@ -69,7 +69,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     if (UseLimelight) {
-      var lastResult = LimelightHelpers.getLatestResults("limelight-battery").targetingResults;
+      var lastResult = LimelightHelpers.getLatestResults("limelight-testll").targetingResults;
 
       Pose2d llPose = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red ? lastResult.getBotPose2d_wpiRed() : lastResult.getBotPose2d_wpiBlue();
 

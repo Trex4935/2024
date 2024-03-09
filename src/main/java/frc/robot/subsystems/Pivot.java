@@ -59,35 +59,26 @@ public class Pivot extends SubsystemBase {
     // News up the Hash Map and adds the pivot values to
     stateAngle = new HashMap<String, Double>();
     stateAngle.put("Default", -55.0);
-    stateAngle.put("Amp", -36.0);
-    stateAngle.put("Speaker", -20.0); // -25
+    stateAngle.put("Amp", -38.0);
+    stateAngle.put("Speaker", -25.0); // -25
     stateAngle.put("Source", -36.0);
     stateAngle.put("Climb", 0.0);
-    stateAngle.put("Trap", 0.0);
+    stateAngle.put("Trap", -10.0);
 
   }
 
-  // Sets motor speed if limit switches aren't pressed
+  //  motor speed if limit switches aren't pressed
   public void setPivotMotor(double speed) {
-    if (testLimitSwitch(speed)) {
-      pivotMotor.set(0);
-    } else {
       pivotMotor.set(speed);
-    }
   }
-
   // Checks to see if the speed is at our target speed with limit switch??
-  public boolean testLimitSwitch(double speed) {
-    if ((speed < 0 && batteryLimitSwitch.isPressed()) || (speed > 0 && forceFieldLimitSwitch.isPressed())) {
-    	return true;
-    }
-
+  public void testLimitSwitch() {
     currentLimitSwitch = batteryLimitSwitch.isPressed();
-    if (Helper.detectFallingRisingEdge(previousLimitSwitch, currentLimitSwitch, true)) {
-      relativeEncoder.setPosition(-55);
+    for (int index = 0; index % 10 == 0; index++) {
+      if (currentLimitSwitch) {
+        relativeEncoder.setPosition(-50);
+      }
     }
-    previousLimitSwitch = currentLimitSwitch;
-    return false;
   }
 
   // Manual movement for the PID
@@ -95,6 +86,7 @@ public class Pivot extends SubsystemBase {
     double targetAngle = stateAngle.get(desiredPosition) + offsetAngle;
     pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
     pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.4);
+    testLimitSwitch();
   }
 
   public void manualPivotForward() {

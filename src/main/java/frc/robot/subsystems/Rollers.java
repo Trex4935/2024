@@ -149,8 +149,8 @@ public class Rollers extends SubsystemBase {
 
       // AMP STATE: Reverses low and high rollers when maganetic flap is pushed,
       case AMP:
-        setIntake(-0.1);
-        setMagazine(-0.1);
+        setIntake(0.25);
+        setMagazine(0.25);
         currentDustpanSmacnaState = dustpanSmacna.get();
         if (Helper.detectFallingRisingEdge(previousDustpanSmacnaState, currentDustpanSmacnaState, false)) {
           timer.start();
