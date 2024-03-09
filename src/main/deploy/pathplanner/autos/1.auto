@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6,
-      "y": 3.2
+      "x": 1.45,
+      "y": 5.55
     },
     "rotation": 0
   },
@@ -18,9 +18,9 @@
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "1 Piece Auto(Low-1)"
+            "waitTime": 3.0
           }
         },
         {
@@ -32,13 +32,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 3.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "1 Piece Auto(Low-2)"
+            "pathName": "1"
           }
         }
       ]
