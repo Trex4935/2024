@@ -132,7 +132,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 			// Makes a target pose
 			Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
 			// Creates and returns an auto-generated pathfinding command
-			Command autoCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(1, 1, 1, 1), 0);
+			Command autoCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(RobotContainer.MaxSpeed -0.75, RobotContainer.MaxSpeed - 0.75, Math.PI, Math.PI), 0);
 			return autoCommand;
 		}
 

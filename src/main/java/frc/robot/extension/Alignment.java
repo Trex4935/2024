@@ -12,12 +12,15 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 /** Add your docs here. */
 public class Alignment {
 
 	public static final double fieldLength = Units.inchesToMeters(651.223);
 	public static final double fieldWidth = Units.inchesToMeters(323.277);
+
+	public static Alliance currentAlliance;
 
 
 	// Position offsets for field elements
@@ -45,6 +48,7 @@ public class Alignment {
 
 	public static void updateAprilTagTranslations() {
 
+		currentAlliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 		// Clear pose lists
 		aprilTagPoses.clear();
 		allianceAprilTags.clear();
@@ -58,8 +62,7 @@ public class Alignment {
 		}
 
 		// Adds AprilTag poses to lists and sets offsets according to alliance
-		if ((DriverStation.getAlliance().isEmpty() || 
-				DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)) {
+		if ((currentAlliance == DriverStation.Alliance.Blue)) {
 
 			sourceAprilTag = aprilTagPoses.get(0);
 			allianceAprilTags.add(sourceAprilTag);
@@ -106,7 +109,7 @@ public class Alignment {
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(5, 8));
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(13, 16));
 
-			sourceOffset[0] = 0.320528;
+			sourceOffset[0] = -0.4;
 			sourceOffset[1] = 0.879128;
 			sourceOffset[2] = -120.0;
 				

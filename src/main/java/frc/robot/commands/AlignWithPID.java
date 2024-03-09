@@ -26,8 +26,8 @@ public class AlignWithPID extends Command {
 	/** Creates a new DriveToPoseCommand. */
 
 	private static final TrapezoidProfile.Constraints DEFAULT_XY_CONSTRAINTS = new TrapezoidProfile.Constraints(
-			3,
-			3);
+			3.5,
+			3.5);
 	private static final TrapezoidProfile.Constraints DEFAULT_OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(
 			Math.PI,
 			Math.PI);
@@ -105,7 +105,7 @@ public class AlignWithPID extends Command {
 	@Override
 	public void execute() {
 		if (useVision) {
-			if (!LimelightHelpers.getTV("limelight-forcefield")) {
+			if (!LimelightHelpers.getTV("limelight-battery")) {
 				this.cancel();
 			}
 		}
@@ -187,7 +187,7 @@ public class AlignWithPID extends Command {
 				return getTargetPose(tagPose, 0, 0, 0);
 
 			case 10:
-				return getTargetPose(tagPose, 0.320528, 0.879128, -120.0);
+				return getTargetPose(tagPose, -0.4, 0.879128, -120.0);
 
 			case 11:
 				return getTargetPose(tagPose, 0, 0, 0);

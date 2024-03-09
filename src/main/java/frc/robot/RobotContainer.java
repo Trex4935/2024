@@ -44,7 +44,7 @@ public class RobotContainer {
   public static NoteState noteLifecycle;
 
   // Swerve settings
-  private double MaxSpeed = 3; // 6 meters per second desired top speed
+  public static double MaxSpeed = 3; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   // Setting up bindings for necessary control of the swerve drive platform
@@ -73,7 +73,7 @@ public class RobotContainer {
   // TODO: Tune offset values
   // private final AlignWithPID align = new AlignWithPID(drivetrain,
   // () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset),
-  // false, false);
+  // true, false);
 
   // Creates the autoChooser to use in the sendables
   private final SendableChooser<Command> autoChooser;
