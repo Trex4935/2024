@@ -18,7 +18,6 @@ import frc.robot.RobotContainer;
 import frc.robot.extension.SparkMax;
 import frc.robot.extension.Helper;
 
-
 public class Pivot extends SubsystemBase {
   // Creates two new limit switches
   SparkLimitSwitch batteryLimitSwitch, forceFieldLimitSwitch;
@@ -67,16 +66,18 @@ public class Pivot extends SubsystemBase {
 
   }
 
-  //  motor speed if limit switches aren't pressed
+  // motor speed if limit switches aren't pressed
   public void setPivotMotor(double speed) {
-      pivotMotor.set(speed);
+    pivotMotor.set(speed);
   }
+
   // Checks to see if the speed is at our target speed with limit switch??
   public void testLimitSwitch() {
     currentLimitSwitch = batteryLimitSwitch.isPressed();
     for (int index = 0; index % 10 == 0; index++) {
       if (currentLimitSwitch) {
-        relativeEncoder.setPosition(-50);
+        System.out.println("VALUE BEFORE RESET: " + relativeEncoder.getPosition());
+        relativeEncoder.setPosition(-45);
       }
     }
   }
