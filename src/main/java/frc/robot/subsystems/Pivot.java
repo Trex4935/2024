@@ -60,8 +60,8 @@ public class Pivot extends SubsystemBase {
     stateAngle = new HashMap<String, Double>();
     stateAngle.put("Default", -55.0);
     stateAngle.put("Amp", -38.0);
-    stateAngle.put("Speaker", -25.0); // -25
-    stateAngle.put("Source", -36.0);
+    stateAngle.put("Speaker", -20.0); // -25
+    stateAngle.put("Source", -37.0);
     stateAngle.put("Climb", 0.0);
     stateAngle.put("Trap", -10.0);
 
