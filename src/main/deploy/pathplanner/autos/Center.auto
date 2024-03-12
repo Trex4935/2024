@@ -1,28 +1,10 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.45,
-      "y": 5.55
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "Field"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
-          }
-        },
         {
           "type": "named",
           "data": {
@@ -38,7 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1"
+            "pathName": "Center-1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Field"
           }
         }
       ]

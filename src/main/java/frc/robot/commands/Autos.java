@@ -13,11 +13,15 @@ public final class Autos {
 
   public static Command speakerCommand = Commands.runOnce((() -> {
     RobotContainer.noteLifecycle = NoteState.SPEAKER;
-    System.out.println("SPEAKER");
+    System.out.println("auto SPEAKER");
   }));
   public static Command fieldCommand = Commands.runOnce((() -> {
     RobotContainer.noteLifecycle = NoteState.FIELD;
-    System.out.println("FIELD");
+    System.out.println("auto FIELD");
+  }));
+  public static Command intakeCommand = Commands.runOnce((() -> {
+    RobotContainer.noteLifecycle = NoteState.GROUNDINTAKE;
+    System.out.println("auto INTAKE");
   }));
 
   private Autos() {

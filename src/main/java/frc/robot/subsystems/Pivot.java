@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.extension.SparkMax;
 
-
 public class Pivot extends SubsystemBase {
   // Creates two new limit switches
   SparkLimitSwitch batteryLimitSwitch, forceFieldLimitSwitch;
@@ -59,23 +58,25 @@ public class Pivot extends SubsystemBase {
     stateAngle = new HashMap<String, Double>();
     stateAngle.put("Default", -55.0);
     stateAngle.put("Amp", -38.0);
-    stateAngle.put("Speaker", -25.0); // -25
-    stateAngle.put("Source", -36.0);
+    stateAngle.put("Speaker", -20.0); // -25
+    stateAngle.put("Source", -37.0);
     stateAngle.put("Climb", 0.0);
     stateAngle.put("Trap", -10.0);
 
   }
 
-  //  motor speed if limit switches aren't pressed
+  // motor speed if limit switches aren't pressed
   public void setPivotMotor(double speed) {
-      pivotMotor.set(speed);
+    pivotMotor.set(speed);
   }
+
   // Checks to see if the speed is at our target speed with limit switch??
   public void testLimitSwitch() {
     currentLimitSwitch = batteryLimitSwitch.isPressed();
     for (int index = 0; index % 10 == 0; index++) {
       if (currentLimitSwitch) {
-        relativeEncoder.setPosition(-50);
+        // System.out.println("VALUE BEFORE RESET: " + relativeEncoder.getPosition());
+        relativeEncoder.setPosition(-45);
       }
     }
   }
