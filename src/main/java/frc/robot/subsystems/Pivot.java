@@ -5,6 +5,13 @@
 package frc.robot.subsystems;
 
 import java.util.HashMap;
+
+import com.ctre.phoenix.sensors.PigeonIMU_ControlFrame;
+import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU.PigeonState;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -18,8 +25,10 @@ import frc.robot.RobotContainer;
 import frc.robot.extension.SparkMax;
 import frc.robot.extension.Helper;
 
-
 public class Pivot extends SubsystemBase {
+  // Creates a Pigeon IMU
+  Pigeon2 pigeon2 = new Pigeon2(8);
+  // WPI_PigeonIMU gyro = new WPI_PigeonIMU(6);
   // Creates two new limit switches
   SparkLimitSwitch batteryLimitSwitch, forceFieldLimitSwitch;
   boolean currentLimitSwitch = false;
@@ -42,7 +51,11 @@ public class Pivot extends SubsystemBase {
   // Creates Pivot at Angle Object
   public static boolean pivotAtAngle;
 
+  public final StatusSignal<Double> pigeonYaw;
+
   public Pivot() {
+    pigeonYaw = pigeon2.getYaw();
+
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
     pivotPID = pivotMotor.getPIDController();
@@ -50,11 +63,13 @@ public class Pivot extends SubsystemBase {
 
     // News up the relative encoder and configs it to the PID
     relativeEncoder = pivotMotor.getEncoder();
-    pivotPID.setFeedbackDevice(relativeEncoder);
+    // pivotPID.setFeedbackDevice();
 
     // News up the limit switches
     batteryLimitSwitch = pivotMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
     forceFieldLimitSwitch = pivotMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+
+    // News up the Pigeon IMU
 
     // News up the Hash Map and adds the pivot values to
     stateAngle = new HashMap<String, Double>();
@@ -67,10 +82,11 @@ public class Pivot extends SubsystemBase {
 
   }
 
-  //  motor speed if limit switches aren't pressed
+  // motor speed if limit switches aren't pressed
   public void setPivotMotor(double speed) {
-      pivotMotor.set(speed);
+    pivotMotor.set(speed);
   }
+
   // Checks to see if the speed is at our target speed with limit switch??
   public void testLimitSwitch() {
     currentLimitSwitch = batteryLimitSwitch.isPressed();
@@ -84,7 +100,7 @@ public class Pivot extends SubsystemBase {
   // Manual movement for the PID
   public void setPivotPosition(String desiredPosition) {
     double targetAngle = stateAngle.get(desiredPosition) + offsetAngle;
-    pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
+    // pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
     pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.4);
     testLimitSwitch();
   }
@@ -140,11 +156,16 @@ public class Pivot extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(), null);
-    builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
-    builder.addBooleanProperty("Force Field Limit Switch", () -> forceFieldLimitSwitch.isPressed(), null);
-    builder.addBooleanProperty("Battery Limit Switch", () -> batteryLimitSwitch.isPressed(), null);
+    // builder.addDoubleProperty("Pivot Encoder Position", () ->
+    // relativeEncoder.getPosition(), null);
+    // builder.addDoubleProperty("Pivot Encoder Velocity", () ->
+    // relativeEncoder.getVelocity(), null);
+    // builder.addBooleanProperty("Force Field Limit Switch", () ->
+    // forceFieldLimitSwitch.isPressed(), null);
+    // builder.addBooleanProperty("Battery Limit Switch", () ->
+    // batteryLimitSwitch.isPressed(), null);
     builder.addBooleanProperty("Pivot At Angle", () -> pivotAtAngle, null);
+    builder.addDoubleProperty("Pigeon IMU", () -> pigeonYaw.getValue(), null);
   }
 
   @Override
