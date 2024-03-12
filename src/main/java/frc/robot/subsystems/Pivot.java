@@ -76,7 +76,7 @@ public class Pivot extends SubsystemBase {
     currentLimitSwitch = batteryLimitSwitch.isPressed();
     for (int index = 0; index % 10 == 0; index++) {
       if (currentLimitSwitch) {
-        System.out.println("VALUE BEFORE RESET: " + relativeEncoder.getPosition());
+        // System.out.println("VALUE BEFORE RESET: " + relativeEncoder.getPosition());
         relativeEncoder.setPosition(-45);
       }
     }
