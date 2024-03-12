@@ -35,8 +35,6 @@ import frc.robot.subsystems.LEDControl;
 
 public class RobotContainer {
 
-  private final SendableChooser<Command> autoChooser;
-
   // News up our subsystems that we use throughout RobotContainer
   private final DustPan dustpan = new DustPan();
   private final Pivot pivot = new Pivot();
@@ -202,11 +200,9 @@ public class RobotContainer {
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
   public RobotContainer() {
 
-    autoChooser = AutoBuilder.buildAutoChooser("Center");
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-
     NamedCommands.registerCommand("Speaker", Autos.speakerCommand);
     NamedCommands.registerCommand("Field", Autos.fieldCommand);
+    NamedCommands.registerCommand("Intake", Autos.intakeCommand);
 
     Alignment.updateAprilTagTranslations();
     configureBindings();
@@ -216,11 +212,6 @@ public class RobotContainer {
     SmartDashboard.putData(shooter);
     SmartDashboard.putData(climberRight);
 
-    /*
-     * autoChooser = AutoBuilder.buildAutoChooser();
-     * autoChooser.setDefaultOption("1 Piece Auto(Mid)", getAutonomousCommand());
-     * SmartDashboard.putData("Auto Mode", autoChooser);
-     */
   }
 
   public Pose2d getTargetPose(Pose2d aprilTagPose, double[] offsetArray) {
@@ -235,9 +226,8 @@ public class RobotContainer {
     return targetPose;
   }
 
-  /** Runs autoChooser :) */
+  //Runs Auto
   public Command getAutonomousCommand() {
-    // return new PathPlannerAuto("1");
-    return autoChooser.getSelected();
+    return new PathPlannerAuto("");
   }
 }
