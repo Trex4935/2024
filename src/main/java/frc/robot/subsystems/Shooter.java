@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -22,7 +21,6 @@ public class Shooter extends SubsystemBase {
     shootingMotorLeft = SparkMax.createDefaultCANSparkMax(6);
     shootingMotorRight = SparkMax.createDefaultCANSparkMax(8);
     shootingMotorRight.setInverted(true);
-
   }
 
   /** Sets the left shooting motor's speed */
@@ -61,11 +59,11 @@ public class Shooter extends SubsystemBase {
   public void shooterSwitch() {
     switch (RobotContainer.noteLifecycle) {
 
-      // Note is dropped into the amp
+        // Note is dropped into the amp
       case AMP:
         setShooters(0.2, 0.2);
         break;
-      // Note is shot out towards speaker
+        // Note is shot out towards speaker
       case SPEAKER:
         if (Pivot.pivotAtAngle) {
           setShooters(0.9, 0.9);
@@ -85,9 +83,7 @@ public class Shooter extends SubsystemBase {
       default:
         // turns all the motors off
         stopShootingMotors();
-
     }
-
   }
 
   public void initSendable(SendableBuilder builder) {
@@ -100,5 +96,4 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
 
   }
-
 }

@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -20,17 +19,14 @@ public class ClimberLeft extends SubsystemBase {
   public ClimberLeft() {
     climberMotorLeft = SparkMax.createDefaultCANSparkMax(3);
     climberMotorLeft.setInverted(false);
-
   }
 
   /** Sets the right climber motor's speed */
   public void setClimberMotorTwo(double speed) {
-    if (RobotContainer.noteLifecycle == NoteState.READYCLIMB)
-    {
+    if (RobotContainer.noteLifecycle == NoteState.READYCLIMB) {
       climberMotorLeft.set(speed * .5);
     }
-    if (RobotContainer.noteLifecycle == NoteState.CLIMB)
-    {
+    if (RobotContainer.noteLifecycle == NoteState.CLIMB) {
       climberMotorLeft.set(-speed);
     }
   }
@@ -51,7 +47,8 @@ public class ClimberLeft extends SubsystemBase {
   }
 
   public void initSendable(SendableBuilder builder) {
-		builder.addDoubleProperty("Left Climber Encoder Position", () -> climberMotorLeft.getEncoder().getPosition(), null);
+    builder.addDoubleProperty(
+        "Left Climber Encoder Position", () -> climberMotorLeft.getEncoder().getPosition(), null);
   }
 
   @Override

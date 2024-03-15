@@ -27,7 +27,6 @@ public class DustPan extends SubsystemBase {
     // Creates Compressor Object
     m_compressor = new Compressor(14, PneumaticsModuleType.CTREPCM);
     m_compressor.enableDigital();
-
   }
 
   /** Turns on the solenoid, brings dustpan up */
@@ -44,17 +43,15 @@ public class DustPan extends SubsystemBase {
   public boolean getDustPanState() {
     return solenoid.get();
   }
-	
-	
+
   /** Note Life Cycle state machine to control the intake */
   public void intakeSwitch() {
     switch (RobotContainer.noteLifecycle) {
-
-			case FIELD:
-				dustPanUp();
+      case FIELD:
+        dustPanUp();
         break;
 
-			case GROUNDINTAKE:
+      case GROUNDINTAKE:
         // Turns Solenoid on when we want to intake a note
         dustPanDown();
         break;
@@ -69,20 +66,20 @@ public class DustPan extends SubsystemBase {
         dustPanUp();
         break;
 
-			default:
-				// Turns Solenoid off in all other cases
-				dustPanUp();
-		}
-	}
-		
-	@Override
-	/** Puts the current state of the intake onto NetworkTables */
-	public void initSendable(SendableBuilder builder) {
-		builder.addBooleanProperty("DustPan Dropped", this::getDustPanState, null);
-	}
+      default:
+        // Turns Solenoid off in all other cases
+        dustPanUp();
+    }
+  }
 
-	@Override
-	public void periodic() {
-		// This method will be called once per scheduler run
-	}
+  @Override
+  /** Puts the current state of the intake onto NetworkTables */
+  public void initSendable(SendableBuilder builder) {
+    builder.addBooleanProperty("DustPan Dropped", this::getDustPanState, null);
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
 }
