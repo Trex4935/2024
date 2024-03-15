@@ -4,9 +4,9 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -36,7 +36,6 @@ public class LEDControl extends SubsystemBase {
     ledToggle = false;
     counter = 0;
     RobotContainer.noteLifecycle = NoteState.FIELD;
-
   }
 
   // Used to create rainbow LEDs
@@ -77,7 +76,6 @@ public class LEDControl extends SubsystemBase {
       ledStrip.setData(ledBuffer);
       ledStrip.start();
     }
-
   }
 
   // A method used to create non changing LEDs or solid LEDs
@@ -113,13 +111,13 @@ public class LEDControl extends SubsystemBase {
   }
 
   /**
-   * 
-   * @param pirmaryColor    Primary color of LED strip e.g Color.kRed
-   * @param secondaryColor  Secondary color of LED strip e.g. Color.kBlack
-   * @param startPosition   Initial position of Primary color
+   * @param pirmaryColor Primary color of LED strip e.g Color.kRed
+   * @param secondaryColor Secondary color of LED strip e.g. Color.kBlack
+   * @param startPosition Initial position of Primary color
    * @param lengthOfPrimary Number of LEDs to set to Primary Color
    */
-  public void setLEDSectionOn(Color pirmaryColor, Color secondaryColor, int startPosition, int lengthOfPrimary) {
+  public void setLEDSectionOn(
+      Color pirmaryColor, Color secondaryColor, int startPosition, int lengthOfPrimary) {
 
     // set all of the leds to the secondary color
     for (int i = 0; i < ledBufferLength; i++) {
@@ -137,13 +135,11 @@ public class LEDControl extends SubsystemBase {
       ledBuffer.setLED(startPosition, pirmaryColor);
       startPosition++;
     }
-
   }
 
   /**
-   * 
-   * @param primaryColor    Color that will be moving e.g. Color.kRed
-   * @param secondaryColor  Color that will be the background e.g. Color.kBlack
+   * @param primaryColor Color that will be moving e.g. Color.kRed
+   * @param secondaryColor Color that will be the background e.g. Color.kBlack
    * @param lengthOfPrimary Length of moving strip.
    */
   public void setLEDsWalking(Color primaryColor, Color secondaryColor, int lengthOfPrimary) {
@@ -162,7 +158,7 @@ public class LEDControl extends SubsystemBase {
     // implementing LEDs into LED control
     switch (RobotContainer.noteLifecycle) {
 
-      // Refer to LED guide in extension to see what each state changes the LEDs to
+        // Refer to LED guide in extension to see what each state changes the LEDs to
       case FIELD: // Solid Orange
         solidLEDS(5, 255, 32);
         break;
@@ -218,6 +214,5 @@ public class LEDControl extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-  }
+  public void periodic() {}
 }

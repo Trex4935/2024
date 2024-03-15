@@ -4,19 +4,17 @@
 
 package frc.robot.subsystems;
 
-import java.util.HashMap;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkLimitSwitch;
-
+import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.extension.SparkMax;
-import frc.robot.extension.Helper;
+import java.util.HashMap;
 
 public class Pivot extends SubsystemBase {
   // Creates two new limit switches
@@ -63,7 +61,6 @@ public class Pivot extends SubsystemBase {
     stateAngle.put("Source", -37.0);
     stateAngle.put("Climb", 0.0);
     stateAngle.put("Trap", -10.0);
-
   }
 
   // motor speed if limit switches aren't pressed
@@ -100,7 +97,6 @@ public class Pivot extends SubsystemBase {
 
   public void resetPivotOffset() {
     offsetAngle = 0;
-
   }
 
   /** Stops the pivot motor */
@@ -112,11 +108,11 @@ public class Pivot extends SubsystemBase {
   public void pivotSwitch() {
     switch (RobotContainer.noteLifecycle) {
 
-      // Note is dropped into the amp
+        // Note is dropped into the amp
       case AMP:
         setPivotPosition("Amp");
         break;
-      // Note is shot out towards speaker
+        // Note is shot out towards speaker
       case SPEAKER:
         setPivotPosition("Speaker");
         break;
@@ -136,14 +132,14 @@ public class Pivot extends SubsystemBase {
         setPivotPosition("Default");
         resetPivotOffset();
     }
-
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(), null);
     builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
-    builder.addBooleanProperty("Force Field Limit Switch", () -> forceFieldLimitSwitch.isPressed(), null);
+    builder.addBooleanProperty(
+        "Force Field Limit Switch", () -> forceFieldLimitSwitch.isPressed(), null);
     builder.addBooleanProperty("Battery Limit Switch", () -> batteryLimitSwitch.isPressed(), null);
     builder.addBooleanProperty("Pivot At Angle", () -> pivotAtAngle, null);
   }
