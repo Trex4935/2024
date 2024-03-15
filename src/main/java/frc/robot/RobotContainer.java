@@ -5,16 +5,13 @@
 package frc.robot;
 
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.pathplanner.lib.auto.AutoBuilder;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -27,10 +24,11 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimberLeft;
 import frc.robot.subsystems.ClimberRight;
 import frc.robot.subsystems.DustPan;
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Rollers;
 import frc.robot.subsystems.LEDControl;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Rollers;
+import frc.robot.subsystems.Shooter;
+
 // import frc.robot.commands.AlignWithPID;
 
 public class RobotContainer {
@@ -49,7 +47,8 @@ public class RobotContainer {
 
   // Swerve settings
   public static double MaxSpeed = 6; // 6 meters per second desired top speed
-  private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+  private double MaxAngularRate =
+      1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   // Setting up bindings for necessary control of the swerve drive platform
   private final CommandXboxController driverJoystick = new CommandXboxController(0); // My joystick
@@ -62,10 +61,12 @@ public class RobotContainer {
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   // Make sure things are field centric for swerve
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-                                                               // driving in open loop
+  private final SwerveRequest.FieldCentric drive =
+      new SwerveRequest.FieldCentric()
+          .withDeadband(MaxSpeed * 0.1)
+          .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+  // driving in open loop
   // Setting up the brake and pointing function
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -94,19 +95,29 @@ public class RobotContainer {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
         // Driving with joysticks
-        drivetrain.applyRequest(() -> drive.withVelocityX(driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
-            // Joystick
-            .withVelocityY(driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
-            .withRotationalRate(-driverJoystick.getRightX() * MaxAngularRate) // Drive right with Joystick
-        ));
+        drivetrain.applyRequest(
+            () ->
+                drive
+                    .withVelocityX(driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
+                    // Joystick
+                    .withVelocityY(driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
+                    .withRotationalRate(
+                        -driverJoystick.getRightX() * MaxAngularRate) // Drive right with Joystick
+            ));
 
     // Control climber motors
-    driverJoystick.rightTrigger()
+    driverJoystick
+        .rightTrigger()
         .whileTrue(
-            climberRight.runEnd(() -> climberRight.setClimberMotorOne(0.8), () -> climberRight.stopClimberMotorOne()));
-    driverJoystick.leftTrigger()
+            climberRight.runEnd(
+                () -> climberRight.setClimberMotorOne(0.8),
+                () -> climberRight.stopClimberMotorOne()));
+    driverJoystick
+        .leftTrigger()
         .whileTrue(
-            climberLeft.runEnd(() -> climberLeft.setClimberMotorTwo(0.8), () -> climberLeft.stopClimberMotorTwo()));
+            climberLeft.runEnd(
+                () -> climberLeft.setClimberMotorTwo(0.8),
+                () -> climberLeft.stopClimberMotorTwo()));
     // Makes a button that slows the speed down when needed
     driverJoystick.leftBumper().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
 
@@ -114,9 +125,13 @@ public class RobotContainer {
     driverJoystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
     // B button saves the current state of the wheels, and when you let go, it
     // reverts back to them.
-    driverJoystick.b().whileTrue(drivetrain
-        .applyRequest(
-            () -> point.withModuleDirection(new Rotation2d(-driverJoystick.getLeftY(), -driverJoystick.getLeftX()))));
+    driverJoystick
+        .b()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () ->
+                    point.withModuleDirection(
+                        new Rotation2d(-driverJoystick.getLeftY(), -driverJoystick.getLeftX()))));
 
     // reset the field-centric heading on left bumper press
     driverJoystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -164,13 +179,17 @@ public class RobotContainer {
     buttonBox.button(6).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
 
     // Button 7 changes state to ready-to-climb
-    buttonBox.button(7).whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
+    buttonBox
+        .button(7)
+        .whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
 
     // Button 8 changes state to eject
     buttonBox.button(8).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.EJECT)));
 
     // Button 9 changes state to intake
-    buttonBox.button(9).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
+    buttonBox
+        .button(9)
+        .onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
 
     // Button 10 changes state to source
     buttonBox.button(10).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
@@ -202,12 +221,12 @@ public class RobotContainer {
     SmartDashboard.putData(pivot);
     SmartDashboard.putData(shooter);
     SmartDashboard.putData(climberRight);
-
   }
 
   public Pose2d getTargetPose(Pose2d aprilTagPose, double[] offsetArray) {
     // Creates an offset pose from the offset array
-    Pose2d pose2dOffset = new Pose2d(offsetArray[0], offsetArray[1], Rotation2d.fromDegrees(offsetArray[2]));
+    Pose2d pose2dOffset =
+        new Pose2d(offsetArray[0], offsetArray[1], Rotation2d.fromDegrees(offsetArray[2]));
     // Gets target values from the tag poses and the offset
     double targetX = aprilTagPose.getX() + pose2dOffset.getX();
     double targetY = aprilTagPose.getY() + pose2dOffset.getY();
@@ -217,7 +236,7 @@ public class RobotContainer {
     return targetPose;
   }
 
-  //Runs Auto
+  // Runs Auto
   public Command getAutonomousCommand() {
     return new PathPlannerAuto("");
   }
