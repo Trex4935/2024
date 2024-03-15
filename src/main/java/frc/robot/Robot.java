@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
     if (UseLimelight) {
       var lastResult = LimelightHelpers.getLatestResults("limelight-testll").targetingResults;
 
-      Pose2d llPose = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red ? lastResult.getBotPose2d_wpiRed() : lastResult.getBotPose2d_wpiBlue();
+      Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
 
       if (lastResult.valid) {
         m_robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());

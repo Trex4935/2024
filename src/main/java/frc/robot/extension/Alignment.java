@@ -79,6 +79,7 @@ public class Alignment {
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(2, 5));
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(8, 13));
 
+			/* 
 				sourceOffset[0] = 0.320528;
 				sourceOffset[1] = 0.879128;
 				sourceOffset[2] = -60.0;
@@ -93,7 +94,8 @@ public class Alignment {
 					
 				stageOffset[0] = 0;
 				stageOffset[1] = 0.53;
-				stageOffset[2] = 180.0; 
+				stageOffset[2] = 180.0;
+				*/
 
 		} else {
 			speakerAprilTag = aprilTagPoses.get(3);
@@ -109,6 +111,7 @@ public class Alignment {
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(5, 8));
 			opposingAllianceAprilTags.addAll(aprilTagPoses.subList(13, 16));
 
+			/* 
 			sourceOffset[0] = -0.4;
 			sourceOffset[1] = 0.879128;
 			sourceOffset[2] = -120.0;
@@ -124,6 +127,7 @@ public class Alignment {
 			stageOffset[0] = 0;
 			stageOffset[1] = 0.53;
 			stageOffset[2] = 180.0;
+			*/
 		}
 	}
 }
