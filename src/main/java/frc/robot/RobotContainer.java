@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.AlignWithPID;
 import frc.robot.commands.Autos;
 import frc.robot.extension.Alignment;
 import frc.robot.extension.NoteState;
@@ -28,8 +29,6 @@ import frc.robot.subsystems.LEDControl;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Rollers;
 import frc.robot.subsystems.Shooter;
-
-// import frc.robot.commands.AlignWithPID;
 
 public class RobotContainer {
 
@@ -76,9 +75,12 @@ public class RobotContainer {
 
   // Alternate align command
   // TODO: Tune offset values
-  // private final AlignWithPID align = new AlignWithPID(drivetrain,
-  // () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset),
-  // true, false);
+  private final AlignWithPID align =
+      new AlignWithPID(
+          drivetrain,
+          () -> getTargetPose(Alignment.speakerAprilTag, Alignment.speakerOffset),
+          true,
+          true);
 
   // Creates the autoChooser to use in the sendables
   // private final SendableChooser<Command> autoChooser;
@@ -123,6 +125,8 @@ public class RobotContainer {
 
     // A button acts as a brake, and turns all wheels inward
     driverJoystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+
+    driverJoystick.start().whileTrue(align);
     // B button saves the current state of the wheels, and when you let go, it
     // reverts back to them.
     driverJoystick
@@ -138,23 +142,42 @@ public class RobotContainer {
 
     // All alignment commands require the right trigger to function
     // Up on the D-pad automatically aligns to the speaker
-    driverJoystick.povUp().and(driverJoystick.start())
-        .whileTrue(drivetrain.alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
-            .andThen(drivetrain.applyRequest(() -> brake)));
+    driverJoystick
+        .povUp()
+        .and(driverJoystick.start())
+        .whileTrue(
+            drivetrain
+                .alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
+                .andThen(drivetrain.applyRequest(() -> brake)));
 
     // Down on the D-pad automatically aligns to the source
-    driverJoystick.povDown().and(driverJoystick.start()).whileTrue(drivetrain.alignWithPathPlanner(
-        Alignment.sourceAprilTag, Alignment.sourceOffset).andThen(drivetrain.applyRequest(() -> brake)));
+    driverJoystick
+        .povDown()
+        .and(driverJoystick.start())
+        .whileTrue(
+            drivetrain
+                .alignWithPathPlanner(Alignment.sourceAprilTag, Alignment.sourceOffset)
+                .andThen(drivetrain.applyRequest(() -> brake)));
 
     // Left on the D-pad automatically aligns to the amp
-    driverJoystick.povLeft().and(driverJoystick.start())
-        .whileTrue(drivetrain.alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
-            .andThen(drivetrain.applyRequest(() -> brake)));
+    driverJoystick
+        .povLeft()
+        .and(driverJoystick.start())
+        .whileTrue(
+            drivetrain
+                .alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
+                .andThen(drivetrain.applyRequest(() -> brake)));
 
     // Right on the D-pad automatically aligns to the stage
-    driverJoystick.povRight().and(driverJoystick.start()).whileTrue(drivetrain.alignWithPathPlanner(
-        drivetrain.getState().Pose.nearest(Alignment.stageAprilTags), Alignment.stageOffset)
-        .andThen(drivetrain.applyRequest(() -> brake)));
+    driverJoystick
+        .povRight()
+        .and(driverJoystick.start())
+        .whileTrue(
+            drivetrain
+                .alignWithPathPlanner(
+                    drivetrain.getState().Pose.nearest(Alignment.stageAprilTags),
+                    Alignment.stageOffset)
+                .andThen(drivetrain.applyRequest(() -> brake)));
 
     // The menu button will align using a PID
     // driverJoystick.back().and(driverJoystick.start()).whileTrue(align);

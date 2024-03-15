@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 public class AlignWithPID extends Command {
   /** Creates a new DriveToPoseCommand. */
   private static final TrapezoidProfile.Constraints DEFAULT_XY_CONSTRAINTS =
-      new TrapezoidProfile.Constraints(3, 3);
+      new TrapezoidProfile.Constraints(1, 1);
 
   private static final TrapezoidProfile.Constraints DEFAULT_OMEGA_CONSTRAINTS =
       new TrapezoidProfile.Constraints(Math.PI, Math.PI);
@@ -53,7 +53,7 @@ public class AlignWithPID extends Command {
 
     xController.setTolerance(0.01);
     yController.setTolerance(0.01);
-    thetaController.setTolerance(Units.degreesToRadians(2.0));
+    thetaController.setTolerance(Units.degreesToRadians(1.0));
 
     driveToPoint = new SwerveRequest.ApplyChassisSpeeds();
     finalDrive = new SwerveRequest.ApplyChassisSpeeds();
@@ -68,6 +68,7 @@ public class AlignWithPID extends Command {
     resetPIDControllers();
     if (useVision) {
       int tagID = (int) LimelightHelpers.getFiducialID("limelight-testll");
+      System.out.println(tagID);
       Supplier<Pose2d> visionGoalPoseSupplier = (() -> getOffsetTarget(tagID));
       Pose2d pose = visionGoalPoseSupplier.get();
 
@@ -91,6 +92,10 @@ public class AlignWithPID extends Command {
 
   public boolean atGoal() {
     return xController.atGoal() && yController.atGoal() && thetaController.atGoal();
+  }
+
+  public boolean atGoalTheta() {
+    return thetaController.atGoal();
   }
 
   private void resetPIDControllers() {
@@ -130,9 +135,9 @@ public class AlignWithPID extends Command {
         driveToPoint.withSpeeds(
             ChassisSpeeds.fromFieldRelativeSpeeds(
                 xSpeed, ySpeed, thetaSpeed, robotPose.getRotation()));
-    System.out.println(xSpeed);
-    System.out.println(ySpeed);
-    System.out.println(thetaSpeed);
+    // System.out.println(xSpeed);
+    // System.out.println(ySpeed);
+    // System.out.println(thetaSpeed);
 
     drivetrain.setControl(driveToPoint);
 
@@ -184,8 +189,8 @@ public class AlignWithPID extends Command {
       case 9:
         return getTargetPose(tagPose, 0, 0, 0);
 
-			case 10:
-				return getTargetPose(tagPose, -0.4, 0.879128, -120.0);
+      case 10:
+        return getTargetPose(tagPose, -0.4, 0.879128, -120.0);
 
       case 11:
         return getTargetPose(tagPose, 0, 0, 0);

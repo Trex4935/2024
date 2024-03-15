@@ -5,8 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -64,9 +63,18 @@ public class Robot extends TimedRobot {
       var lastResult = LimelightHelpers.getLatestResults("limelight-testll").targetingResults;
 
       Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
+      // idk why this works
+      Pose2d newLLPose =
+          new Pose2d(
+              llPose.getTranslation(),
+              m_robotContainer
+                  .drivetrain
+                  .getPigeon2()
+                  .getRotation2d()
+                  .minus(new Rotation2d(Math.PI / 2)));
 
       if (lastResult.valid) {
-        m_robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
+        m_robotContainer.drivetrain.addVisionMeasurement(newLLPose, Timer.getFPGATimestamp());
         // Add standard deviations for more accuracy
         // m_robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp(),
         // VecBuilder.fill(0, 0, 0));
