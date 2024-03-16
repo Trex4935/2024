@@ -4,10 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.extension.Alignment;
@@ -60,24 +58,12 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     if (UseLimelight) {
-      var lastResult = LimelightHelpers.getLatestResults("limelight-testll").targetingResults;
+      LimelightHelpers.PoseEstimate llMeasurement =
+          LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-testll");
 
-      Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
-      // idk why this works
-      Pose2d newLLPose =
-          new Pose2d(
-              llPose.getTranslation(),
-              m_robotContainer
-                  .drivetrain
-                  .getPigeon2()
-                  .getRotation2d()
-                  .minus(new Rotation2d(Math.PI / 2)));
-
-      if (lastResult.valid) {
-        m_robotContainer.drivetrain.addVisionMeasurement(newLLPose, Timer.getFPGATimestamp());
-        // Add standard deviations for more accuracy
-        // m_robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp(),
-        // VecBuilder.fill(0, 0, 0));
+      if (llMeasurement.tagCount >= 2) {
+        m_robotContainer.drivetrain.addVisionMeasurement(
+            llMeasurement.pose, llMeasurement.timestampSeconds, VecBuilder.fill(.7, .7, 9999999));
       }
     }
   }

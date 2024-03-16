@@ -19,7 +19,7 @@ public class Alignment {
   public static final double fieldLength = Units.inchesToMeters(651.223);
   public static final double fieldWidth = Units.inchesToMeters(323.277);
 
-	public static Alliance currentAlliance;
+  public static Alliance currentAlliance;
 
   // Position offsets for field elements
   public static double[] sourceOffset = new double[3];
@@ -47,22 +47,21 @@ public class Alignment {
 
   public static void updateAprilTagTranslations() {
 
-		currentAlliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-		// Clear pose lists
-		aprilTagPoses.clear();
-		allianceAprilTags.clear();
-		stageAprilTags.clear();
-		opposingAllianceAprilTags.clear();
-
+    currentAlliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+    // Clear pose lists
+    aprilTagPoses.clear();
+    allianceAprilTags.clear();
+    stageAprilTags.clear();
+    opposingAllianceAprilTags.clear();
 
     // Return a pose from each AprilTag
     for (int i = 0; i < aprilTagLayout.getTags().size(); i++) {
       aprilTagPoses.add(i, aprilTagLayout.getTagPose(i + 1).get().toPose2d());
     }
 
-		// Adds AprilTag poses to lists and sets offsets according to alliance
-		if ((DriverStation.getAlliance().isEmpty() ||
-				DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)) {
+    // Adds AprilTag poses to lists and sets offsets according to alliance
+    if ((DriverStation.getAlliance().isEmpty()
+        || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)) {
 
       sourceAprilTag = aprilTagPoses.get(0);
       allianceAprilTags.add(sourceAprilTag);
@@ -79,21 +78,21 @@ public class Alignment {
       opposingAllianceAprilTags.addAll(aprilTagPoses.subList(2, 5));
       opposingAllianceAprilTags.addAll(aprilTagPoses.subList(8, 13));
 
-				sourceOffset[0] = 0.320528;
-				sourceOffset[1] = 0.879128;
-				sourceOffset[2] = -60.0;
+      sourceOffset[0] = 0.320528;
+      sourceOffset[1] = 0.879128;
+      sourceOffset[2] = -60.0;
 
-				speakerOffset[0] = 1.763;
-				speakerOffset[1] = 0;
-				speakerOffset[2] = -180.0;
+      speakerOffset[0] = 1.763;
+      speakerOffset[1] = 0;
+      speakerOffset[2] = -180.0;
 
-				ampOffset[0] = 0;
-				ampOffset[1] = -0.7042;
-				ampOffset[2] = 90.0;
+      ampOffset[0] = 0;
+      ampOffset[1] = -0.7042;
+      ampOffset[2] = 90.0;
 
-				stageOffset[0] = 0;
-				stageOffset[1] = 0.53;
-				stageOffset[2] = 180.0;
+      stageOffset[0] = 0;
+      stageOffset[1] = 0.53;
+      stageOffset[2] = 180.0;
 
     } else {
       speakerAprilTag = aprilTagPoses.get(3);
@@ -109,21 +108,21 @@ public class Alignment {
       opposingAllianceAprilTags.addAll(aprilTagPoses.subList(5, 8));
       opposingAllianceAprilTags.addAll(aprilTagPoses.subList(13, 16));
 
-			sourceOffset[0] = 0.320528;
-			sourceOffset[1] = 0.879128;
-			sourceOffset[2] = -120.0;
+      sourceOffset[0] = 0.320528;
+      sourceOffset[1] = 0.879128;
+      sourceOffset[2] = -120.0;
 
-			speakerOffset[0] = -1.763;
-			speakerOffset[1] = 0;
-			speakerOffset[2] = 0;
+      speakerOffset[0] = -1.763;
+      speakerOffset[1] = 0;
+      speakerOffset[2] = 0;
 
-			ampOffset[0] = 0;
-			ampOffset[1] = -0.7042;
-			ampOffset[2] = 90.0;
+      ampOffset[0] = 0;
+      ampOffset[1] = -0.7042;
+      ampOffset[2] = 90.0;
 
-			stageOffset[0] = 0;
-			stageOffset[1] = 0.53;
-			stageOffset[2] = 180.0;
-		}
-	}
+      stageOffset[0] = 0;
+      stageOffset[1] = 0.53;
+      stageOffset[2] = 180.0;
+    }
+  }
 }
