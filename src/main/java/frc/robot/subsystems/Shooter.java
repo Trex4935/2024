@@ -34,13 +34,19 @@ public class Shooter extends SubsystemBase {
     shootingMotorRight.set(speed);
   }
 
+  public boolean shooterAtSpeed() {
+    if (shootingMotorLeft.getEncoder().getVelocity() > 3500) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   /** makes motors spin YIPPIE!! */
   public void setShooters(double motor1Speed, double motor2Speed) {
     shootingMotorLeft.set(motor1Speed);
     shootingMotorRight.set(motor2Speed);
-    if (shootingMotorLeft.get() == motor1Speed) {
-      speedState = true;
-    }
+    speedState = shooterAtSpeed();
   }
 
   /** Stops left shooting motor */
