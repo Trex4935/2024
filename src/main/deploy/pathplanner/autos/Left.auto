@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.45,
-      "y": 5.55
+      "x": 0.6950451672385876,
+      "y": 7.1
     },
     "rotation": 0
   },
@@ -11,6 +11,12 @@
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left-1"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -26,13 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center-1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Field"
+            "pathName": "Left-2"
           }
         }
       ]
