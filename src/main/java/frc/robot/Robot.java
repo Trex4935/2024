@@ -5,7 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.extension.Alignment;
@@ -61,9 +63,11 @@ public class Robot extends TimedRobot {
       LimelightHelpers.PoseEstimate llMeasurement =
           LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-testll");
 
+      Pose2d llPose = LimelightHelpers.getBotPose2d_wpiBlue("limelight-testll");
+
       if (llMeasurement.tagCount >= 2) {
         m_robotContainer.drivetrain.addVisionMeasurement(
-            llMeasurement.pose, llMeasurement.timestampSeconds, VecBuilder.fill(.7, .7, 9999999));
+            llPose, Timer.getFPGATimestamp(), VecBuilder.fill(.7, .7, 9999999));
       }
     }
   }
