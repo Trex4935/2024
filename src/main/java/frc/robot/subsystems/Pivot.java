@@ -43,7 +43,7 @@ public class Pivot extends SubsystemBase {
     // News up
     PID = new PIDController(0.001, 0.0, 0.0);
     // News up Pigeon IMU
-    pidgey = new Pigeon2(8);
+    pidgey = new Pigeon2(18);
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
     pivotMotor.setInverted(false);
@@ -80,8 +80,11 @@ public class Pivot extends SubsystemBase {
   public void setPivotPosition(String desiredPosition) {
     // double targetAngle = stateAngle.get(desiredPosition) + offsetAngle;
     double targetAngle = 90.0;
-    pivotMotor.set(PID.calculate(pidgey.getRoll().getValueAsDouble(), targetAngle));
-    System.out.println((PID.calculate(pidgey.getRoll().getValueAsDouble(), targetAngle)));
+    double currentRoll = pidgey.getRoll().getValueAsDouble();
+    if (currentRoll < 0) {
+      currentRoll = 0;
+    }
+    pivotMotor.set(PID.calculate(currentRoll, targetAngle));
     // pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
     pivotAtAngle = MathUtil.isNear(targetAngle, pidgey.getRoll().getValueAsDouble(), 0.4);
     testLimitSwitch();
@@ -138,8 +141,10 @@ public class Pivot extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(), null);
-    builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
+    // builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(),
+    // null);
+    // builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(),
+    // null);
     builder.addBooleanProperty(
         "Force Field Limit Switch", () -> forceFieldLimitSwitch.isPressed(), null);
     builder.addBooleanProperty("Battery Limit Switch", () -> batteryLimitSwitch.isPressed(), null);
