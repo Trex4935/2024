@@ -142,7 +142,7 @@ public class Rollers extends SubsystemBase {
         // SPEAKER STATE: Turns on both high and low rollers and returns to Field state
         // after 5 seconds
       case SPEAKER:
-        if (Pivot.pivotAtAngle) {
+        if (Pivot.pivotAtAngle && Shooter.speedState) {
           setMagazine(0.9);
         }
         break;
