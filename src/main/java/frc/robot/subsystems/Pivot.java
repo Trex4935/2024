@@ -56,7 +56,7 @@ public class Pivot extends SubsystemBase {
     stateAngle.put("Default", 170.0);
     stateAngle.put("Amp", 145.0);
     stateAngle.put("Speaker", 120.0); // -25
-    stateAngle.put("Source",90.0);
+    stateAngle.put("Source", 90.0);
     stateAngle.put("Climb", 100.0);
     stateAngle.put("Trap", 100.0);
   }
