@@ -4,12 +4,11 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
-import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -17,6 +16,9 @@ import frc.robot.extension.SparkMax;
 import java.util.HashMap;
 
 public class Pivot extends SubsystemBase {
+  // Creates a Pigeon IMU
+  Pigeon2 pigeon2 = new Pigeon2(8);
+  // WPI_PigeonIMU gyro = new WPI_PigeonIMU(6);
   // Creates two new limit switches
   SparkLimitSwitch batteryLimitSwitch, forceFieldLimitSwitch;
   boolean currentLimitSwitch = false;
@@ -25,12 +27,8 @@ public class Pivot extends SubsystemBase {
   /** Creates a new Pivot. */
   CANSparkMax pivotMotor;
 
-  // Initializes a duty cycle encoder
-  RelativeEncoder relativeEncoder;
-
-  // Initializes the pivot motor's PID
-  SparkPIDController pivotPID;
-
+  // Creates a new PID
+  private PIDController PID;
   // offset
   double offsetAngle = 0.0;
 
@@ -39,28 +37,28 @@ public class Pivot extends SubsystemBase {
   // Creates Pivot at Angle Object
   public static boolean pivotAtAngle;
 
+  private final Pigeon2 pidgey;
+
   public Pivot() {
+    // News up
+    PID = new PIDController(0.015, 0, 0.0);
+    // News up Pigeon IMU
+    pidgey = new Pigeon2(18);
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
-    pivotPID = pivotMotor.getPIDController();
-    SparkMax.configPIDforPositionControl(pivotPID, 0.1, 0, 0, 0, 0, -0.3, 0.3);
-
-    // News up the relative encoder and configs it to the PID
-    relativeEncoder = pivotMotor.getEncoder();
-    pivotPID.setFeedbackDevice(relativeEncoder);
-
+    pivotMotor.setInverted(true);
     // News up the limit switches
     batteryLimitSwitch = pivotMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
     forceFieldLimitSwitch = pivotMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
     // News up the Hash Map and adds the pivot values to
     stateAngle = new HashMap<String, Double>();
-    stateAngle.put("Default", -55.0);
-    stateAngle.put("Amp", -38.0);
-    stateAngle.put("Speaker", -20.0); // -25
-    stateAngle.put("Source", -37.0);
-    stateAngle.put("Climb", 0.0);
-    stateAngle.put("Trap", -10.0);
+    stateAngle.put("Default", 170.0);
+    stateAngle.put("Amp", 145.0);
+    stateAngle.put("Speaker", 120.0); // -25
+    stateAngle.put("Source",90.0);
+    stateAngle.put("Climb", 100.0);
+    stateAngle.put("Trap", 100.0);
   }
 
   // motor speed if limit switches aren't pressed
@@ -73,19 +71,28 @@ public class Pivot extends SubsystemBase {
     currentLimitSwitch = batteryLimitSwitch.isPressed();
     for (int index = 0; index % 10 == 0; index++) {
       if (currentLimitSwitch) {
-        // System.out.println("VALUE BEFORE RESET: " + relativeEncoder.getPosition());
-        relativeEncoder.setPosition(-45);
+        // relativeEncoder.setPosition(-50);
       }
     }
   }
 
   // Manual movement for the PID
   public void setPivotPosition(String desiredPosition) {
-    double targetAngle = stateAngle.get(desiredPosition) + offsetAngle;
-    pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
-    pivotAtAngle = MathUtil.isNear(targetAngle, relativeEncoder.getPosition(), 0.4);
+    // double targetAngle = stateAngle.get(desiredPosition) + offsetAngle;
+    double targetAngle = stateAngle.get(desiredPosition);
+    double currentRoll = pidgey.getRoll().getValueAsDouble();
+    if (currentRoll < -90) {
+      currentRoll = 181;
+    } else if (currentRoll < 0) {
+      currentRoll = 0;
+    }
+    pivotMotor.set(PID.calculate(currentRoll, targetAngle));
+    // pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
+    pivotAtAngle = MathUtil.isNear(targetAngle, pidgey.getRoll().getValueAsDouble(), 0.4);
     testLimitSwitch();
   }
+
+  // method that reads the angle of
 
   public void manualPivotForward() {
     offsetAngle = offsetAngle + 0.5;
@@ -136,12 +143,27 @@ public class Pivot extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(), null);
-    builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(), null);
+    // builder.addDoubleProperty("Pivot Encoder Position", () -> relativeEncoder.getPosition(),
+    // null);
+    // builder.addDoubleProperty("Pivot Encoder Velocity", () -> relativeEncoder.getVelocity(),
+    // null);
     builder.addBooleanProperty(
         "Force Field Limit Switch", () -> forceFieldLimitSwitch.isPressed(), null);
     builder.addBooleanProperty("Battery Limit Switch", () -> batteryLimitSwitch.isPressed(), null);
+    // builder.addDoubleProperty("Pivot Encoder Position", () ->
+    // relativeEncoder.getPosition(), null);
+    // builder.addDoubleProperty("Pivot Encoder Velocity", () ->
+    // relativeEncoder.getVelocity(), null);
+    // builder.addBooleanProperty("Force Field Limit Switch", () ->
+    // forceFieldLimitSwitch.isPressed(), null);
+    // builder.addBooleanProperty("Battery Limit Switch", () ->
+    // batteryLimitSwitch.isPressed(), null);
     builder.addBooleanProperty("Pivot At Angle", () -> pivotAtAngle, null);
+    // builder.addStringProperty("Pigeon IMU", () -> pidgey.getYaw().toString(),
+    // null);
+    builder.addDoubleProperty("Pigeon IMU Roll", () -> pidgey.getRoll().getValueAsDouble(), null);
+    // builder.addStringProperty("Pigeon IMU Pitch", () ->
+    // pidgey.getPitch().toString(), null);
   }
 
   @Override
