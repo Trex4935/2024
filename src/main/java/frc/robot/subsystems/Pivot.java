@@ -41,24 +41,24 @@ public class Pivot extends SubsystemBase {
 
   public Pivot() {
     // News up
-    PID = new PIDController(0.001, 0.0, 0.0);
+    PID = new PIDController(0.015, 0, 0.0);
     // News up Pigeon IMU
     pidgey = new Pigeon2(18);
     // News up pivot motor and configs it to the PID
     pivotMotor = SparkMax.createDefaultCANSparkMax(7);
-    pivotMotor.setInverted(false);
+    pivotMotor.setInverted(true);
     // News up the limit switches
     batteryLimitSwitch = pivotMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
     forceFieldLimitSwitch = pivotMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
     // News up the Hash Map and adds the pivot values to
     stateAngle = new HashMap<String, Double>();
-    stateAngle.put("Default", -55.0);
-    stateAngle.put("Amp", -38.0);
-    stateAngle.put("Speaker", -20.0); // -25
-    stateAngle.put("Source", -37.0);
-    stateAngle.put("Climb", 0.0);
-    stateAngle.put("Trap", -10.0);
+    stateAngle.put("Default", 170.0);
+    stateAngle.put("Amp", 145.0);
+    stateAngle.put("Speaker", 120.0); // -25
+    stateAngle.put("Source",90.0);
+    stateAngle.put("Climb", 100.0);
+    stateAngle.put("Trap", 100.0);
   }
 
   // motor speed if limit switches aren't pressed
@@ -79,7 +79,7 @@ public class Pivot extends SubsystemBase {
   // Manual movement for the PID
   public void setPivotPosition(String desiredPosition) {
     // double targetAngle = stateAngle.get(desiredPosition) + offsetAngle;
-    double targetAngle = 90.0;
+    double targetAngle = stateAngle.get(desiredPosition);
     double currentRoll = pidgey.getRoll().getValueAsDouble();
     if (currentRoll < -90) {
       currentRoll = 181;
@@ -161,7 +161,7 @@ public class Pivot extends SubsystemBase {
     builder.addBooleanProperty("Pivot At Angle", () -> pivotAtAngle, null);
     // builder.addStringProperty("Pigeon IMU", () -> pidgey.getYaw().toString(),
     // null);
-    builder.addStringProperty("Pigeon IMU Roll", () -> pidgey.getRoll().toString(), null);
+    builder.addDoubleProperty("Pigeon IMU Roll", () -> pidgey.getRoll().getValueAsDouble(), null);
     // builder.addStringProperty("Pigeon IMU Pitch", () ->
     // pidgey.getPitch().toString(), null);
   }
