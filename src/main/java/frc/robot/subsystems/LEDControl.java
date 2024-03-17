@@ -164,7 +164,7 @@ public class LEDControl extends SubsystemBase {
         break;
 
       case GROUNDINTAKE: // Black for now
-        solidLEDS(0, 0, 0);
+        flashLEDS(5, 0, 0, 50);
         break;
 
       case SOURCE: // Flashing White
