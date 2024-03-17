@@ -81,7 +81,9 @@ public class Pivot extends SubsystemBase {
     // double targetAngle = stateAngle.get(desiredPosition) + offsetAngle;
     double targetAngle = 90.0;
     double currentRoll = pidgey.getRoll().getValueAsDouble();
-    if (currentRoll < 0) {
+    if (currentRoll < -90) {
+      currentRoll = 181;
+    } else if (currentRoll < 0) {
       currentRoll = 0;
     }
     pivotMotor.set(PID.calculate(currentRoll, targetAngle));
