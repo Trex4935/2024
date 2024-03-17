@@ -18,6 +18,7 @@ public class Rollers extends SubsystemBase {
   // Creating Sensors; ID's shown in IDguide.md
   public FlippedDIO magneticFlap, shooterSmacna, dustpanSmacna;
   public DigitalInput storageButton;
+  private int i;
 
   Timer timer;
 
@@ -98,11 +99,15 @@ public class Rollers extends SubsystemBase {
         setMagazine(0.9);
         // intake sensor detects leading edge of note -> Grabbed state
         currentDustpanSmacnaState = dustpanSmacna.get();
-        if (Helper.detectFallingRisingEdge(
-            previousDustpanSmacnaState, currentDustpanSmacnaState, false)) {
+        if (currentDustpanSmacnaState && i > 15) {
           RobotContainer.noteLifecycle = NoteState.GRABBED;
         }
+        if (storageButton.get()) {
+          RobotContainer.noteLifecycle = NoteState.STORAGE;
+        }
         previousDustpanSmacnaState = currentDustpanSmacnaState;
+        i++;
+
         break;
         // HUMAN INTAKE STATE: Run magazine backwards
       case SOURCE:
@@ -187,6 +192,7 @@ public class Rollers extends SubsystemBase {
       default:
         stopMagazine();
         stopIntake();
+        i = 0;
     }
   }
 

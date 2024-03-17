@@ -35,7 +35,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean shooterAtSpeed() {
-    if (shootingMotorLeft.getEncoder().getVelocity() > 3500) {
+    if (shootingMotorLeft.getEncoder().getVelocity() > 3000) {
       return true;
     } else {
       return false;
@@ -46,7 +46,6 @@ public class Shooter extends SubsystemBase {
   public void setShooters(double motor1Speed, double motor2Speed) {
     shootingMotorLeft.set(motor1Speed);
     shootingMotorRight.set(motor2Speed);
-    speedState = shooterAtSpeed();
   }
 
   /** Stops left shooting motor */
@@ -76,6 +75,7 @@ public class Shooter extends SubsystemBase {
         // Note is shot out towards speaker
       case SPEAKER:
         setShooters(0.9, 0.9);
+        speedState = shooterAtSpeed();
         break;
       case EJECT:
         setShooters(0.2, 0.2);

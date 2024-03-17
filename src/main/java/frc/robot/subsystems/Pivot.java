@@ -56,10 +56,11 @@ public class Pivot extends SubsystemBase {
     stateAngle.put("Default", 170.0);
     stateAngle.put("Amp", 145.0);
     stateAngle.put("Speaker", 130.0); // -25
-    stateAngle.put("Source",63.0);
+    stateAngle.put("Source", 63.0);
     stateAngle.put("Climb", 100.0);
     stateAngle.put("Trap", 100.0);
     stateAngle.put("Intake", 90.0);
+    stateAngle.put("Control", 90.0);
   }
 
   // motor speed if limit switches aren't pressed
@@ -89,12 +90,11 @@ public class Pivot extends SubsystemBase {
     }
     pivotMotor.set(PID.calculate(currentRoll, targetAngle));
     // pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
-    pivotAtAngle = MathUtil.isNear(targetAngle, pidgey.getRoll().getValueAsDouble(), 1);
+    pivotAtAngle = MathUtil.isNear(targetAngle, pidgey.getRoll().getValueAsDouble(), 1.5);
     testLimitSwitch();
   }
 
   // method that reads the angle of
-
 
   public void manualPivotForward() {
     offsetAngle = offsetAngle + 0.5;
@@ -130,6 +130,9 @@ public class Pivot extends SubsystemBase {
         break;
       case GROUNDINTAKE:
         setPivotPosition("Intake");
+        break;
+      case CONTROL:
+        setPivotPosition("Control");
         break;
       case TRAP:
         setPivotPosition("Trap");
