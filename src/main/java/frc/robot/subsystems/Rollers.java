@@ -97,7 +97,8 @@ public class Rollers extends SubsystemBase {
         setIntake(0.9);
         // intake sensor detects leading edge of note -> Grabbed state
         currentDustpanSmacnaState = dustpanSmacna.get();
-        if (currentDustpanSmacnaState != previousDustpanSmacnaState) {
+        if (Helper.detectFallingRisingEdge(
+            previousDustpanSmacnaState, currentDustpanSmacnaState, false)) {
           RobotContainer.noteLifecycle = NoteState.GRABBED;
         }
         previousDustpanSmacnaState = currentDustpanSmacnaState;
