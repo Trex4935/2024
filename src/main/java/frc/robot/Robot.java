@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
 
       Pose2d llPose = LimelightHelpers.getBotPose2d_wpiBlue("limelight-testll");
 
-      if (llMeasurement.tagCount >= 2) {
+      if (LimelightHelpers.getLatestResults("limelight-testll").targetingResults.valid) {
         m_robotContainer.drivetrain.addVisionMeasurement(
             llPose, Timer.getFPGATimestamp(), VecBuilder.fill(.7, .7, 9999999));
       }
