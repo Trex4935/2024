@@ -13,6 +13,7 @@ import frc.robot.extension.SparkMax;
 public class Shooter extends SubsystemBase {
   // Declaring Motors
   CANSparkMax shootingMotorLeft, shootingMotorRight;
+  static boolean speedState = false;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -31,6 +32,14 @@ public class Shooter extends SubsystemBase {
   /** Sets the right shooting motor's speed */
   public void setShootingMotorRight(double speed) {
     shootingMotorRight.set(speed);
+  }
+
+  public boolean shooterAtSpeed() {
+    if (shootingMotorLeft.getEncoder().getVelocity() > 3000) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /** makes motors spin YIPPIE!! */
@@ -65,9 +74,8 @@ public class Shooter extends SubsystemBase {
         break;
         // Note is shot out towards speaker
       case SPEAKER:
-        if (Pivot.pivotAtAngle) {
-          setShooters(0.9, 0.9);
-        }
+        setShooters(0.9, 0.9);
+        speedState = shooterAtSpeed();
         break;
       case EJECT:
         setShooters(0.2, 0.2);

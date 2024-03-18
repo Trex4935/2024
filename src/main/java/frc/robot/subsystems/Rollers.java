@@ -16,8 +16,9 @@ public class Rollers extends SubsystemBase {
   CANSparkMax intake, magazine;
 
   // Creating Sensors; ID's shown in IDguide.md
-  public FlippedDIO magneticFlap, shooterSmacna;
-  public DigitalInput dustpanSmacna, storageButton;
+  public FlippedDIO magneticFlap, shooterSmacna, dustpanSmacna;
+  public DigitalInput storageButton;
+  private int i;
 
   Timer timer;
 
@@ -28,7 +29,7 @@ public class Rollers extends SubsystemBase {
     magazine = SparkMax.createDefaultCANSparkMax(5);
 
     // Sensor Objects
-    dustpanSmacna = new DigitalInput(6);
+    dustpanSmacna = new FlippedDIO(6);
     magneticFlap = new FlippedDIO(2);
     shooterSmacna = new FlippedDIO(3);
     storageButton = new FlippedDIO(1);
@@ -95,13 +96,18 @@ public class Rollers extends SubsystemBase {
         // detects note
       case GROUNDINTAKE:
         setIntake(0.9);
+        setMagazine(0.9);
         // intake sensor detects leading edge of note -> Grabbed state
         currentDustpanSmacnaState = dustpanSmacna.get();
-        if (Helper.detectFallingRisingEdge(
-            previousDustpanSmacnaState, currentDustpanSmacnaState, false)) {
+        if (currentDustpanSmacnaState && i > 15) {
           RobotContainer.noteLifecycle = NoteState.GRABBED;
         }
+        if (storageButton.get()) {
+          RobotContainer.noteLifecycle = NoteState.STORAGE;
+        }
         previousDustpanSmacnaState = currentDustpanSmacnaState;
+        i++;
+
         break;
         // HUMAN INTAKE STATE: Run magazine backwards
       case SOURCE:
@@ -141,7 +147,7 @@ public class Rollers extends SubsystemBase {
         // SPEAKER STATE: Turns on both high and low rollers and returns to Field state
         // after 5 seconds
       case SPEAKER:
-        if (Pivot.pivotAtAngle) {
+        if (Pivot.pivotAtAngle && Shooter.speedState) {
           setMagazine(0.9);
         }
         break;
@@ -186,6 +192,7 @@ public class Rollers extends SubsystemBase {
       default:
         stopMagazine();
         stopIntake();
+        i = 0;
     }
   }
 
@@ -199,6 +206,8 @@ public class Rollers extends SubsystemBase {
     builder.addBooleanProperty("storageButton", () -> storageButton.get(), null);
     builder.addDoubleProperty("Intake Motor Speed", () -> intake.get(), null);
     builder.addDoubleProperty("Magazine Motor Speed", () -> magazine.get(), null);
+    builder.addDoubleProperty("Intake Motor Temp", () -> intake.getMotorTemperature(), null);
+    builder.addDoubleProperty("Magazine Motor Temp", () -> magazine.getMotorTemperature(), null);
   }
 
   @Override

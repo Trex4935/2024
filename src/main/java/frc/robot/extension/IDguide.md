@@ -23,7 +23,7 @@ Dio2: Magnetic Flap
 Dio3: Shooter Smacna
 Dio4: Pivot Limit Switch 1
 Dio5: Pivot Limit Switch 2
-Dio6: VACANT
+Dio6: PigeonIMU
 Dio7: VACANT
 Dio8: DustPan Smacna
 Dio9: Intake Smacna

@@ -98,9 +98,10 @@ public class RobotContainer {
         drivetrain.applyRequest(
             () ->
                 drive
-                    .withVelocityX(driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
+                    .withVelocityX(-driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
                     // Joystick
-                    .withVelocityY(driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
+                    .withVelocityY(
+                        -driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
                     .withRotationalRate(
                         -driverJoystick.getRightX() * MaxAngularRate) // Drive right with Joystick
             ));
@@ -268,6 +269,6 @@ public class RobotContainer {
 
   // Runs Auto
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("");
+    return new PathPlannerAuto("Center");
   }
 }
