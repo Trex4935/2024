@@ -81,7 +81,7 @@ public class Shooter extends SubsystemBase {
         setShooters(0.2, 0.2);
         break;
       case SOURCE:
-        setShooters(-0.25, -0.25);
+        setShooters(-0.4, -0.4);
         break;
       case TRAP:
         if (Pivot.pivotAtAngle) {

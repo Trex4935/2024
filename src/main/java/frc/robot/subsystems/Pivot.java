@@ -59,7 +59,7 @@ public class Pivot extends SubsystemBase {
     stateAngle.put("Source", 63.0);
     stateAngle.put("Climb", 100.0);
     stateAngle.put("Trap", 100.0);
-    stateAngle.put("Intake", 90.0);
+    stateAngle.put("Intake", 88.0);
     stateAngle.put("Control", 90.0);
   }
 
