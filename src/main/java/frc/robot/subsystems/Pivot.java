@@ -61,7 +61,7 @@ public class Pivot extends SubsystemBase {
     stateAngle.put("Trap", 100.0);
     stateAngle.put("Intake", 88.0);
     stateAngle.put("Control", 90.0);
-    stateAngle.put("SpeakerFront", 63.0);
+    stateAngle.put("SpeakerFront", 130.0);
   }
 
   // motor speed if limit switches aren't pressed
