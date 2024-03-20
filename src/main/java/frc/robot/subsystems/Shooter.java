@@ -77,6 +77,11 @@ public class Shooter extends SubsystemBase {
         setShooters(0.5, 0.5);
         speedState = shooterAtSpeed();
         break;
+
+      case SPEAKERFRONT:
+        setShooters(0.9, 0.9);
+        speedState = shooterAtSpeed();
+        break;
       case EJECT:
         setShooters(0.2, 0.2);
         break;
