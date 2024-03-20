@@ -262,6 +262,6 @@ public class RobotContainer {
 
   // Runs Auto
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("Center");
+    return new PathPlannerAuto("Center2");
   }
 }

@@ -35,7 +35,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean shooterAtSpeed() {
-    if (shootingMotorLeft.getEncoder().getVelocity() > 3000) {
+    if (shootingMotorLeft.getEncoder().getVelocity() > 2000) {
       return true;
     } else {
       return false;
@@ -74,7 +74,7 @@ public class Shooter extends SubsystemBase {
         break;
         // Note is shot out towards speaker
       case SPEAKER:
-        setShooters(0.9, 0.9);
+        setShooters(0.5, 0.5);
         speedState = shooterAtSpeed();
         break;
       case EJECT:
