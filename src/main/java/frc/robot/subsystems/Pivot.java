@@ -61,6 +61,7 @@ public class Pivot extends SubsystemBase {
     stateAngle.put("Trap", 100.0);
     stateAngle.put("Intake", 88.0);
     stateAngle.put("Control", 90.0);
+    stateAngle.put("SpeakerFront", 63.0);
   }
 
   // motor speed if limit switches aren't pressed
@@ -124,6 +125,9 @@ public class Pivot extends SubsystemBase {
         // Note is shot out towards speaker
       case SPEAKER:
         setPivotPosition("Speaker");
+        break;
+      case SPEAKERFRONT:
+        setPivotPosition("SpeakerFront");
         break;
       case SOURCE:
         setPivotPosition("Source");

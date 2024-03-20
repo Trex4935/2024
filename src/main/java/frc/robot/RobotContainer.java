@@ -196,7 +196,9 @@ public class RobotContainer {
     buttonBox.button(5).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
 
     // Button 6 changes state to climb
-    buttonBox.button(6).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
+    buttonBox
+        .button(6)
+        .whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKERFRONT)));
 
     // Button 7 changes state to ready-to-climb
     buttonBox
