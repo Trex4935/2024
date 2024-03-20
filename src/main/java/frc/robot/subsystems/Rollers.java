@@ -111,7 +111,7 @@ public class Rollers extends SubsystemBase {
         break;
         // HUMAN INTAKE STATE: Run magazine backwards
       case SOURCE:
-        setMagazine(-0.2);
+        setMagazine(-0.4);
         if (storageButton.get()) {
           RobotContainer.noteLifecycle = NoteState.FIELD;
         }

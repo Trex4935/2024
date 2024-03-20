@@ -141,7 +141,7 @@ public class RobotContainer {
     // Up on the D-pad automatically aligns to the speaker
     driverJoystick
         .povUp()
-        .and(driverJoystick.rightTrigger())
+        .and(driverJoystick.start())
         .whileTrue(
             drivetrain
                 .alignWithPathPlanner(Alignment.speakerAprilTag, Alignment.speakerOffset)
@@ -150,7 +150,7 @@ public class RobotContainer {
     // Down on the D-pad automatically aligns to the source
     driverJoystick
         .povDown()
-        .and(driverJoystick.rightTrigger())
+        .and(driverJoystick.start())
         .whileTrue(
             drivetrain
                 .alignWithPathPlanner(Alignment.sourceAprilTag, Alignment.sourceOffset)
@@ -159,7 +159,7 @@ public class RobotContainer {
     // Left on the D-pad automatically aligns to the amp
     driverJoystick
         .povLeft()
-        .and(driverJoystick.rightTrigger())
+        .and(driverJoystick.start())
         .whileTrue(
             drivetrain
                 .alignWithPathPlanner(Alignment.ampAprilTag, Alignment.ampOffset)
@@ -168,7 +168,7 @@ public class RobotContainer {
     // Right on the D-pad automatically aligns to the stage
     driverJoystick
         .povRight()
-        .and(driverJoystick.rightTrigger())
+        .and(driverJoystick.start())
         .whileTrue(
             drivetrain
                 .alignWithPathPlanner(
