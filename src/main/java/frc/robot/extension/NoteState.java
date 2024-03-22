@@ -17,5 +17,6 @@ public enum NoteState {
   EJECT,
   TRAP,
   READYCLIMB,
-  CLIMB
+  CLIMB,
+  SPEAKERFRONT
 }

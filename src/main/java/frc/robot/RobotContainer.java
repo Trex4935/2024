@@ -185,7 +185,6 @@ public class RobotContainer {
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    // TODO: Change button numberings and reorder as necessary
     // Button 1 manually moves the pivot backwards
     buttonBox.button(1).onTrue(rollers.runOnce(() -> pivot.manualPivotBackward()));
 
@@ -195,10 +194,12 @@ public class RobotContainer {
     // Button 5 changes state to trap
     buttonBox.button(5).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.TRAP)));
 
-    // Button 6 changes state to climb
-    buttonBox.button(6).whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.CLIMB)));
+    // Button 6 changes state to speaker (front)
+    buttonBox
+        .button(6)
+        .whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKERFRONT)));
 
-    // Button 7 changes state to ready-to-climb
+    // Button 7 runs the pivot backwards
     buttonBox
         .button(7)
         .whileTrue(pivot.runEnd(() -> pivot.setPivotMotor(-0.2), () -> pivot.stopPivotMotor()));
@@ -211,31 +212,19 @@ public class RobotContainer {
         .button(9)
         .onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.GROUNDINTAKE)));
 
-    // Button # changes state to trap
+    // Button 10 changes state to source
     buttonBox
         .button(10)
         .whileTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SOURCE)));
 
-    // Button # changes state to field
-    buttonBox.button(11).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
-
-    // Button 12 changes state to field
+    // Button 12 changes state to amp
     buttonBox.button(12).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.AMP)));
 
     // Button 13 changes state to speaker
     buttonBox.button(13).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.SPEAKER)));
 
-    // Button 14 changes state to source
+    // Button 14 changes state to field
     buttonBox.button(14).onTrue(rollers.runOnce(() -> rollers.changeNoteState(NoteState.FIELD)));
-
-    // Button # manually moves the pivot forward
-    // buttonBox.button(15).onTrue(rollers.runOnce(() ->
-    // rollers.changeNoteState(NoteState.EJECT)));
-
-    // Button # manually moves the pivot backward
-    // buttonBox.button(15).onTrue(rollers.runOnce(() ->
-    // rollers.changeNoteState(NoteState.EJECT)));
-
   }
 
   // Sendables to put autoChooser and Pivot Angle in the SmartDashboard.
