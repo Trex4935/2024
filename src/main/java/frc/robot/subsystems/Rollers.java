@@ -17,7 +17,7 @@ public class Rollers extends SubsystemBase {
 
   // Creating Sensors; ID's shown in IDguide.md
   public FlippedDIO magneticFlap, shooterSmacna, dustpanSmacna;
-  public DigitalInput lowerStorageButton;
+  public DigitalInput lowerStorageButton, upperStorageButton;
   private int i;
 
   Timer timer;
@@ -33,6 +33,7 @@ public class Rollers extends SubsystemBase {
     magneticFlap = new FlippedDIO(2);
     shooterSmacna = new FlippedDIO(3);
     lowerStorageButton = new FlippedDIO(1);
+    upperStorageButton = new FlippedDIO(4);
 
     // News up a timer object
     timer = new Timer();
@@ -102,7 +103,7 @@ public class Rollers extends SubsystemBase {
         if (currentDustpanSmacnaState && i > 15) {
           RobotContainer.noteLifecycle = NoteState.GRABBED;
         }
-        if (lowerStorageButton.get()) {
+        if (upperStorageButton.get()) {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
         previousDustpanSmacnaState = currentDustpanSmacnaState;
@@ -132,7 +133,7 @@ public class Rollers extends SubsystemBase {
       case CONTROL:
         setIntake(0.9);
         setMagazine(0.9);
-        if (lowerStorageButton.get()) {
+        if (upperStorageButton.get()) {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
 
@@ -203,7 +204,8 @@ public class Rollers extends SubsystemBase {
     builder.addBooleanProperty("magazineSmacna", () -> magneticFlap.get(), null);
     builder.addBooleanProperty("dustpanSmacna", () -> dustpanSmacna.get(), null);
     builder.addBooleanProperty("shooterSmacna", () -> shooterSmacna.get(), null);
-    builder.addBooleanProperty("storageButton", () -> lowerStorageButton.get(), null);
+    builder.addBooleanProperty("lowerStorageButton", () -> lowerStorageButton.get(), null);
+    builder.addBooleanProperty("upperStorageButton", () -> upperStorageButton.get(), null);
     builder.addDoubleProperty("Intake Motor Speed", () -> intake.get(), null);
     builder.addDoubleProperty("Magazine Motor Speed", () -> magazine.get(), null);
     builder.addDoubleProperty("Intake Motor Temp", () -> intake.getMotorTemperature(), null);
