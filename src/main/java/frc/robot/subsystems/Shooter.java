@@ -15,6 +15,7 @@ public class Shooter extends SubsystemBase {
   CANSparkMax shootingMotorLeft, shootingMotorRight;
   static boolean speedState = false;
 
+
   /** Creates a new Shooter. */
   public Shooter() {
 
@@ -35,11 +36,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean shooterAtSpeed() {
-    if (shootingMotorLeft.getEncoder().getVelocity() > 2000) {
-      return true;
-    } else {
-      return false;
-    }
+    return (shootingMotorLeft.getEncoder().getVelocity() > 2000 && shootingMotorRight.getEncoder().getVelocity() > 2000);
   }
 
   /** makes motors spin YIPPIE!! */

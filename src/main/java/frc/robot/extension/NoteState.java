@@ -18,5 +18,6 @@ public enum NoteState {
   TRAP,
   READYCLIMB,
   CLIMB,
-  SPEAKERFRONT
+  SPEAKERFRONT,
+	SPEAKERCUSTOM
 }
