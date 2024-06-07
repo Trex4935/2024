@@ -41,7 +41,7 @@ public class Pivot extends SubsystemBase {
 
   public Pivot() {
     // News up
-    PID = new PIDController(0.015, 0, 0.0);
+    PID = new PIDController(0.01, 0, 0.0);
     // News up Pigeon IMU
     pidgey = new Pigeon2(18);
     // News up pivot motor and configs it to the PID
@@ -59,9 +59,9 @@ public class Pivot extends SubsystemBase {
     stateAngle.put("Source", 63.0);
     stateAngle.put("Climb", 100.0);
     stateAngle.put("Trap", 100.0);
-    stateAngle.put("Intake", 88.0);
+    stateAngle.put("Intake", 75.0);
     stateAngle.put("Control", 90.0);
-    stateAngle.put("SpeakerFront", 130.0);
+    stateAngle.put("SpeakerFront", 128.0);
   }
 
   // motor speed if limit switches aren't pressed
