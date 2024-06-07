@@ -18,10 +18,12 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import frc.robot.extension.Alignment;
 
 public class Telemetry {
   private final double MaxSpeed;
   private final CommandSwerveDrivetrain Drivetrain;
+  public static double distanceFromSpeaker;
 
   /**
    * Construct a telemetry object, with the specified max speed of the robot
@@ -102,6 +104,9 @@ public class Telemetry {
     fieldPub.set(new double[] {pose.getX(), pose.getY(), pose.getRotation().getDegrees()});
 
     rotation2d.set(pose.getRotation());
+
+    distanceFromSpeaker =
+        pose.getTranslation().getDistance(Alignment.speakerAprilTag.getTranslation());
 
     /* Telemeterize the robot's general speeds */
     double currentTime = Utils.getCurrentTimeSeconds();
