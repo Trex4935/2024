@@ -12,6 +12,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -21,8 +22,6 @@ import frc.robot.commands.Autos;
 import frc.robot.extension.Alignment;
 import frc.robot.extension.NoteState;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.ClimberLeft;
-import frc.robot.subsystems.ClimberRight;
 import frc.robot.subsystems.DustPan;
 import frc.robot.subsystems.LEDControl;
 import frc.robot.subsystems.Pivot;
@@ -38,8 +37,8 @@ public class RobotContainer {
   private final Pivot pivot = new Pivot();
   private final Rollers rollers = new Rollers();
   private final Shooter shooter = new Shooter();
-  private final ClimberRight climberRight = new ClimberRight();
-  private final ClimberLeft climberLeft = new ClimberLeft();
+  // private final ClimberRight climberRight = new ClimberRight();
+  // private final ClimberLeft climberLeft = new ClimberLeft();
   private final LEDControl ledControl = new LEDControl();
 
   // Sets the default state in the Note Life Cycle
@@ -92,22 +91,38 @@ public class RobotContainer {
     pivot.setDefaultCommand(pivot.run(() -> pivot.pivotSwitch()));
     ledControl.setDefaultCommand(ledControl.run(() -> ledControl.ledSwitch()));
 
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
-        // Driving with joysticks
-        drivetrain.applyRequest(
-            () ->
-                drive
-                    .withVelocityX(-driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
-                    // Joystick
-                    .withVelocityY(
-                        -driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
-                    .withRotationalRate(
-                        -driverJoystick.getRightX() * MaxAngularRate) // Drive right with Joystick
-            ));
+          // Driving with joysticks
+          drivetrain.applyRequest(
+              () ->
+                  drive
+                      .withVelocityX(-driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
+                      // Joystick
+                      .withVelocityY(
+                          -driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
+                      .withRotationalRate(
+                          -driverJoystick.getRightX() * MaxAngularRate) // Drive right with Joystick
+              ));
+    } else {
+      drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+
+          // Driving with joysticks
+          drivetrain.applyRequest(
+              () ->
+                  drive
+                      .withVelocityX(driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
+                      // Joystick
+                      .withVelocityY(
+                          driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
+                      .withRotationalRate(
+                          -driverJoystick.getRightX() * MaxAngularRate) // Drive right with Joystick
+              ));
+    }
 
     // Control climber motors
-    driverJoystick
+    /*  driverJoystick
         .rightTrigger()
         .whileTrue(
             climberRight.runEnd(
@@ -118,7 +133,7 @@ public class RobotContainer {
         .whileTrue(
             climberLeft.runEnd(
                 () -> climberLeft.setClimberMotorTwo(0.8),
-                () -> climberLeft.stopClimberMotorTwo()));
+                () -> climberLeft.stopClimberMotorTwo()));*/
     // Makes a button that slows the speed down when needed
     driverJoystick.leftBumper().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
 
@@ -134,7 +149,7 @@ public class RobotContainer {
                     point.withModuleDirection(
                         new Rotation2d(-driverJoystick.getLeftY(), -driverJoystick.getLeftX()))));
 
-    // reset the field-centric heading on left bumper press
+    // reset the field-centric heading on right bumper press
     driverJoystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     // All alignment commands require the right trigger to function
@@ -240,7 +255,7 @@ public class RobotContainer {
     SmartDashboard.putData(rollers);
     SmartDashboard.putData(pivot);
     SmartDashboard.putData(shooter);
-    SmartDashboard.putData(climberRight);
+    // SmartDashboard.putData(climberRight);
   }
 
   public Pose2d getTargetPose(Pose2d aprilTagPose, double[] offsetArray) {

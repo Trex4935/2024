@@ -74,7 +74,7 @@ public class Shooter extends SubsystemBase {
         break;
         // Note is shot out towards speaker
       case SPEAKER:
-        setShooters(0.5, 0.5);
+        setShooters(0.7, 0.7);
         speedState = shooterAtSpeed();
         break;
 
