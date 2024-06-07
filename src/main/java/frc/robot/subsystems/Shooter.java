@@ -5,83 +5,103 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.extension.SparkMax;
 
 public class Shooter extends SubsystemBase {
-
   // Declaring Motors
-  CANSparkMax shootingmotor1;
-  CANSparkMax shootingmotor2;
-
-  // Makes a new state for the shooter
+  CANSparkMax shootingMotorLeft, shootingMotorRight;
+  static boolean speedState = false;
 
   /** Creates a new Shooter. */
   public Shooter() {
 
     // Creating Motor Objects
-    shootingmotor1 = SparkMax.createDefaultCANSparkMax(6);
-    shootingmotor2 = SparkMax.createDefaultCANSparkMax(8);
-
+    shootingMotorLeft = SparkMax.createDefaultCANSparkMax(6);
+    shootingMotorRight = SparkMax.createDefaultCANSparkMax(8);
+    shootingMotorRight.setInverted(true);
   }
 
-  // makes motors spin YIPPIE
-  public void shooterMovement(double speed) {
-    shootingmotor1.set(0.8);
-    shootingmotor2.set(-0.8);
+  /** Sets the left shooting motor's speed */
+  public void setShootingMotorLeft(double speed) {
+    shootingMotorLeft.set(speed);
   }
 
-  // sets motor 1's speed
-  public void setshootingmotor1(double speed) {
-    shootingmotor1.set(speed);
+  /** Sets the right shooting motor's speed */
+  public void setShootingMotorRight(double speed) {
+    shootingMotorRight.set(speed);
   }
 
-  // sets motor 2's speed
-  public void setshootingmotor2(double speed) {
-    shootingmotor2.set(speed);
+  public boolean shooterAtSpeed() {
+    if (shootingMotorLeft.getEncoder().getVelocity() > 2000) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  // stops motor 1
-  public void stopShootingMotor1() {
-    shootingmotor1.stopMotor();
+  /** makes motors spin YIPPIE!! */
+  public void setShooters(double motor1Speed, double motor2Speed) {
+    shootingMotorLeft.set(motor1Speed);
+    shootingMotorRight.set(motor2Speed);
   }
 
-  // stops motor 2
-  public void stopShootingMotor2() {
-    shootingmotor2.stopMotor();
+  /** Stops left shooting motor */
+  public void stopShootingMotorLeft() {
+    shootingMotorLeft.stopMotor();
   }
 
-  // stop all motors
-  public void stopShooterMotors() {
-    stopShootingMotor1();
-    stopShootingMotor2();
+  /** Stops right shooting motor */
+  public void stopShootingMotorRight() {
+    shootingMotorRight.stopMotor();
   }
 
-  // state machine for shooter motors
+  /** Stop both shooting motors */
+  public void stopShootingMotors() {
+    stopShootingMotorLeft();
+    stopShootingMotorRight();
+  }
+
+  /** state machine for shooter motors */
   public void shooterSwitch() {
     switch (RobotContainer.noteLifecycle) {
 
-      // Note is moving to the amp drop position
-      case AMPLOADING:
-        shooterMovement(0);
-        break;
-      // Note is dropped into the amp
+        // Note is dropped into the amp
       case AMP:
-        shooterMovement(0);
+        setShooters(0.2, 0.2);
         break;
-      // Note is shot out towards speaker
+        // Note is shot out towards speaker
       case SPEAKER:
-        shooterMovement(0);
-
+        setShooters(0.5, 0.5);
+        speedState = shooterAtSpeed();
         break;
-      // Deafult Position of the Shooter angled at 180 degrees approximately
+
+      case SPEAKERFRONT:
+        setShooters(0.9, 0.9);
+        speedState = shooterAtSpeed();
+        break;
+      case EJECT:
+        setShooters(0.2, 0.2);
+        break;
+      case SOURCE:
+        setShooters(-0.4, -0.4);
+        break;
+      case TRAP:
+        if (Pivot.pivotAtAngle) {
+          setShooters(0.3, 0.3);
+          break;
+        }
       default:
         // turns all the motors off
-        stopShooterMotors();
-
+        stopShootingMotors();
     }
+  }
 
+  public void initSendable(SendableBuilder builder) {
+    builder.addDoubleProperty("Left Shooter Motor Speed", () -> shootingMotorLeft.get(), null);
+    builder.addDoubleProperty("Right Shooter Motor Speed", () -> shootingMotorRight.get(), null);
   }
 
   @Override
@@ -89,5 +109,4 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
 
   }
-
 }

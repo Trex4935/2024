@@ -4,11 +4,13 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
+import frc.robot.extension.NoteState;
 
 public class LEDControl extends SubsystemBase {
 
@@ -16,27 +18,27 @@ public class LEDControl extends SubsystemBase {
   int m_rainbowFirstPixelHue;
   AddressableLED ledStrip;
   AddressableLEDBuffer ledBuffer;
-  int ledBufferLength;
+  // Declares a counter and a toggle to be used in flashing the LEDs
   boolean ledToggle;
+  int counter, ledBufferLength;
   private int walkStartingPosition = 0;
-  // Makes a new state for the shooter
 
-  /** Creates a new Shooter. */
+  /** Creates a new LEDControl. */
   public LEDControl() {
 
     // Creating addressable led Objects
     m_rainbowFirstPixelHue = 0;
     ledStrip = new AddressableLED(7);
-    ledBuffer = new AddressableLEDBuffer(60);
+    ledBuffer = new AddressableLEDBuffer(180);
     ledBufferLength = ledBuffer.getLength();
     ledStrip.setLength(ledBuffer.getLength());
-    ledToggle = true;
-
-    // Set the data
-
+    // Makes the counter and toggle
+    ledToggle = false;
+    counter = 0;
+    RobotContainer.noteLifecycle = NoteState.FIELD;
   }
 
-  // makes motors spin YIPPIE
+  // Used to create rainbow LEDs
   public void LEDController() {
     // For every pixel
     for (var i = 0; i < ledBuffer.getLength(); i++) {
@@ -54,15 +56,16 @@ public class LEDControl extends SubsystemBase {
     ledStrip.start();
   }
 
+  // Used to create a 'walking' LED
   public void sectionedLEDControl() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
       ledBuffer.setLED(i, Color.kBlue);
       if (i < ledBuffer.getLength() - 1) {
-        System.out.println("+1: " + (i + 1));
+        // System.out.println("+1: "+(i+1));
         ledBuffer.setLED(i + 1, Color.kBlack);
       }
       if (i >= 1) {
-        System.out.println("-1: " + (i - 1));
+        // System.out.println("-1: " + (i - 1));
         ledBuffer.setLED(i - 1, Color.kBlack);
       }
       if (i == 0) {
@@ -73,9 +76,9 @@ public class LEDControl extends SubsystemBase {
       ledStrip.setData(ledBuffer);
       ledStrip.start();
     }
-
   }
 
+  // A method used to create non changing LEDs or solid LEDs
   public void solidLEDS(int hue, int saturation, int brightness) {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
       // Calculate the hue - hue is easier for rainbows because the color
@@ -89,44 +92,32 @@ public class LEDControl extends SubsystemBase {
     ledStrip.start();
   }
 
-  public void flashLEDS(int hue, int saturation, int brightness) {
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
-      // Calculate the hue - hue is easier for rainbows because the color
-      // shape is a circle so only one value needs to precess
-      // Set the value
-      if (i % 2 == 0) {
-        if (ledToggle) {
-          ledBuffer.setHSV(i, hue, saturation, brightness);
-        } else {
-          ledBuffer.setHSV(i, 0, 0, 0);
-        }
+  // A method used to create flashing LEDs taking blink rate into account
+  public void flashLEDS(int hue, int saturation, int brightness, int blinkRate) {
+    counter++;
+    // Checks to see how long one cycle has passed
+    if (counter % blinkRate == 0) {
+      // Checks to see if LEDs are off and turns them on
+      if (!ledToggle) {
+        solidLEDS(hue, saturation, brightness);
+        ledToggle = true;
       }
-
+      // Turns off the LEDs if they are on
       else {
-        if (ledToggle) {
-          ledBuffer.setHSV(i, 0, 0, 0);
-        } else {
-          ledBuffer.setHSV(i, hue, saturation, brightness);
-        }
+        solidLEDS(0, 0, 0);
+        ledToggle = false;
       }
     }
-    ledToggle = !ledToggle;
-    // Increase by to make the rainbow "move"
-    // Check bounds
-    Timer.delay(5);
-    ledStrip.setData(ledBuffer);
-    ledStrip.start();
-
   }
 
   /**
-   * 
-   * @param pirmaryColor    Primary color of LED strip e.g Color.kRed
-   * @param secondaryColor  Secondary color of LED strip e.g. Color.kBlack
-   * @param startPosition   Initial position of Primary color
+   * @param pirmaryColor Primary color of LED strip e.g Color.kRed
+   * @param secondaryColor Secondary color of LED strip e.g. Color.kBlack
+   * @param startPosition Initial position of Primary color
    * @param lengthOfPrimary Number of LEDs to set to Primary Color
    */
-  public void setLEDSectionOn(Color pirmaryColor, Color secondaryColor, int startPosition, int lengthOfPrimary) {
+  public void setLEDSectionOn(
+      Color pirmaryColor, Color secondaryColor, int startPosition, int lengthOfPrimary) {
 
     // set all of the leds to the secondary color
     for (int i = 0; i < ledBufferLength; i++) {
@@ -144,13 +135,11 @@ public class LEDControl extends SubsystemBase {
       ledBuffer.setLED(startPosition, pirmaryColor);
       startPosition++;
     }
-
   }
 
   /**
-   * 
-   * @param primaryColor    Color that will be moving e.g. Color.kRed
-   * @param secondaryColor  Color that will be the background e.g. Color.kBlack
+   * @param primaryColor Color that will be moving e.g. Color.kRed
+   * @param secondaryColor Color that will be the background e.g. Color.kBlack
    * @param lengthOfPrimary Length of moving strip.
    */
   public void setLEDsWalking(Color primaryColor, Color secondaryColor, int lengthOfPrimary) {
@@ -165,14 +154,65 @@ public class LEDControl extends SubsystemBase {
     walkStartingPosition = walkStartingPosition % ledBufferLength;
   }
 
-  @Override
-  public void periodic() {
+  public void ledSwitch() {
+    // implementing LEDs into LED control
+    switch (RobotContainer.noteLifecycle) {
 
-    // LEDController();
-    // This method will be called once per scheduler run
-    // solidLEDS(15, 255, 32);
-    solidLEDS(15, 255, 32);
-    solidLEDS(0, 0, 0);
+        // Refer to LED guide in extension to see what each state changes the LEDs to
+      case FIELD: // Solid Orange
+        solidLEDS(5, 255, 32);
+        break;
+
+      case GROUNDINTAKE: // Black for now
+        flashLEDS(5, 0, 0, 50);
+        break;
+
+      case SOURCE: // Flashing White
+        flashLEDS(202, 95, 36, 50);
+        break;
+
+      case GRABBED: // Flashing Orange
+        flashLEDS(5, 255, 32, 50);
+        break;
+
+      case CONTROL: // Flashing Orange
+        flashLEDS(5, 255, 32, 50);
+        break;
+
+      case STORAGE: // Solid Blue
+        solidLEDS(250, 255, 32);
+        break;
+
+      case SPEAKER: // Solid Green
+        solidLEDS(220, 255, 32);
+        break;
+
+      case AMP: // Flash Purple
+        flashLEDS(150, 255, 32, 50);
+        break;
+
+      case EJECT: // Flashing Red
+        flashLEDS(1, 255, 32, 25);
+        break;
+
+      case READYCLIMB: // Solid Pink
+        solidLEDS(175, 255, 32);
+        break;
+
+      case CLIMB: // Flash Pink
+        flashLEDS(175, 255, 32, 50);
+        break;
+
+      case TRAP: // Flash Green
+        flashLEDS(220, 255, 32, 50);
+        break;
+
+      default: // Solid Orange
+        solidLEDS(5, 255, 32);
+        break;
+    }
   }
 
+  @Override
+  public void periodic() {}
 }
