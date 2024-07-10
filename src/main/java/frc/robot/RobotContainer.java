@@ -9,6 +9,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Autos;
 import frc.robot.extension.Alignment;
+import frc.robot.extension.LimelightHelpers;
 import frc.robot.extension.NoteState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.DustPan;
@@ -43,6 +45,9 @@ public class RobotContainer {
 
   // Sets the default state in the Note Life Cycle
   public static NoteState noteLifecycle;
+
+  // Whether a vision update should be rejected
+  public boolean doRejectUpdate;
 
   // Swerve settings
   private double MaxSpeed = 6; // 6 meters per second desired top speed
@@ -269,6 +274,26 @@ public class RobotContainer {
     // Makes a target pose
     Pose2d targetPose = new Pose2d(targetX, targetY, targetTheta);
     return targetPose;
+  }
+
+  public void updateVision() {
+    LimelightHelpers.SetRobotOrientation(
+        "limelight-testll", drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    LimelightHelpers.PoseEstimate mt2 =
+        LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-testll");
+    if (Math.abs(drivetrain.getPigeon2().getRate())
+        > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision
+    // updates
+    {
+      doRejectUpdate = true;
+    }
+    if (mt2.tagCount == 0) {
+      doRejectUpdate = true;
+    }
+    if (!doRejectUpdate) {
+      drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+      drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+    }
   }
 
   // Runs Auto
