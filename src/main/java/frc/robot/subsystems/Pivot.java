@@ -41,7 +41,7 @@ public class Pivot extends SubsystemBase {
 
   public Pivot() {
     // News up
-    PID = new PIDController(0.01, 0, 0.0);
+    PID = new PIDController(0.015, 0, 0.0);
     // News up Pigeon IMU
     pidgey = new Pigeon2(18);
     // News up pivot motor and configs it to the PID

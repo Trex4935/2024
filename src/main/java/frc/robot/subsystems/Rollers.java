@@ -17,7 +17,7 @@ public class Rollers extends SubsystemBase {
 
   // Creating Sensors; ID's shown in IDguide.md
   public FlippedDIO magneticFlap, shooterSmacna, dustpanSmacna;
-  public DigitalInput lowerStorageButton, upperStorageButton;
+  public DigitalInput storageButton;
   private int i;
 
   Timer timer;
@@ -32,8 +32,7 @@ public class Rollers extends SubsystemBase {
     dustpanSmacna = new FlippedDIO(6);
     magneticFlap = new FlippedDIO(2);
     shooterSmacna = new FlippedDIO(3);
-    lowerStorageButton = new FlippedDIO(1);
-    upperStorageButton = new FlippedDIO(4);
+    storageButton = new FlippedDIO(1);
 
     // News up a timer object
     timer = new Timer();
@@ -103,7 +102,7 @@ public class Rollers extends SubsystemBase {
         if (currentDustpanSmacnaState && i > 15) {
           RobotContainer.noteLifecycle = NoteState.GRABBED;
         }
-        if (upperStorageButton.get()) {
+        if (storageButton.get()) {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
         previousDustpanSmacnaState = currentDustpanSmacnaState;
@@ -113,7 +112,7 @@ public class Rollers extends SubsystemBase {
         // HUMAN INTAKE STATE: Run magazine backwards
       case SOURCE:
         setMagazine(-0.4);
-        if (lowerStorageButton.get()) {
+        if (storageButton.get()) {
           RobotContainer.noteLifecycle = NoteState.FIELD;
         }
         break;
@@ -133,7 +132,7 @@ public class Rollers extends SubsystemBase {
       case CONTROL:
         setIntake(0.9);
         setMagazine(0.9);
-        if (upperStorageButton.get()) {
+        if (storageButton.get()) {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
 
@@ -173,8 +172,8 @@ public class Rollers extends SubsystemBase {
         // again after 7
         // seconds
       case EJECT:
-        magazine.set(0.8);
-        intake.set(0.8);
+        magazine.set(0.1);
+        intake.set(0.1);
         if (Helper.detectFallingRisingEdge(
             previousDustpanSmacnaState, currentDustpanSmacnaState, false)) {
           timer.start();
@@ -204,8 +203,7 @@ public class Rollers extends SubsystemBase {
     builder.addBooleanProperty("magazineSmacna", () -> magneticFlap.get(), null);
     builder.addBooleanProperty("dustpanSmacna", () -> dustpanSmacna.get(), null);
     builder.addBooleanProperty("shooterSmacna", () -> shooterSmacna.get(), null);
-    builder.addBooleanProperty("lowerStorageButton", () -> lowerStorageButton.get(), null);
-    builder.addBooleanProperty("upperStorageButton", () -> upperStorageButton.get(), null);
+    builder.addBooleanProperty("storageButton", () -> storageButton.get(), null);
     builder.addDoubleProperty("Intake Motor Speed", () -> intake.get(), null);
     builder.addDoubleProperty("Magazine Motor Speed", () -> magazine.get(), null);
     builder.addDoubleProperty("Intake Motor Temp", () -> intake.getMotorTemperature(), null);
