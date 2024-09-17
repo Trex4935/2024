@@ -16,8 +16,8 @@ public class Rollers extends SubsystemBase {
   CANSparkMax intake, magazine;
 
   // Creating Sensors; ID's shown in IDguide.md
-  public FlippedDIO magneticFlap, shooterSmacna, dustpanSmacna;
-  public DigitalInput storageButton;
+  public FlippedDIO magneticDIO, shooterDIO, dustpanDIO;
+  public DigitalInput storageDIO;
   private int i;
 
   Timer timer;
@@ -29,10 +29,10 @@ public class Rollers extends SubsystemBase {
     magazine = SparkMax.createDefaultCANSparkMax(5);
 
     // Sensor Objects
-    dustpanSmacna = new FlippedDIO(6);
-    magneticFlap = new FlippedDIO(2);
-    shooterSmacna = new FlippedDIO(3);
-    storageButton = new FlippedDIO(1);
+    dustpanDIO = new FlippedDIO(6);
+    magneticDIO = new FlippedDIO(2);
+    shooterDIO = new FlippedDIO(3);
+    storageDIO = new FlippedDIO(1);
 
     // News up a timer object
     timer = new Timer();
@@ -98,11 +98,11 @@ public class Rollers extends SubsystemBase {
         setIntake(0.9);
         setMagazine(0.9);
         // intake sensor detects leading edge of note -> Grabbed state
-        currentDustpanSmacnaState = dustpanSmacna.get();
+        currentDustpanSmacnaState = dustpanDIO.get();
         if (currentDustpanSmacnaState && i > 15) {
           RobotContainer.noteLifecycle = NoteState.GRABBED;
         }
-        if (storageButton.get()) {
+        if (storageDIO.get()) {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
         previousDustpanSmacnaState = currentDustpanSmacnaState;
@@ -112,7 +112,7 @@ public class Rollers extends SubsystemBase {
         // HUMAN INTAKE STATE: Run magazine backwards
       case SOURCE:
         setMagazine(-0.4);
-        if (storageButton.get()) {
+        if (storageDIO.get()) {
           RobotContainer.noteLifecycle = NoteState.FIELD;
         }
         break;
@@ -121,7 +121,7 @@ public class Rollers extends SubsystemBase {
       case GRABBED:
         setIntake(0.9);
         // intake sensor detects back edge of the note -> Control state
-        currentDustpanSmacnaState = dustpanSmacna.get();
+        currentDustpanSmacnaState = dustpanDIO.get();
         if (currentDustpanSmacnaState != previousDustpanSmacnaState) {
           RobotContainer.noteLifecycle = NoteState.CONTROL;
         }
@@ -132,7 +132,7 @@ public class Rollers extends SubsystemBase {
       case CONTROL:
         setIntake(0.9);
         setMagazine(0.9);
-        if (storageButton.get()) {
+        if (storageDIO.get()) {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
 
@@ -156,7 +156,7 @@ public class Rollers extends SubsystemBase {
       case AMP:
         setIntake(0.25);
         setMagazine(0.25);
-        currentDustpanSmacnaState = dustpanSmacna.get();
+        currentDustpanSmacnaState = dustpanDIO.get();
         if (Helper.detectFallingRisingEdge(
             previousDustpanSmacnaState, currentDustpanSmacnaState, false)) {
           timer.start();
@@ -200,10 +200,10 @@ public class Rollers extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     builder.addStringProperty(
         "currentNoteLifeCycle", () -> RobotContainer.noteLifecycle.toString(), null);
-    builder.addBooleanProperty("magazineSmacna", () -> magneticFlap.get(), null);
-    builder.addBooleanProperty("dustpanSmacna", () -> dustpanSmacna.get(), null);
-    builder.addBooleanProperty("shooterSmacna", () -> shooterSmacna.get(), null);
-    builder.addBooleanProperty("storageButton", () -> storageButton.get(), null);
+    builder.addBooleanProperty("magazineSmacna", () -> magneticDIO.get(), null);
+    builder.addBooleanProperty("dustpanSmacna", () -> dustpanDIO.get(), null);
+    builder.addBooleanProperty("shooterSmacna", () -> shooterDIO.get(), null);
+    builder.addBooleanProperty("storageButton", () -> storageDIO.get(), null);
     builder.addDoubleProperty("Intake Motor Speed", () -> intake.get(), null);
     builder.addDoubleProperty("Magazine Motor Speed", () -> magazine.get(), null);
     builder.addDoubleProperty("Intake Motor Temp", () -> intake.getMotorTemperature(), null);
