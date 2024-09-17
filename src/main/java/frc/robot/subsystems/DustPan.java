@@ -22,7 +22,7 @@ public class DustPan extends SubsystemBase {
   /** Creates a new DustPan. */
   public DustPan() {
     // news up the solenoid and compressor
-    solenoid = new Solenoid(14, PneumaticsModuleType.CTREPCM, 2);
+    solenoid = new Solenoid(14, PneumaticsModuleType.CTREPCM, 5);
 
     // Creates Compressor Object
     m_compressor = new Compressor(14, PneumaticsModuleType.CTREPCM);
