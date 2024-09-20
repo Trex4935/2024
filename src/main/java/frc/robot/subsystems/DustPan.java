@@ -22,7 +22,7 @@ public class DustPan extends SubsystemBase {
   /** Creates a new DustPan. */
   public DustPan() {
     // news up the solenoid and compressor
-    solenoid = new Solenoid(14, PneumaticsModuleType.CTREPCM, 2);
+    solenoid = new Solenoid(14, PneumaticsModuleType.CTREPCM, 5);
 
     // Creates Compressor Object
     m_compressor = new Compressor(14, PneumaticsModuleType.CTREPCM);
@@ -75,7 +75,7 @@ public class DustPan extends SubsystemBase {
   @Override
   /** Puts the current state of the intake onto NetworkTables */
   public void initSendable(SendableBuilder builder) {
-    builder.addBooleanProperty("DustPan Dropped", this::getDustPanState, null);
+    builder.addBooleanProperty("DustPan Up?", this::getDustPanState, null);
   }
 
   @Override

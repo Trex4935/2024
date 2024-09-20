@@ -12,7 +12,6 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -91,35 +90,18 @@ public class RobotContainer {
     pivot.setDefaultCommand(pivot.run(() -> pivot.pivotSwitch()));
     ledControl.setDefaultCommand(ledControl.run(() -> ledControl.ledSwitch()));
 
-    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 
-          // Driving with joysticks
-          drivetrain.applyRequest(
-              () ->
-                  drive
-                      .withVelocityX(driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
-                      // Joystick
-                      .withVelocityY(
-                          driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
-                      .withRotationalRate(
-                          -driverJoystick.getRightX() * MaxAngularRate) // Drive right with Joystick
-              ));
-    } else {
-      drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-
-          // Driving with joysticks
-          drivetrain.applyRequest(
-              () ->
-                  drive
-                      .withVelocityX(-driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
-                      // Joystick
-                      .withVelocityY(
-                          -driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
-                      .withRotationalRate(
-                          -driverJoystick.getRightX() * MaxAngularRate) // Drive right with Joystick
-              ));
-    }
+        // Driving with joysticks
+        drivetrain.applyRequest(
+            () ->
+                drive
+                    .withVelocityX(driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
+                    // Joystick
+                    .withVelocityY(driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
+                    .withRotationalRate(
+                        -driverJoystick.getRightX() * MaxAngularRate) // Drive right with Joystick
+            ));
 
     // Control climber motors
     /*  driverJoystick
