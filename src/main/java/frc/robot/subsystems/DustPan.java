@@ -75,7 +75,7 @@ public class DustPan extends SubsystemBase {
   @Override
   /** Puts the current state of the intake onto NetworkTables */
   public void initSendable(SendableBuilder builder) {
-    builder.addBooleanProperty("DustPan Dropped", this::getDustPanState, null);
+    builder.addBooleanProperty("DustPan Up?", this::getDustPanState, null);
   }
 
   @Override
