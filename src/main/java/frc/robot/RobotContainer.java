@@ -63,8 +63,8 @@ public class RobotContainer {
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * 0.1)
           .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-  // driving in open loop
+          .withDriveRequestType(
+              DriveRequestType.OpenLoopVoltage); // I want field-centric driving in open loop
   // Setting up the brake and pointing function
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -91,17 +91,21 @@ public class RobotContainer {
     ledControl.setDefaultCommand(ledControl.run(() -> ledControl.ledSwitch()));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-
         // Driving with joysticks
-        drivetrain.applyRequest(
-            () ->
-                drive
-                    .withVelocityX(driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
-                    // Joystick
-                    .withVelocityY(driverJoystick.getLeftX() * MaxSpeed) // Drive left with Joystick
-                    .withRotationalRate(
-                        -driverJoystick.getRightX() * MaxAngularRate) // Drive right with Joystick
-            ));
+        drivetrain
+            .applyRequest(
+                () ->
+                    drive
+                        .withVelocityX(-driverJoystick.getLeftY() * MaxSpeed) // Drive forward with
+                        // negative Y (forward)
+                        .withVelocityY(
+                            -driverJoystick.getLeftX()
+                                * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(
+                            -driverJoystick.getRightX()
+                                * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                )
+            .ignoringDisable(true));
 
     // Control climber motors
     /*  driverJoystick
@@ -117,7 +121,9 @@ public class RobotContainer {
                 () -> climberLeft.setClimberMotorTwo(0.8),
                 () -> climberLeft.stopClimberMotorTwo()));*/
     // Makes a button that slows the speed down when needed
-    driverJoystick.leftBumper().whileTrue(Commands.runEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
+    driverJoystick
+        .leftBumper()
+        .whileTrue(Commands.startEnd(() -> MaxSpeed = 2, () -> MaxSpeed = 6));
 
     // A button acts as a brake, and turns all wheels inward
     driverJoystick.a().whileTrue(drivetrain.applyRequest(() -> brake));

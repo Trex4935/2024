@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -97,8 +98,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         this::getCurrentRobotChassisSpeeds,
         (speeds) ->
             this.setControl(
-                autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
-        // robot
+                autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
         new HolonomicPathFollowerConfig(
             new PIDConstants(10, 0, 0),
             new PIDConstants(10, 0, 0),
@@ -106,10 +106,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             driveBaseRadius,
             new ReplanningConfig()),
         () ->
-            DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
-                == DriverStation.Alliance.Red, // Assume the path needs to be
-        // flipped for Red vs Blue, this is
-        // normally the case
+            DriverStation.getAlliance().orElse(Alliance.Blue)
+                == Alliance
+                    .Red, // Assume the path needs to be flipped for Red vs Blue, this is normally
+        // the case
         this); // Subsystem for requirements
   }
 
