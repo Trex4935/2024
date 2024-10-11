@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,6 +36,13 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
   private final SwerveRequest.ApplyChassisSpeeds autoRequest =
       new SwerveRequest.ApplyChassisSpeeds();
+
+  /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
+  private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
+  /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
+  private final Rotation2d RedAlliancePerspectiveRotation = Rotation2d.fromDegrees(180);
+  /* Keep track if we've ever applied the operator perspective before or not */
+  private boolean hasAppliedOperatorPerspective = false;
 
   public CommandSwerveDrivetrain(
       SwerveDrivetrainConstants driveTrainConstants,
@@ -97,8 +105,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         this::getCurrentRobotChassisSpeeds,
         (speeds) ->
             this.setControl(
-                autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
-        // robot
+                autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
         new HolonomicPathFollowerConfig(
             new PIDConstants(10, 0, 0),
             new PIDConstants(10, 0, 0),
@@ -106,10 +113,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             driveBaseRadius,
             new ReplanningConfig()),
         () ->
-            DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
-                == DriverStation.Alliance.Red, // Assume the path needs to be
-        // flipped for Red vs Blue, this is
-        // normally the case
+            DriverStation.getAlliance().orElse(Alliance.Blue)
+                == Alliance
+                    .Red, // Assume the path needs to be flipped for Red vs Blue, this is normally
+        // the case
         this); // Subsystem for requirements
   }
 
@@ -163,5 +170,25 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
               updateSimState(deltaTime, RobotController.getBatteryVoltage());
             });
     m_simNotifier.startPeriodic(kSimLoopPeriod);
+  }
+
+  @Override
+  public void periodic() {
+    /* Periodically try to apply the operator perspective */
+    /* If we haven't applied the operator perspective before, then we should apply it regardless of DS state */
+    /* This allows us to correct the perspective in case the robot code restarts mid-match */
+    /* Otherwise, only check and apply the operator perspective if the DS is disabled */
+    /* This ensures driving behavior doesn't change until an explicit disable event occurs during testing*/
+    if (!hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
+      DriverStation.getAlliance()
+          .ifPresent(
+              (allianceColor) -> {
+                this.setOperatorPerspectiveForward(
+                    allianceColor == Alliance.Red
+                        ? RedAlliancePerspectiveRotation
+                        : BlueAlliancePerspectiveRotation);
+                hasAppliedOperatorPerspective = true;
+              });
+    }
   }
 }
