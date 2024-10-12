@@ -91,7 +91,7 @@ public class Pivot extends SubsystemBase {
     }
     pivotMotor.set(PID.calculate(currentRoll, targetAngle));
     // pivotPID.setReference(targetAngle, CANSparkBase.ControlType.kPosition);
-    pivotAtAngle = MathUtil.isNear(targetAngle, pidgey.getRoll().getValueAsDouble(), 1.5);
+    pivotAtAngle = MathUtil.isNear(targetAngle, pidgey.getRoll().getValueAsDouble(), 3.5);
     testLimitSwitch();
   }
 

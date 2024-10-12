@@ -102,7 +102,7 @@ public class Rollers extends SubsystemBase {
         if (currentDustpanSmacnaState && i > 15) {
           RobotContainer.noteLifecycle = NoteState.GRABBED;
         }
-        if (storageDIO.get()) {
+        if (shooterDIO.get()) {
           RobotContainer.noteLifecycle = NoteState.STORAGE;
         }
         previousDustpanSmacnaState = currentDustpanSmacnaState;
