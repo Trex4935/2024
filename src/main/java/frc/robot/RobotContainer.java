@@ -102,7 +102,7 @@ public class RobotContainer {
                             -driverJoystick.getLeftX()
                                 * MaxSpeed) // Drive left with negative X (left)
                         .withRotationalRate(
-                            -driverJoystick.getRightX()
+                            driverJoystick.getRightX()
                                 * MaxAngularRate) // Drive counterclockwise with negative X (left)
                 )
             .ignoringDisable(true));
